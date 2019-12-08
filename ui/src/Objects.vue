@@ -3,13 +3,17 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
       <h1 class="h2">Objects</h1>
     </div>
-    <div v-for="obj in cache" v-bind:key="obj.metadata.uid">
-      {{ obj.kind }}/{{ obj.metadata.name }}@{{ obj.metadata.namespace }}: {{ obj.status.phase }}
+    <div v-for="obj in orderedCache" v-bind:key="obj.metadata.uid">
+      {{ obj.kind }}/{{ obj.metadata.namespace }}/{{ obj.metadata.name }}: {{ obj.status.phase }}
     </div>
   </div>
 </template>
 
 <script>
+function objKey(obj) {
+  return `${obj.kind}/${obj.metadata.namespace}/${obj.metadata.name}`
+}
+
 export default {
   name: "Objects",
   data() {
@@ -27,7 +31,15 @@ export default {
     }
     this.es = undefined
   },
+  computed: {
+    orderedCache: function() {
+     return Object.values(this.cache).sort( (a, b) => objKey(a).localeCompare(objKey(b)) )
+    }
+  },
   methods: {
+    orderCache() {
+      return 
+    },
     setupStream() {
       this.es = new EventSource("/sse");
       this.es.onerror = function(err) {
