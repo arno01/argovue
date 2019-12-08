@@ -16,7 +16,6 @@ func (a *App) Profile(w http.ResponseWriter, r *http.Request) {
 	var profile interface{}
 	session, err := a.Store().Get(r, "auth-session")
 	if err != nil {
-		log.Errorf("Can't get session store, error:%v", err)
 		profile = new(map[string]interface{})
 	} else {
 		profile = session.Values["profile"]
@@ -40,7 +39,7 @@ func (a *App) Logout(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/ui/#/", http.StatusFound)
+	http.Redirect(w, r, a.Args().UIRootURL(), http.StatusFound)
 }
 
 // AuthInitiate initialises OIDC auth sequence by redirecting browser to OIDC provider
@@ -106,5 +105,5 @@ func (a *App) AuthCallback(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/ui/#/", http.StatusSeeOther)
+	http.Redirect(w, r, a.Args().UIRootURL(), http.StatusSeeOther)
 }
