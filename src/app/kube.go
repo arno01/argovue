@@ -1,10 +1,10 @@
 package app
 
 import (
-	log "github.com/sirupsen/logrus"
 	"kubevue/msg"
 
-	v1 "k8s.io/api/core/v1"
+	log "github.com/sirupsen/logrus"
+
 	apiv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
@@ -13,20 +13,22 @@ import (
 	"k8s.io/client-go/tools/cache"
 )
 
+// Notify broker on new message
 func (a *App) Notify(action string, obj interface{}) {
 	mObj := obj.(apiv1.Object)
 	log.Printf("%s %s@%s uid:%s", action, mObj.GetName(), mObj.GetNamespace(), mObj.GetUID())
 	a.Broker().Notifier <- msg.New(action, obj)
 }
 
-func (a *App) Watch(group, version, resource string) {
-	log.Debugf("Starting kubernetes watcher: %s/%s/%s", resource, version, group)
+// Watch resources
+func (a *App) Watch(group, version, resource, namespace string) {
+	log.Debugf("Starting kubernetes watcher: %s/%s/%s/%s", resource, version, group, namespace)
 	cfg, err := rest.InClusterConfig()
 	dc, err := dynamic.NewForConfig(cfg)
 	if err != nil {
 		log.WithError(err).Fatal("Could not generate dynamic client for config")
 	}
-	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(dc, 0, v1.NamespaceAll, nil)
+	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(dc, 0, namespace, nil)
 	gvr := schema.GroupVersionResource{
 		Group:    group,
 		Version:  version,

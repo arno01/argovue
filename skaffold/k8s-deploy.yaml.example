@@ -24,6 +24,14 @@ spec:
           value: ~
         - name: UI_ROOT_URL
           value: "/ui/#/"
+        - name: K8S_GROUP
+          value: argoproj.io
+        - name: K8S_VERSION
+          value: v1alpha1
+        - name: K8S_NAME
+          value: workflows
+        - name: K8S_NAMESPACE
+          value: default
       ports:
         - containerPort: 8080
       resources:
