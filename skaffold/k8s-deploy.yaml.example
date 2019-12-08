@@ -23,7 +23,7 @@ spec:
         - name: OIDC_SCOPE
           value: ~
         - name: UI_ROOT_URL
-          value: ~
+          value: "/ui/#/"
       ports:
         - containerPort: 8080
       resources:
