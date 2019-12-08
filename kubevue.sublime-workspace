@@ -1,0 +1,2023 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"Ex",
+				"Exchange"
+			],
+			[
+				"S",
+				"StatusFound"
+			],
+			[
+				"H",
+				"WriteHeader"
+			],
+			[
+				"oidc",
+				"oidcCallbackURL\tstring ·ν"
+			],
+			[
+				"oidcCl",
+				"oidcClientSecret\tstring ·ν"
+			],
+			[
+				"idTok",
+				"idToken\tinvalid type ·ν"
+			],
+			[
+				"Va",
+				"VaultArgs\tstruct ·ʈ"
+			],
+			[
+				"Vault",
+				"VaultArgs\tstruct ·ʈ"
+			],
+			[
+				"Vau",
+				"VaultArgs\tstruct ·ʈ"
+			],
+			[
+				"kube",
+				"kubeTokenPath\tstring ·ν"
+			],
+			[
+				"s",
+				"stripName\tbool ·ν"
+			],
+			[
+				"handle",
+				"handleSecretKey\tfunc(secretPath string, keyName string) bool, string, string ·ƒ"
+			],
+			[
+				"secret",
+				"secretValue\tinterface ·ν"
+			],
+			[
+				"val",
+				"valParts\t[]string ·ν"
+			],
+			[
+				"make",
+				"makeVarName\tfunc(envName string, key string, upperCase bool, stripVariable bool) string ·ƒ"
+			],
+			[
+				"appe",
+				"appendEnv\t*bool ·ν"
+			],
+			[
+				"Deb",
+				"Debugf\tfunc(format string, args ...interface{}) ·ƒ"
+			],
+			[
+				"toke",
+				"tokenPath\tstring ·ν"
+			],
+			[
+				"vau",
+				"vaultTokenPath\tstring ·ν"
+			],
+			[
+				"vaultToe",
+				"vaultTokenPath\t*string ·ν"
+			],
+			[
+				"con",
+				"continue"
+			],
+			[
+				"get_",
+				"get_tag_config"
+			],
+			[
+				"get_tag",
+				"get_tag_info"
+			],
+			[
+				"SE",
+				"SECRETKEY"
+			],
+			[
+				"SER",
+				"SERVICE_PATH"
+			],
+			[
+				"auto",
+				"auto-approve"
+			],
+			[
+				"DRONE",
+				"DRONE_WORKSPACE"
+			],
+			[
+				"VSPHERE",
+				"VSPHERE_DATACENTER"
+			],
+			[
+				"VS",
+				"VSPHERE_DATACENTER"
+			],
+			[
+				"wo",
+				"worker-pool-http"
+			],
+			[
+				"worke",
+				"worker-pool-https"
+			],
+			[
+				"lt",
+				"bigip_ltm_node"
+			],
+			[
+				"pro",
+				"provisioner\tprovisioner block"
+			],
+			[
+				"V",
+				"VSPHERE_RESOURCE_POOL"
+			],
+			[
+				"f5",
+				"f5_controlplane_vs_ip"
+			],
+			[
+				"cl",
+				"cluster_env_name"
+			],
+			[
+				"rancher",
+				"rancher_controlplane"
+			],
+			[
+				"ran",
+				"rancher_etcd"
+			],
+			[
+				"vsp",
+				"vsphere_virtual_machine"
+			],
+			[
+				"init",
+				"initial"
+			],
+			[
+				"contro",
+				"controlplane-node"
+			],
+			[
+				"bit",
+				"bigip_ltm_node"
+			],
+			[
+				"big_ltm",
+				"bigip_ltm_node"
+			],
+			[
+				"HELM",
+				"HELM_TLS_ENABLE"
+			],
+			[
+				"templa",
+				"template_uuid"
+			],
+			[
+				"pa",
+				"parseGitHubPath"
+			],
+			[
+				"impo",
+				"importer"
+			],
+			[
+				"cont",
+				"context"
+			],
+			[
+				"vault_",
+				"vault_secret"
+			],
+			[
+				"seal",
+				"sealed-secrets-key"
+			],
+			[
+				"DRON",
+				"DRONE_WORKSPACE"
+			],
+			[
+				"PLUGIN_VAUL",
+				"PLUGIN_VAULT_ADDR"
+			],
+			[
+				"PLUGIN_EN",
+				"PLUGIN_ENV_NAME"
+			],
+			[
+				"P",
+				"PLUGIN_VAR_ISO"
+			],
+			[
+				"when",
+				"when_promote_trigger"
+			],
+			[
+				"vault",
+				"vault_addr"
+			],
+			[
+				"resor",
+				"vsphere_resource_pool"
+			],
+			[
+				"g",
+				"github_url"
+			],
+			[
+				"git",
+				"github_client_secret"
+			],
+			[
+				"github_cli",
+				"github_client_id"
+			],
+			[
+				"PLUGIN",
+				"PLUGIN_ENTRY"
+			],
+			[
+				"D",
+				"DRONE_PLUGIN_TF"
+			],
+			[
+				"DRONE_REPO",
+				"DRONE_REPO_NAME"
+			],
+			[
+				"DRONE_REPO_",
+				"DRONE_REPO_NAMESPACE"
+			],
+			[
+				"clust",
+				"cluster_name"
+			],
+			[
+				"New",
+				"NewEnterpriseClient"
+			],
+			[
+				"sto",
+				"storageClass"
+			],
+			[
+				"F",
+				"FULL_NAME"
+			],
+			[
+				"IN",
+				"INFOBLOX_NETWORK"
+			],
+			[
+				"INFO",
+				"INFOBLOX_PASSWORD"
+			],
+			[
+				"TF_",
+				"TF_VAR_s3_state_key"
+			],
+			[
+				"VALU",
+				"VALUES_FLAG"
+			],
+			[
+				"VER",
+				"VERSION_FLAG"
+			],
+			[
+				"install",
+				"install_or_upgrade"
+			],
+			[
+				"CHART",
+				"CHART_NAMESPACE"
+			],
+			[
+				"SERVER",
+				"SERVER_COUNT"
+			],
+			[
+				"gener",
+				"generate-ssl-cert"
+			],
+			[
+				"fetch",
+				"fetch-k8s"
+			],
+			[
+				"overl",
+				"overlay_file"
+			],
+			[
+				"confi",
+				"configure-infra"
+			],
+			[
+				"cle",
+				"cleanup-k8s-dns"
+			],
+			[
+				"dele",
+				"delete-ingress"
+			],
+			[
+				"k8s",
+				"k8s-installer"
+			],
+			[
+				"e2e",
+				"e2e-generate"
+			],
+			[
+				"gene",
+				"generate-vars"
+			],
+			[
+				"cre",
+				"credentials"
+			],
+			[
+				"Xa",
+				"XrayPassword"
+			],
+			[
+				"Xra",
+				"XrayUsername"
+			],
+			[
+				"Xray",
+				"XrayEPScan"
+			],
+			[
+				"So",
+				"SonarqubeRunner"
+			],
+			[
+				"Son",
+				"SonarqubeURL"
+			],
+			[
+				"check",
+				"check-docker-file"
+			],
+			[
+				"panic",
+				"panic_handler"
+			],
+			[
+				"Sc",
+				"ScheduleWithBody"
+			],
+			[
+				"E",
+				"Environment"
+			],
+			[
+				"rbac",
+				"rbacv1"
+			],
+			[
+				"GetSer",
+				"GetServiceAccount"
+			],
+			[
+				"SA",
+				"SAPOLICY"
+			],
+			[
+				"VAULT",
+				"VAULT_TOKEN"
+			],
+			[
+				"VA",
+				"VAULT_ADDR"
+			],
+			[
+				"xray",
+				"xray_issue"
+			],
+			[
+				"xray_feature",
+				"xray_feature_issue"
+			],
+			[
+				"Get",
+				"GetOptions"
+			],
+			[
+				"name",
+				"namespace"
+			],
+			[
+				"ser",
+				"serviceAccount"
+			],
+			[
+				"jfrogregist",
+				"jfrogregistry-npn"
+			],
+			[
+				"padding",
+				"padding-bottom\tproperty"
+			],
+			[
+				"Dco",
+				"DcosCreateJob\tfunc(i actions.I, image string) result.T ·ƒ"
+			],
+			[
+				"maybe",
+				"maybeDeleteDeployment\tfunc(i I, dcos json.T) ·ƒ"
+			],
+			[
+				"margin-",
+				"margin-bottom\tproperty"
+			],
+			[
+				"ar",
+				"artefact"
+			],
+			[
+				"so",
+				"sonarProjectId\tfunc(js push.T) string ·ƒ"
+			],
+			[
+				"Actio",
+				"ActionContext\tmap[string]result.Result ·ʈ"
+			],
+			[
+				"get",
+				"getImageName\tfunc(js push.Object) string ·ƒ"
+			],
+			[
+				"Read",
+				"ReadFile\tfunc(filename string) []byte, error ·ƒ"
+			],
+			[
+				"wait",
+				"waitForContainerReStart\tfunc(cli *client.Client, id string, name string, timeout int) bool ·ƒ"
+			],
+			[
+				"Create",
+				"CreateWithToken\tfunc(uri string, token string, packet Object) *http.Response, error ·ƒ"
+			],
+			[
+				"pull",
+				"pullrequest_id"
+			],
+			[
+				"GetUi",
+				"GetUriJson\tfunc(token string, uri string) []byte ·ƒ"
+			],
+			[
+				"regi",
+				"registryURL\tstring ·ν"
+			],
+			[
+				"reg",
+				"registryURL\tvar ·ν"
+			],
+			[
+				"St",
+				"StatusCode\tint ·ν"
+			],
+			[
+				"sonar",
+				"sonarProjectId\tfunc(js pullrequest.Object) string ·ƒ"
+			],
+			[
+				"mci_l",
+				"mci_label_file"
+			],
+			[
+				"W",
+				"WriteString\tfunc(s string) int, error ·ƒ"
+			],
+			[
+				"mci",
+				"mci_env_file"
+			],
+			[
+				"mci_",
+				"mci_label_file"
+			],
+			[
+				"Es",
+				"QueryEscape\tfunc(s string) string ·ƒ"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "src/auth/auth.go",
+			"settings":
+			{
+				"buffer_size": 904,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/args/args.go",
+			"settings":
+			{
+				"buffer_size": 1884,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "skaffold/k8s-deploy.yaml",
+			"settings":
+			{
+				"buffer_size": 663,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/Golang Build/Go.sublime-build",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/Golang Build/Go.sublime-build",
+					""
+				],
+				[
+					"Packages/Golang Build/Go.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/Golang Build/Go.sublime-build",
+					"Test"
+				],
+				[
+					"Packages/Golang Build/Go.sublime-build",
+					"Install"
+				],
+				[
+					"Packages/Golang Build/Go.sublime-build",
+					"Cross-Compile (Interactive)"
+				],
+				[
+					"Packages/Golang Build/Go.sublime-build",
+					"Clean"
+				],
+				[
+					"Packages/GoSublime/GoSublime.sublime-build",
+					""
+				],
+				[
+					"Packages/SublimeREPL/sublimerepl_build_system_hack.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/Golang Build/Go.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/Golang Build/Go.sublime-build",
+					""
+				],
+				[
+					"Packages/Golang Build/Go.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/Golang Build/Go.sublime-build",
+					"Test"
+				],
+				[
+					"Packages/Golang Build/Go.sublime-build",
+					"Install"
+				],
+				[
+					"Packages/Golang Build/Go.sublime-build",
+					"Cross-Compile (Interactive)"
+				],
+				[
+					"Packages/Golang Build/Go.sublime-build",
+					"Clean"
+				],
+				[
+					"Packages/SublimeREPL/sublimerepl_build_system_hack.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/Golang Build/Go.sublime-build",
+				"Cross-Compile (Interactive)"
+			]
+		],
+		[
+			[
+				[
+					"Packages/Makefile/Make.sublime-build",
+					""
+				],
+				[
+					"Packages/Makefile/Make.sublime-build",
+					"Clean"
+				]
+			],
+			[
+				"Packages/Makefile/Make.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/Makefile/Make.sublime-build",
+					""
+				],
+				[
+					"Packages/Makefile/Make.sublime-build",
+					"Clean"
+				],
+				[
+					"Packages/GoSublime/GoSublime.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/GoSublime/GoSublime.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"gofmt",
+				"Gofmt: Format this file"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"prv",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"new b",
+				"Build: New Build System"
+			],
+			[
+				"build",
+				"Build With: Go"
+			],
+			[
+				"go buil",
+				"Build With: Go"
+			],
+			[
+				"golang",
+				"Set Syntax: Golang Build Output"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"goim",
+				"GoImports"
+			],
+			[
+				"lintset",
+				"Preferences: SublimeLinter Settings"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"LSP",
+				"LSP: Enable Language Server Globally"
+			],
+			[
+				"packa",
+				"Package Control: List Packages"
+			],
+			[
+				"instapackage ins",
+				"Package Control: Install Package"
+			],
+			[
+				"package ins",
+				"Package Control: Install Package"
+			],
+			[
+				"LSPSet",
+				"Preferences: LSP Settings"
+			],
+			[
+				"LSP Set",
+				"Preferences: LSP Settings"
+			],
+			[
+				"LSP Sett",
+				"Preferences: LSP Settings"
+			],
+			[
+				"list pac",
+				"Package Control: List Packages"
+			],
+			[
+				"lint",
+				"SublimeLinter: Show All Errors"
+			],
+			[
+				"instl",
+				"Package Control: Install Package"
+			],
+			[
+				"pack",
+				"Package Control: Remove Package"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"in",
+				"Package Control: Install Package"
+			],
+			[
+				"GoSublime: ",
+				"GoSublime: Replay current package"
+			],
+			[
+				"GoSublime: bu",
+				"GoSublime: Run build command"
+			],
+			[
+				"update",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"go build",
+				"Build With: GoSublime"
+			],
+			[
+				"git push",
+				"Git: Push Current Branch"
+			],
+			[
+				"git commit",
+				"Git: Commit"
+			],
+			[
+				"git add",
+				"Git: Add..."
+			],
+			[
+				"git commit ",
+				"Git: Commit"
+			],
+			[
+				"git comm",
+				"Git: Commit"
+			],
+			[
+				"i",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			],
+			[
+				"git pull",
+				"Git: Pull"
+			],
+			[
+				"git uns",
+				"Git: Reset (unstage) All"
+			],
+			[
+				"git status",
+				"Git: Status"
+			],
+			[
+				"git diff",
+				"Git: Diff Current File"
+			],
+			[
+				"git pus",
+				"Git: Push Current Branch"
+			],
+			[
+				"git log",
+				"Git: Log Current File"
+			],
+			[
+				"git push ",
+				"Git: Push Current Branch"
+			],
+			[
+				"git qui",
+				"Git: Quick Commit (current file)"
+			],
+			[
+				"qui",
+				"Git: Quick Commit (current file)"
+			],
+			[
+				"gitqui",
+				"Git: Quick Commit (current file)"
+			],
+			[
+				"git commi",
+				"Git: Commit"
+			],
+			[
+				"quic",
+				"Git: Quick Commit (current file)"
+			],
+			[
+				"git qu",
+				"Git: Quick Commit (current file)"
+			],
+			[
+				"git lo",
+				"Git: Log Current File"
+			],
+			[
+				"go sub",
+				"GoSublime: Usage & Tips"
+			],
+			[
+				"giti add",
+				"Git: Add Current File"
+			],
+			[
+				"git rese",
+				"Git: Reset (unstage) All"
+			],
+			[
+				"git com",
+				"Git: Commit"
+			],
+			[
+				"git stat",
+				"Git: Status"
+			],
+			[
+				"git ad",
+				"Git: Add..."
+			],
+			[
+				"git pu",
+				"Git: Push Current Branch"
+			],
+			[
+				"contro",
+				"Package Control: Install Package"
+			],
+			[
+				"git blame",
+				"Git: Blame"
+			],
+			[
+				"Git Bla",
+				"Git: Blame"
+			],
+			[
+				"git ",
+				"Git: Blame"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"git comit",
+				"Git: Commit"
+			],
+			[
+				"git dif",
+				"Git: Diff Tool Current File"
+			],
+			[
+				"git res",
+				"Git: Reset (unstage) All"
+			],
+			[
+				"package in",
+				"Package Control: Install Package"
+			],
+			[
+				"GoSublime: ex",
+				"GoSublime: Edit Margo Extension"
+			],
+			[
+				"GoSublime: use",
+				"GoSublime: User Settings"
+			],
+			[
+				"GoSublime: doc",
+				"GoSublime: Show documentation hint"
+			],
+			[
+				"GoSublime: show",
+				"GoSublime: Show call tip"
+			],
+			[
+				"GoSublime: lis",
+				"GoSublime: List Package declarations"
+			],
+			[
+				"git blam",
+				"Git: Blame"
+			],
+			[
+				"git bla",
+				"Git: Blame"
+			],
+			[
+				"remov",
+				"Package Control: Remove Package"
+			],
+			[
+				"git puhs",
+				"Git: Push"
+			],
+			[
+				"git statu",
+				"Git: Status"
+			],
+			[
+				"git sta",
+				"Git: Status"
+			],
+			[
+				"git ame",
+				"Git: Amend Commit"
+			],
+			[
+				"git re",
+				"Git: Reset (unstage) All"
+			],
+			[
+				"git bl",
+				"Git: Blame"
+			],
+			[
+				"git q",
+				"Git: Quick Commit (current file)"
+			],
+			[
+				"git his",
+				"Git: Commit history"
+			],
+			[
+				"git am",
+				"Git: Amend Commit"
+			],
+			[
+				"git dd",
+				"Git: Add..."
+			],
+			[
+				"GIT COMMIT",
+				"Git: Commit"
+			],
+			[
+				"git amend",
+				"Git: Amend Commit"
+			],
+			[
+				"git cocmmit",
+				"GitGutter: Compare Against Commit"
+			],
+			[
+				"git diff c",
+				"Git: Diff Current File"
+			],
+			[
+				"ui",
+				"UI: Select Color Scheme"
+			],
+			[
+				"insal",
+				"Package Control: Install Package"
+			],
+			[
+				"packin",
+				"Package Control: Install Package"
+			],
+			[
+				"them",
+				"UI: Select Color Scheme"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 327.0,
+		"history":
+		[
+			"sd"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/roman_galeev/infosec/kubevue/src",
+		"/Users/roman_galeev/infosec/kubevue/ui",
+		"/Users/roman_galeev/infosec/kubevue/skaffold"
+	],
+	"file_history":
+	[
+		"/Users/roman_galeev/infosec/kubevue/src/args/args.go",
+		"/Users/roman_galeev/Library/Application Support/Sublime Text 3/Packages/Gofmt/Gofmt.sublime-settings",
+		"/Users/roman_galeev/Library/Application Support/Sublime Text 3/Packages/User/Gofmt.sublime-settings",
+		"/Users/roman_galeev/Library/Application Support/Sublime Text 3/Packages/Makefile/Make.sublime-build",
+		"/Users/roman_galeev/Library/Application Support/Sublime Text 3/Packages/User/make.sublime-build",
+		"/Users/roman_galeev/Library/Application Support/Sublime Text 3/Packages/User/golang.sublime-settings",
+		"/Users/roman_galeev/infosec/kubevue/src/app/auth.go",
+		"/Users/roman_galeev/infosec/kubevue/src/auth/auth.go",
+		"/Users/roman_galeev/infosec/kubevue/ui/src/Auth.vue",
+		"/Users/roman_galeev/infosec/kubevue/src/main.go",
+		"/Users/roman_galeev/Library/Application Support/Sublime Text 3/Packages/User/LSP.sublime-settings",
+		"/Users/roman_galeev/Library/Application Support/Sublime Text 3/Packages/LSP/LSP.sublime-settings",
+		"/Users/roman_galeev/Library/Application Support/Sublime Text 3/Packages/GoSublime/9o.md",
+		"/Users/roman_galeev/Library/Application Support/Sublime Text 3/Packages/User/GoSublime/osx-x64/log.txt",
+		"/Users/roman_galeev/Library/Application Support/Sublime Text 3/Packages/GoSublime/GoSublime.sublime-settings",
+		"/Users/roman_galeev/Library/Application Support/Sublime Text 3/Packages/GoSublime/USAGE.md",
+		"/Users/roman_galeev/infosec/govaultsync/src/app/kube.go",
+		"/Users/roman_galeev/infosec/govaultsync/src/app/app.go",
+		"/Users/roman_galeev/infosec/govaultsync/src/main.go",
+		"/Users/roman_galeev/infosec/govaultsync/src/app.go",
+		"/Users/roman_galeev/infosec/govaultsync/src/kube.go",
+		"/Users/roman_galeev/infosec/goauth/k8s-deploy.yaml",
+		"/Users/roman_galeev/infosec/goauth/main.go",
+		"/Users/roman_galeev/Library/Application Support/Sublime Text 3/Packages/User/GoSublime/src/margo/margo.go",
+		"/Users/roman_galeev/infosec/govaultenv/vault_test.go",
+		"/Users/roman_galeev/infosec/govaultenv/vault_api.go",
+		"/Users/roman_galeev/src/expertise-search-AI/workflow.yaml",
+		"/Users/roman_galeev/infosec/goauth/Dockerfile",
+		"/Users/roman_galeev/infosec/govaultenv/govaultenv.go",
+		"/Users/roman_galeev/infosec/govaultenv/vault.go",
+		"/Users/roman_galeev/infosec/govaultenv/vault_args.go",
+		"/Users/roman_galeev/nv",
+		"/Users/roman_galeev/infosec/goauth/skaffold.yaml",
+		"/Users/roman_galeev/infosec/govaultenv/vauot",
+		"/Users/roman_galeev/ppco/cluster-rke/cluster/tf-cluster/output.tf",
+		"/Users/roman_galeev/cnht/docs/security/Anchore.md",
+		"/Users/roman_galeev/src/govaultenv/govaultenv.go",
+		"/Users/roman_galeev/ppco/cluster-config/svc/argocd/chart/Chart.yaml",
+		"/Users/roman_galeev/ppco/cluster-config/svc/argocd/chart/requirements.yaml",
+		"/Users/roman_galeev/ppco/cluster-config/svc/argocd/chart/values.yaml",
+		"/Users/roman_galeev/ppco/cluster-config/svc/argocd/entry.sh",
+		"/Users/roman_galeev/src/govaultenv/README.md",
+		"/Users/roman_galeev/ppco/sec 101 takeaway",
+		"/Users/roman_galeev/cnht/catch-up",
+		"/Users/roman_galeev/src/govaultenv/.goreleaser.yml",
+		"/Users/roman_galeev/Library/Application Support/Sublime Text 3/Packages/GoSublime/CHANGELOG.md",
+		"/Users/roman_galeev/cnht/topics",
+		"/Users/roman_galeev/ppco/cluster-config/svc/vault/chart/requirements.yaml",
+		"/Users/roman_galeev/src/registry/cli.py",
+		"/Users/roman_galeev/src/registry-cli/registry-2.py",
+		"/Users/roman_galeev/ppco/docs/docs/rancher-up.md",
+		"/Users/roman_galeev/ppco/cluster-config/svc/vault/chart/values.yaml",
+		"/Users/roman_galeev/ppco/cluster-config/svc/vault/entry.sh",
+		"/Users/roman_galeev/cnht/docs/README.md",
+		"/Users/roman_galeev/cnht/docs/security/README.md",
+		"/Users/roman_galeev/cnht/docs/security/Incidents.md",
+		"/Users/roman_galeev/cnht/docs/security/TLS.md",
+		"/Users/roman_galeev/akdp/stp/tf/f5-6379.tf",
+		"/Users/roman_galeev/ppco/charts/notary/templates/signer/service.yaml",
+		"/Users/roman_galeev/ppco/charts/notary/templates/server/service.yaml",
+		"/Users/roman_galeev/ppco/charts/notary/templates/signer/deployment.yaml",
+		"/Users/roman_galeev/ppco/charts/notary/templates/server/ingress.yaml",
+		"/Users/roman_galeev/akdp/init/svc/notary/templates/server/ingress.yaml",
+		"/Users/roman_galeev/akdp/init/svc/notary/templates/signer/signer-config.yaml",
+		"/Users/roman_galeev/akdp/init/svc/notary/values.yaml",
+		"/Users/roman_galeev/akdp/init/svc/notary/requirements.yaml",
+		"/Users/roman_galeev/akdp/init/svc/notary/templates/signer/deployment.yaml",
+		"/Users/roman_galeev/akdp/init/svc/notary/templates/server/server-config.yaml",
+		"/Users/roman_galeev/akdp/init/svc/notary/templates/signer/migrations.yaml",
+		"/Users/roman_galeev/akdp/init/svc/notary/templates/server/migrations.yaml",
+		"/Users/roman_galeev/akdp/init/svc/notary/templates/server/deployment.yaml",
+		"/Users/roman_galeev/akdp/init/svc/notary/templates/signer/cert.yaml",
+		"/Users/roman_galeev/akdp/init/svc/notary/templates/ca.yaml",
+		"/Users/roman_galeev/akdp/init/svc/notary/templates/server/cert.yaml",
+		"/Users/roman_galeev/ppco/charts/notary/Chart.yaml",
+		"/Users/roman_galeev/ppco/charts/notary/values.yaml",
+		"/Users/roman_galeev/ppco/charts/notary/templates/mysql/pvc.yaml",
+		"/Users/roman_galeev/ppco/cluster/cluster/tf/cluster.tf",
+		"/Users/roman_galeev/ppco/charts/notary/templates/mysql/deployment.yaml",
+		"/Users/roman_galeev/ppco/charts/notary/templates/server/deployment.yaml",
+		"/Users/roman_galeev/src/notary/migrations/server/mysql/0001_initial.up.sql",
+		"/Users/roman_galeev/ppco/cluster/cluster/tf/entry.sh",
+		"/Users/roman_galeev/ppco/cluster/cluster/tf/output.tf",
+		"/Users/roman_galeev/ppco/cluster/cluster/scripts/configure-argocd.sh",
+		"/Users/roman_galeev/ppco/cluster/cluster/scripts/configure-sealed-secrets.sh",
+		"/Users/roman_galeev/ppco/cluster-config/svc/anchore-engine/entry.sh",
+		"/Users/roman_galeev/ppco/cluster/cluster/yaml/psp.yaml",
+		"/Users/roman_galeev/ppco/cluster-config/svc/cert-manager/chart/templates/tpp-venafi-issuer.yaml",
+		"/Users/roman_galeev/ppco/cluster/cluster/scripts/configure.sh",
+		"/Users/roman_galeev/ppco/cluster/cluster/svc/argo-cd/values.yaml",
+		"/Users/roman_galeev/ppco/cluster/cluster/scripts/configure-helm.sh",
+		"/Users/roman_galeev/ppco/cluster/Dockerfile",
+		"/Users/roman_galeev/ppco/cluster-config/svc/argo-cd/chart/values.yaml",
+		"/Users/roman_galeev/ppco/cluster-config/svc/openebs/entry.sh",
+		"/Users/roman_galeev/ppco/cluster-config/svc/argo-cd/entry.sh",
+		"/Users/roman_galeev/daily",
+		"/Users/roman_galeev/ppco/cluster/README.md",
+		"/Users/roman_galeev/src/sec101/security 101 notes",
+		"/Users/roman_galeev/ppco/cluster-config/svc/anchore-engine/chart/values.yaml",
+		"/Users/roman_galeev/ppco/cluster/cluster/scripts/wait-for-cluster-active.sh",
+		"/Users/roman_galeev/ppco/cluster-rke-rancher/cluster/svc/rancher/values.yaml",
+		"/Users/roman_galeev/ppco/cluster-rke/cluster/scripts/register-name.sh",
+		"/Users/roman_galeev/ppco/cluster-rke/cluster/tf-cluster/worker.tf",
+		"/Users/roman_galeev/ppco/cluster-rke-rancher/cluster/provision/rancher.sh",
+		"/Users/roman_galeev/ppco/cluster-rke-rancher/cluster/tf-bootstrap/entry.sh",
+		"/Users/roman_galeev/ppco/cluster-rke-rancher/cluster/tf-bootstrap/bootstrap.tf",
+		"/Users/roman_galeev/ppco/cluster-rke/cluster/scripts/provision.sh",
+		"/Users/roman_galeev/ppco/cluster-rke/cluster/tf-cluster/cluster.tf",
+		"/Users/roman_galeev/ppco/cluster-rke/definition/provision/post-config.sh",
+		"/Users/roman_galeev/ppco/cluster-rke/definition/provision/cert-manager.sh",
+		"/Users/roman_galeev/akdp/rancher/.drone.jsonnet",
+		"/Users/roman_galeev/ppco/cluster-rke/definition/tf-bootstrap/entry.sh",
+		"/Users/roman_galeev/ppco/cluster-rke/definition/tf-bootstrap/bootstrap.tf",
+		"/Users/roman_galeev/ppco/cluster-rke/definition/tf-rancher/config.tf",
+		"/Users/roman_galeev/akdp/rancher/tf-rancher/config.tf",
+		"/Users/roman_galeev/ppco/cluster-rke/definition/provision/rancher.sh",
+		"/Users/roman_galeev/ppco/cluster-rke/definition/svc/rancher/values.yaml",
+		"/Users/roman_galeev/akdp/rancher/provision/post-config.sh",
+		"/Users/roman_galeev/akdp/rancher/svc/rancher/Chart.yaml",
+		"/Users/roman_galeev/ppco/cluster-rke/cluster/yaml/podsecuritypolicies.yaml",
+		"/Users/roman_galeev/ppco/cluster-rke/cluster/tf-cluster/input.tf",
+		"/Users/roman_galeev/ppco/cluster-rke/cluster/tf-cluster/entry.sh",
+		"/Users/roman_galeev/ppco/cluster-rke/definition/tf-rancher/entry.sh",
+		"/Users/roman_galeev/ppco/cluster-rke/definition/tf-rancher/input.tf",
+		"/Users/roman_galeev/ppco/cluster-rke/definition/provision/yaml.sh",
+		"/Users/roman_galeev/ppco/cluster-config/local.sh",
+		"/Users/roman_galeev/ppco/cluster-config/svc/drone/entry.sh",
+		"/Users/roman_galeev/ppco/akdp/entry.sh"
+	],
+	"find":
+	{
+		"height": 51.0
+	},
+	"find_in_files":
+	{
+		"height": 101.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			")\n"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "src/auth/auth.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 904,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								820,
+								812
+							]
+						],
+						"settings":
+						{
+							"SL.13.region_keys":
+							[
+							],
+							"SL.58.region_keys":
+							[
+							],
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".",
+									"selector": "source.go"
+								}
+							],
+							"git_gutter_is_enabled": true,
+							"lsp_active": true,
+							"lsp_language":
+							{
+								"gopls": "go"
+							},
+							"show_definitions": false,
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "src/args/args.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1884,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"SL.29.region_keys":
+							[
+							],
+							"git_gutter_is_enabled": true,
+							"lsp_active": true,
+							"lsp_language":
+							{
+								"gopls": "go"
+							},
+							"show_definitions": false,
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "skaffold/k8s-deploy.yaml",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 663,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								402,
+								402
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/YAML/YAML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 24.0
+	},
+	"input":
+	{
+		"height": 36.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.9o:///Users/roman_galeev/src/mci/api":
+	{
+		"height": 108.0
+	},
+	"output.9o:///Users/roman_galeev/src/mci/src/mci":
+	{
+		"height": 108.0
+	},
+	"output.9o:///Users/roman_galeev/src/mci/src/mci/commands/dns":
+	{
+		"height": 108.0
+	},
+	"output.9o:///Users/roman_galeev/src/mci/src/mci/config":
+	{
+		"height": 108.0
+	},
+	"output.9o:///Users/roman_galeev/src/mci/src/ui/src/components":
+	{
+		"height": 108.0
+	},
+	"output.9o://9o":
+	{
+		"height": 315.0
+	},
+	"output.GoSublime-main-output":
+	{
+		"height": 108.0
+	},
+	"output.GoSublime/HUD":
+	{
+		"height": 0.0
+	},
+	"output.GsComplete.completion-hint-output":
+	{
+		"height": 108.0
+	},
+	"output.GsDoc-output-output":
+	{
+		"height": 108.0
+	},
+	"output.SublimeLinter":
+	{
+		"height": 266.0
+	},
+	"output.diagnostics":
+	{
+		"height": 238.0
+	},
+	"output.exec":
+	{
+		"height": 267.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.git":
+	{
+		"height": 108.0
+	},
+	"output.golang_build":
+	{
+		"height": 198.0
+	},
+	"output.mdpopups":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/Golang Build/Go.sublime-build",
+	"project": "kubevue.sublime-project",
+	"replace":
+	{
+		"height": 44.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"args.go",
+				"src/args/args.go"
+			],
+			[
+				"args",
+				"src/args/args.go"
+			],
+			[
+				"auth",
+				"src/auth/auth.go"
+			],
+			[
+				"auth.go",
+				"src/app/auth.go"
+			],
+			[
+				"Auth.vue",
+				"ui/src/Auth.vue"
+			],
+			[
+				"aut",
+				"kubevue/src/app/auth.go"
+			],
+			[
+				"au",
+				"kubevue/src/app/auth.go"
+			],
+			[
+				"auth/auth",
+				"kubevue/src/auth/auth.go"
+			],
+			[
+				"cluster-config/en",
+				"ppco/cluster-config/entry.sh"
+			],
+			[
+				"images",
+				"ppco/centos7-docker/images"
+			],
+			[
+				"cluster/provider.tf",
+				"ppco/cluster-rke/cluster/tf-cluster/provider.tf"
+			],
+			[
+				"terraform/Dock",
+				"ppco/terraform/Dockerfile"
+			],
+			[
+				"akdp/init/vaultcrd/v",
+				"akdp/init/svc/vault-crd/values.yaml"
+			],
+			[
+				"provision/vault-cd",
+				"ppco/cluster/cluster/provision/vault-crd.sh"
+			],
+			[
+				"provision/argo",
+				"ppco/cluster/cluster/provision/argocd.sh"
+			],
+			[
+				"provision/seal",
+				"ppco/cluster/cluster/provision/sealed-secrets.sh"
+			],
+			[
+				"ppco/worker",
+				"ppco/cluster/cluster/tf/worker.tf"
+			],
+			[
+				"k8sdev/na",
+				"namespace-deployer/clusters/k8sdev/namespaces"
+			],
+			[
+				"k8s/na",
+				"namespace-deployer/clusters/k8s/namespaces"
+			],
+			[
+				"k8s/nam",
+				"namespace-deployer/clusters/k8s/namespaces"
+			],
+			[
+				"k8sdev/nam",
+				"namespace-deployer/clusters/k8sdev/namespaces"
+			],
+			[
+				"akdp/init/vault/va",
+				"akdp/init/svc/vault/values.yaml"
+			],
+			[
+				"vault/val",
+				"charts/vault/values.yaml"
+			],
+			[
+				"ppco/alpine/Do",
+				"ppco/alpine/Dockerfile"
+			],
+			[
+				"akdp/enr",
+				"ppco/akdp/entry.sh"
+			],
+			[
+				"local.sh",
+				"ppco/cluster/local.sh"
+			],
+			[
+				"envs/npn",
+				"ppco/envs/npn.libsonnet"
+			],
+			[
+				"test.sh",
+				"ppco/cluster/test.sh"
+			],
+			[
+				"akdp/entr",
+				"ppco/akdp/entry.sh"
+			],
+			[
+				"local",
+				"ppco/cluster/local.sh"
+			],
+			[
+				"minio-back",
+				"ppco/cluster/cluster/tf/minio-backend.tf"
+			],
+			[
+				"charts/consul/va",
+				"charts/consul/values.yaml"
+			],
+			[
+				"charts/consul/val",
+				"charts/consul/values.yaml"
+			],
+			[
+				"charts/consul/valu",
+				"charts/consul/values.yaml"
+			],
+			[
+				"charts/vault/value",
+				"charts/vault/values.yaml"
+			],
+			[
+				"vault/templates/tpp",
+				"akdp/util/svc/vault/templates/vault-tpp-ingress.yaml"
+			],
+			[
+				"akdp/util/svc/vault/va",
+				"akdp/util/svc/vault/values.yaml"
+			],
+			[
+				"charts/drone/val",
+				"charts/drone/values.yaml"
+			],
+			[
+				"cluster/provis",
+				"ppco/cluster/cluster/scripts/provision.sh"
+			],
+			[
+				"cluster/provsi",
+				"ppco/cluster/cluster/scripts/provision.sh"
+			],
+			[
+				"charts/vault/val",
+				"ppco/charts/vault/values.yaml"
+			],
+			[
+				"akdp/entry.sh",
+				"ppco/akdp/entry.sh"
+			],
+			[
+				"cluster/entry.sh",
+				"ppco/cluster-rke/cluster/tf-cluster/entry.sh"
+			],
+			[
+				"output.t",
+				"ppco/cluster/cluster/tf/output.tf"
+			],
+			[
+				"provision.sh",
+				"ppco/cluster/cluster/scripts/provision.sh"
+			],
+			[
+				"envscomm",
+				"ppco/envs/common.libsonnet"
+			],
+			[
+				"envs/comm",
+				"ppco/envs/common.libsonnet"
+			],
+			[
+				"daily",
+				"~/daily"
+			],
+			[
+				"centos7/ce",
+				"ppco/centos7/centos7.js"
+			],
+			[
+				"mini/.dro",
+				"akdp/mini/.drone.jsonnet"
+			],
+			[
+				"mini/.",
+				"akdp/mini/.drone.jsonnet"
+			],
+			[
+				"mini/",
+				"akdp/mini/.drone.jsonnet"
+			],
+			[
+				"akdp/mi",
+				"akdp/mini/.drone.jsonnet"
+			],
+			[
+				"core/repo.",
+				"drone/drone-server/core/repo.go"
+			],
+			[
+				"synce",
+				"drone/drone-server/service/syncer/syncer.go"
+			],
+			[
+				"inject_login",
+				"drone/drone-server/cmd/drone-server/inject_login.go"
+			],
+			[
+				"akdp/min",
+				"akdp/mini/.drone.jsonnet"
+			],
+			[
+				"cluster/.dro",
+				"ppco/cluster/.drone.yml"
+			],
+			[
+				"cluster/README",
+				"ppco/cluster/README.md"
+			],
+			[
+				"akdp/en",
+				"ppco/akdp/entry.sh"
+			],
+			[
+				"init/.dro",
+				"akdp/init/.drone.jsonnet"
+			],
+			[
+				"chart/vault-crd/va",
+				"charts/vault-crd/values.yaml"
+			],
+			[
+				"worker.tf",
+				"ppco/cluster/cluster/tf/worker.tf"
+			],
+			[
+				"docker/cen",
+				"ppco/centos7-docker/clone.js"
+			],
+			[
+				"akdp/wait",
+				"ppco/akdp/wait-for.sh"
+			],
+			[
+				"kubectl/en",
+				"ppco/kubectl/entry.sh"
+			],
+			[
+				"akdp/.do",
+				"ppco/akdp/.drone.yml"
+			],
+			[
+				"mini/.d",
+				"akdp/mini/.drone.jsonnet"
+			],
+			[
+				"wait-for-name",
+				"ppco/cluster/scripts/wait-for-name.sh"
+			],
+			[
+				"cluster/tf/",
+				"ppco/cluster/tf/controlplane.tf"
+			],
+			[
+				"infoblox.sh",
+				"ppco/infoblox/sbin/infoblox.sh"
+			],
+			[
+				"infoblox/en",
+				"drone/infoblox/entry.sh"
+			],
+			[
+				"kubectl/entry",
+				"ppco/kubectl/entry.sh"
+			],
+			[
+				"packer/entr",
+				"ppco/packer/entry.sh"
+			],
+			[
+				"issues",
+				"ppco/cluster/docs/issues.md"
+			],
+			[
+				"plugin.go",
+				"drone/drone-jsonnet-config/plugin/plugin.go"
+			],
+			[
+				"drone-server/read",
+				"drone-server/.github/readme.md"
+			],
+			[
+				"drone-go/drone",
+				"src/github.com/drone/drone-jsonnet-config/vendor/github.com/drone/drone-go/drone/types.go"
+			],
+			[
+				"drone-go/drone.go",
+				"src/github.com/drone/drone-jsonnet-config/vendor/github.com/drone/drone-go/drone/interface.go"
+			],
+			[
+				"api/repos/update",
+				"src/github.com/drone/drone/handler/api/repos/update.go"
+			],
+			[
+				"drone/core/repo",
+				"src/github.com/drone/drone/core/repo.go"
+			],
+			[
+				"drone/client.go",
+				"src/github.com/drone/drone-jsonnet-config/vendor/github.com/drone/drone-go/drone/client.go"
+			],
+			[
+				"tmpl/pip",
+				"k8s/setup/tmpl/pipelines.yaml"
+			],
+			[
+				"helm-de",
+				"k8s/setup/kube-helm-addons/helm-deploy.sh"
+			],
+			[
+				"addons/kube-pr",
+				"k8s/setup/tmpl/addons/kube-prometheus/values.yaml.tmpl"
+			],
+			[
+				"envs/sa",
+				"k8s/setup/envs/sandbox.env"
+			],
+			[
+				"helm-",
+				"k8s/setup/kube-helm-addons/helm-deploy.sh"
+			],
+			[
+				"addons/promval",
+				"k8s/setup/tmpl/addons/kube-prometheus/values.yaml.tmpl"
+			],
+			[
+				"addonconsul/values.",
+				"k8s/setup/tmpl/addons/consul/values.yaml.tmpl"
+			],
+			[
+				"addonsconsulvalu",
+				"k8s/setup/tmpl/addons/consul/values.yaml.tmpl"
+			],
+			[
+				"tmpl/addons/cons",
+				"k8s/setup/tmpl/addons/consul/values.yaml.tmpl"
+			],
+			[
+				"tmpl/co",
+				"k8s/setup/tmpl/config.yaml"
+			],
+			[
+				"tmpl/con",
+				"k8s/setup/tmpl/config.yaml"
+			],
+			[
+				"envs/san",
+				"k8s/setup/envs/sandbox.env"
+			],
+			[
+				"envs/pro",
+				"k8s/setup/envs/prod.env"
+			],
+			[
+				"envss/",
+				"k8s/setup/envs/sandbox.env"
+			],
+			[
+				"addonsvaultva",
+				"k8s/setup/tmpl/addons/vault/values.yaml.tmpl"
+			],
+			[
+				"helm",
+				"k8s/setup/kube-helm-addons/helm-deploy.sh"
+			],
+			[
+				"vsphere/igni",
+				"k8s/setup/etcd/vsphere/ignition.tf"
+			],
+			[
+				"posts",
+				"private/posts"
+			],
+			[
+				"pos",
+				"private/posts"
+			],
+			[
+				"helm-depl",
+				"k8s/setup/kube-helm-addons/helm-deploy.sh"
+			],
+			[
+				"tmpl/",
+				"k8s/setup/tmpl/pipelines.yaml"
+			],
+			[
+				"tmpl/pipe",
+				"k8s/setup/tmpl/pipelines.yaml"
+			],
+			[
+				"envs/",
+				"k8s/setup/envs/prod.env"
+			],
+			[
+				"infoblox",
+				"k8s/setup/kube-helm-addons/infoblox.sh"
+			],
+			[
+				"tf/",
+				"k8s/setup/kube-helm-addons/tf/a.tf"
+			],
+			[
+				"addons/depl",
+				"k8s/setup/kube-helm-addons/helm-deploy.sh"
+			],
+			[
+				"dex/va",
+				"k8s/setup/tmpl/addons/dex/values.yaml.tmpl"
+			],
+			[
+				"consul/valu",
+				"k8s/setup/tmpl/addons/consul/values.yaml"
+			],
+			[
+				"addons/va",
+				"k8s/setup/kube-helm-addons/vars.sh"
+			],
+			[
+				"kube-helmdepl",
+				"k8s/setup/kube-helm-addons/helm-deploy.sh"
+			],
+			[
+				"infra/upda",
+				"k8s/setup/infra/update-config.sh"
+			],
+			[
+				"tmpl/conf",
+				"k8s/setup/tmpl/config.yaml"
+			],
+			[
+				"pipeline",
+				"k8s/setup/tmpl/pipelines.yaml"
+			],
+			[
+				"tf.sh",
+				"k8s/setup/kube-helm-addons/tf/tf.sh"
+			],
+			[
+				"pipel",
+				"k8s/setup/tmpl/pipelines.yaml"
+			],
+			[
+				"post",
+				"private/posts"
+			],
+			[
+				"0",
+				"k8s/tests/0"
+			],
+			[
+				"helm-dep",
+				"k8s/setup/kube-helm-addons/helm-deploy.sh"
+			],
+			[
+				"pipe",
+				"k8s-setup/tmpl/pipelines.yaml"
+			],
+			[
+				"README.",
+				"k8s-setup/README.md"
+			],
+			[
+				"gen.sh",
+				"k8s-setup/gen.sh"
+			],
+			[
+				"doc/Overlay",
+				"k8s-setup/doc/Overlay.md"
+			],
+			[
+				"README",
+				"k8s-setup/README.md"
+			],
+			[
+				"sandbo",
+				"k8s-setup/envs/sandbox.env"
+			],
+			[
+				"sandbox",
+				"k8s-setup/envs/sandbox.env"
+			],
+			[
+				"Makefile",
+				"k8s-setup/Makefile"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 321.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
