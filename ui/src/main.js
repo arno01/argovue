@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import App from '@/App.vue'
-import Dashboard from '@/Dashboard.vue'
+import Front from '@/Front.vue'
 import Watch from '@/Watch.vue'
 import Auth from '@/Auth.vue'
 
@@ -19,7 +19,7 @@ Vue.prototype.$auth = new Vue(Auth)
 
 const router = new VueRouter({
   routes: [
-    { path: '/', component: Dashboard },
+    { path: '/', component: Front },
     { path: '/watch/:objects', component: Watch, props: (route) => ({ objects: route.params.objects }) }
   ]
 })

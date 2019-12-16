@@ -4,18 +4,17 @@
       <h1 class="h2">{{objects}}</h1>
     </div>
     <div v-for="obj in orderedCache" v-bind:key="obj.metadata.uid">
-      {{ obj.kind }}/{{ obj.metadata.namespace }}/{{ obj.metadata.name }}: {{ obj.status? obj.status.phase : "" }}
+      {{ obj.metadata.name }} {{ obj.status? obj.status.phase : "" }}
     </div>
   </div>
 </template>
 
 <script>
 function objKey(obj) {
-  return `${obj.kind}/${obj.metadata.namespace}/${obj.metadata.name}`
+  return obj.metadata.name
 }
 
 export default {
-  name: "Objects",
   props: ["objects"],
   data() {
     return {

@@ -2,7 +2,7 @@
   <div style="height: 100%">
     <div v-if="$auth.isAuth()">
       <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">KubeVue</a>
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#/">KubeVue</a>
         <ul class="navbar-nav px-3">
           <li class="nav-item text-nowrap">
             <a class="nav-link" style="cursor: pointer" @click="$auth.logout()">{{$auth.name}}</a>
@@ -15,7 +15,6 @@
           <nav class="col-md-2 d-none d-md-block bg-light sidebar">
             <div class="sidebar-sticky">
               <ul class="nav flex-column">
-                <b-nav-item to="/">Dashboard</b-nav-item>
                 <b-nav-item v-for="obj in objects" v-bind:key="obj" :to="`/watch/${obj}`">{{obj}}</b-nav-item>
               </ul>
             </div>
