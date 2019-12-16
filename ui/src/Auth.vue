@@ -4,22 +4,25 @@ import axios from "axios";
 export default {
   data() {
     return {
-      auth: false,
+      auth: "undefined",
       name: undefined
     };
   },
   methods: {
     isAuth() {
-      return this.auth;
+      return this.auth == "true"
+    },
+    isNot() {
+      return this.auth == "false"
     },
     check: async function() {
       let ev = await axios.get("/profile");
       if (ev.data && ev.data.name) {
-        this.auth = true;
-        this.name = ev.data.name;
+        this.auth = "true"
+        this.name = ev.data.name
       } else {
-        this.auth = false;
-        this.name = undefined;
+        this.auth = "false"
+        this.name = undefined
       }
     },
     login() {
