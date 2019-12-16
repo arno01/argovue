@@ -6,8 +6,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// SSE writes events to SSE stream
-func (a *App) SSE(w http.ResponseWriter, r *http.Request) {
+// Watch writes events to SSE stream
+func (a *App) Watch(w http.ResponseWriter, r *http.Request) {
 	session, _ := a.Store().Get(r, "auth-session")
 	profileRef := session.Values["profile"]
 	if profileRef == nil {
@@ -20,7 +20,7 @@ func (a *App) SSE(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Profile is not a map", http.StatusInternalServerError)
 	}
 
-	log.Debugf("Serving SSE connection for:%s at:%s", profile["name"], r.RemoteAddr)
+	log.Debugf("Serving sse connection for:%s at:%s", profile["name"], r.RemoteAddr)
 	flusher, ok := w.(http.Flusher)
 	if !ok {
 		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
@@ -34,6 +34,5 @@ func (a *App) SSE(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	flusher.Flush()
-	a.Broker().Serve(w, flusher)
 	log.Debugf("Closing SSE connection")
 }

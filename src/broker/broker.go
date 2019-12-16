@@ -34,7 +34,7 @@ func sendMsg(rw http.ResponseWriter, flusher http.Flusher, m *msg.Msg) {
 // New creates broker instance
 func New() (broker *Broker) {
 	broker = &Broker{
-		Notifier:       make(chan *msg.Msg, 1),
+		Notifier:       make(chan *msg.Msg),
 		newClients:     make(chan chan *msg.Msg),
 		closingClients: make(chan chan *msg.Msg),
 		cache:          make(map[types.UID]interface{}),
@@ -95,7 +95,11 @@ func (broker *Broker) listen() {
 		case s := <-broker.closingClients:
 			delete(broker.clients, s)
 			log.Debugf("Removed client. %d registered clients", len(broker.clients))
-		case msg := <-broker.Notifier:
+		case msg, ok := <-broker.Notifier:
+			if !ok {
+				log.Debugf("Stopping message broker")
+				return
+			}
 			broker.updateCache(msg)
 			for clientMessageChan, _ := range broker.clients {
 				select {

@@ -15,6 +15,5 @@ func main() {
 	fmt.Printf("Starting kubevue, version:%s", version)
 	a := app.New()
 	a.Connect()
-	a.Watch(a.Args().K8S())
 	a.Serve()
 }

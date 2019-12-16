@@ -20,9 +20,6 @@ type Args struct {
 	oidcRedirectURL  string
 	oidcScopes       string
 	uiRootURL        string
-	k8sGroup         string
-	k8sVersion       string
-	k8sName          string
 	k8sNamespace     string
 }
 
@@ -43,9 +40,6 @@ func (a *Args) Parse() *Args {
 	flag.StringVar(&a.oidcRedirectURL, "oidc-redirect-url", os.Getenv("OIDC_REDIRECT_URL"), "OIDC redirect url")
 	flag.StringVar(&a.oidcScopes, "oidc-scopes", os.Getenv("OIDC_SCOPES"), "OIDC scopes")
 	flag.StringVar(&a.uiRootURL, "ui-root-url", os.Getenv("UI_ROOT_URL"), "UI root url for redirects")
-	flag.StringVar(&a.k8sGroup, "k8s-group", os.Getenv("K8S_GROUP"), "Kubernetes object group")
-	flag.StringVar(&a.k8sVersion, "k8s-version", os.Getenv("K8S_VERSION"), "Kubernetes objects version")
-	flag.StringVar(&a.k8sName, "k8s-name", os.Getenv("K8S_NAME"), "Kubernetes objects name")
 	flag.StringVar(&a.k8sNamespace, "k8s-namespace", os.Getenv("K8S_NAMESPACE"), "Kubernetes objects namespace")
 
 	flag.Parse()
@@ -78,9 +72,9 @@ func (a *Args) OIDC() (string, string, string, string, string) {
 	return a.oidcProvider, a.oidcClientID, a.oidcClientSecret, a.oidcRedirectURL, a.oidcScopes
 }
 
-// K8S returns K8S objects selector
-func (a *Args) K8S() (string, string, string, string) {
-	return a.k8sGroup, a.k8sVersion, a.k8sName, a.k8sNamespace
+// Namespace returns the namespace to keep our config objects
+func (a *Args) Namespace() string {
+	return a.k8sNamespace
 }
 
 // LogLevel set loglevel
