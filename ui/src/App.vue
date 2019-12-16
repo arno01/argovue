@@ -16,7 +16,7 @@
             <div class="sidebar-sticky">
               <ul class="nav flex-column">
                 <b-nav-item to="/">Dashboard</b-nav-item>
-                <b-nav-item to="/objects">Objects</b-nav-item>
+                <b-nav-item v-for="obj in objects" v-bind:key="obj" :to="`/watch/${obj}`">{{obj}}</b-nav-item>
               </ul>
             </div>
           </nav>
@@ -37,10 +37,18 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "app",
+  created: async function () {
+    let re = await axios.get("/objects");
+    this.objects = re.data
+    window.console.log("objects", this.objects);
+  },
   data() {
     return {
+      objects: [],
       version: null,
       version_ref: null
     };

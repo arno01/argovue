@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">Objects</h1>
+      <h1 class="h2">{{objects}}</h1>
     </div>
     <div v-for="obj in orderedCache" v-bind:key="obj.metadata.uid">
-      {{ obj.kind }}/{{ obj.metadata.namespace }}/{{ obj.metadata.name }}: {{ obj.status.phase }}
+      {{ obj.kind }}/{{ obj.metadata.namespace }}/{{ obj.metadata.name }}: {{ obj.status? obj.status.phase : "" }}
     </div>
   </div>
 </template>
@@ -16,6 +16,7 @@ function objKey(obj) {
 
 export default {
   name: "Objects",
+  props: ["objects"],
   data() {
     return {
       cache: {},
@@ -26,22 +27,29 @@ export default {
     this.setupStream();
   },
   destroyed() {
-    if (this.es) {
-      this.es.close()
-    }
-    this.es = undefined
+    this.tearDown()
   },
   computed: {
     orderedCache: function() {
      return Object.values(this.cache).sort( (a, b) => objKey(a).localeCompare(objKey(b)) )
     }
   },
+  watch: {
+    objects () {
+      this.tearDown()
+      this.setupStream()
+    }
+  },
   methods: {
-    orderCache() {
-      return 
+    tearDown() {
+      if (this.es) {
+        this.es.close()
+      }
+      this.cache = {}
+      this.es = undefined
     },
     setupStream() {
-      this.es = new EventSource("/sse");
+      this.es = new EventSource(`/watch/${this.objects}`);
       this.es.onerror = function(err) {
         window.console.log("sse error", err);
       };

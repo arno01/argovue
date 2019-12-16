@@ -47,6 +47,14 @@ func (a *App) ClientSet() *kubernetes.Clientset {
 	return a.clientset
 }
 
+// Objects return list of known objects
+func (a *App) GetObjects() (re []string) {
+	for name, _ := range a.brokers {
+		re = append(re, name)
+	}
+	return
+}
+
 // New creates an application instance
 func New() *App {
 	a := new(App)
@@ -114,6 +122,7 @@ func (a *App) Serve() {
 	r := mux.NewRouter()
 	r.PathPrefix("/ui/").Handler(http.StripPrefix("/ui/", http.FileServer(http.Dir(a.Args().Dir()))))
 	r.HandleFunc("/watch/{objects}", a.Watch)
+	r.HandleFunc("/objects", a.Objects)
 	r.HandleFunc("/auth", a.AuthInitiate)
 	r.HandleFunc("/callback", a.AuthCallback)
 	r.HandleFunc("/profile", a.Profile)
