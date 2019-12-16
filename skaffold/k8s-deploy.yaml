@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kubevue
+  namespace: kubevue
+  labels:
+    app: kubevue
+spec:
+  containers:
+    - name: main
+      image: kubevue
+      command: ["sh", "-c"]
+      args: ["./kubevue -verbose=debug"]
+      env:
+        - name: OIDC_CLIENT_ID
+          value: kubevue
+        - name: OIDC_CLIENT_SECRET
+          value: ZXhhbXBsZS1hcHAtc2VjcmV0
+        - name: OIDC_PROVIDER
+          value: http://dex.default:5556
+        - name: OIDC_REDIRECT_URL
+          value: http://localhost:8080/callback
+        - name: OIDC_SCOPE
+          value: groups
+        - name: UI_ROOT_URL
+          value: /ui/#/
+        - name: K8S_NAMESPACE
+          value: default
+      ports:
+        - containerPort: 8080
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 1000Mi

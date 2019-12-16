@@ -2,7 +2,6 @@
 /src/kubevue
 /skaffold/kubevue
 /skaffold/ui
-/skaffold/k8s-deploy.yaml
 /skaffold/k8s-deploy.yaml.real
 /kubevue.sublime-project
 /kubevue.sublime-workspace
