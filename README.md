@@ -2,7 +2,7 @@
 
 ## Development
 
-In skaffold folder rename `k8s-deploy.yaml.example` to `k8s-deploy.yaml` and provide missing values (OIDC), then:
+Make sure `dex.default` resolves to `127.0.0.1` on your development machine (e.g. put an entry to `/etc/hosts`), and then in skaffold folder:
 
 ```sh
 skaffold dev --port-forward
@@ -11,8 +11,6 @@ skaffold dev --port-forward
 You should see something like:
 
 ```sh
-WARN[0000] port 50051 for gRPC server already in use: using 50052 instead
-WARN[0000] port 50052 for gRPC HTTP server already in use: using 50053 instead
 Listing files to watch...
  - kubevue
 Generating tags...

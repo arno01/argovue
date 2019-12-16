@@ -523,7 +523,7 @@
 			"file": "src/auth/auth.go",
 			"settings":
 			{
-				"buffer_size": 904,
+				"buffer_size": 896,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -532,7 +532,16 @@
 			"file": "src/args/args.go",
 			"settings":
 			{
-				"buffer_size": 1884,
+				"buffer_size": 2939,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "skaffold/k8s-dex.yaml",
+			"settings":
+			{
+				"buffer_size": 2471,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -541,7 +550,7 @@
 			"file": "skaffold/k8s-deploy.yaml",
 			"settings":
 			{
-				"buffer_size": 663,
+				"buffer_size": 964,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -1242,15 +1251,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 904,
+						"buffer_size": 896,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								820,
-								812
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1259,6 +1268,9 @@
 							[
 							],
 							"SL.58.region_keys":
+							[
+							],
+							"SL.73.region_keys":
 							[
 							],
 							"auto_complete_triggers":
@@ -1283,7 +1295,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 8.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -1295,21 +1307,35 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1884,
+						"buffer_size": 2939,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1537,
+								1537
 							]
 						],
 						"settings":
 						{
 							"SL.29.region_keys":
 							[
+							],
+							"SL.74.region_keys":
+							[
+							],
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".",
+									"selector": "source.go"
+								}
 							],
 							"git_gutter_is_enabled": true,
 							"lsp_active": true,
@@ -1322,7 +1348,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 388.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -1330,19 +1356,19 @@
 				},
 				{
 					"buffer": 2,
-					"file": "skaffold/k8s-deploy.yaml",
+					"file": "skaffold/k8s-dex.yaml",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 663,
+						"buffer_size": 2471,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								402,
-								402
+								800,
+								800
 							]
 						],
 						"settings":
@@ -1353,10 +1379,44 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 366.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "skaffold/k8s-deploy.yaml",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 964,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								784,
+								784
+							]
+						],
+						"settings":
+						{
+							"SL.75.region_keys":
+							[
+							],
+							"git_gutter_is_enabled": true,
+							"syntax": "Packages/YAML/YAML.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
 					"type": "text"
 				}
 			]
@@ -1461,7 +1521,7 @@
 	{
 		"height": 0.0
 	},
-	"pinned_build_system": "Packages/Golang Build/Go.sublime-build",
+	"pinned_build_system": "Packages/User/make.sublime-build",
 	"project": "kubevue.sublime-project",
 	"replace":
 	{
