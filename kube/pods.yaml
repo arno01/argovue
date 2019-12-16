@@ -1,0 +1,9 @@
+apiVersion: kubevue.io/v1
+kind: Object
+metadata:
+  name: pods
+spec:
+  group: ""
+  version: v1
+  name: pods
+  namespace: default
