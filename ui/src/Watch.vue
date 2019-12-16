@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">{{objects}}</h1>
+      <h1 class="h2">{{namespace}}/{{objects}}</h1>
     </div>
     <div v-for="obj in orderedCache" v-bind:key="obj.metadata.uid">
       {{ obj.metadata.name }} {{ obj.status? obj.status.phase : "" }}
@@ -15,7 +15,7 @@ function objKey(obj) {
 }
 
 export default {
-  props: ["objects"],
+  props: ["namespace", "objects"],
   data() {
     return {
       cache: {},
@@ -48,7 +48,7 @@ export default {
       this.es = undefined
     },
     setupStream() {
-      this.es = new EventSource(`/watch/${this.objects}`);
+      this.es = new EventSource(`/watch/${this.namespace}/${this.objects}`);
       this.es.onerror = function(err) {
         window.console.log("sse error", err);
       };

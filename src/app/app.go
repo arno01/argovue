@@ -18,13 +18,15 @@ import (
 	"github.com/gorilla/sessions"
 )
 
+type BrokerMap map[string]map[string]*CrdBroker
+
 // App defines application dependencies
 type App struct {
 	args      *args.Args
 	clientset *kubernetes.Clientset
 	auth      *auth.Auth
 	store     *sessions.FilesystemStore
-	brokers   map[string]*CrdBroker
+	brokers   BrokerMap
 }
 
 // Args returns application argumnets
@@ -49,8 +51,10 @@ func (a *App) ClientSet() *kubernetes.Clientset {
 
 // Objects return list of known objects
 func (a *App) GetObjects() (re []string) {
-	for name, _ := range a.brokers {
-		re = append(re, name)
+	for namespace, _ := range a.brokers {
+		for name, _ := range a.brokers[namespace] {
+			re = append(re, fmt.Sprintf("%s/%s", namespace, name))
+		}
 	}
 	return
 }
@@ -61,39 +65,36 @@ func New() *App {
 	a.args = args.New().LogLevel()
 	a.auth = auth.New(a.Args().OIDC())
 	a.store = sessions.NewFilesystemStore("", []byte("session-secret"))
-	a.brokers = make(map[string]*CrdBroker)
-	a.brokers["objects"] = NewBroker("kubevue.io", "v1", "objects", a.args.Namespace())
+	a.brokers = make(BrokerMap)
 	gob.Register(map[string]interface{}{})
-	go a.watchObjects()
+	go a.watchObjects(a.newBroker("kubevue.io", "v1", "objects", a.args.Namespace()))
 	return a
 }
 
-func (a *App) watchObjects() {
-	cb := a.brokers["objects"]
+func (a *App) watchObjects(cb *CrdBroker) {
 	for msg := range cb.crd.Notifier() {
 		cb.broker.Notifier <- msg
 		switch msg.Action {
 		case "add":
 			m := crd.Parse(msg.Content)
 			if broker := a.brokers[m.Name]; broker == nil {
-				log.Infof("adding object:%s to roster", m.Name)
-				a.brokers[m.Name] = NewBroker(m.Group, m.Version, m.Name, m.Namespace)
-				a.brokers[m.Name].PassMessages()
+				log.Infof("adding object %s/%s to roster", m.Namespace, m.Name)
+				a.newBroker(m.Group, m.Version, m.Name, m.Namespace).PassMessages()
 			} else {
-				log.Infof("skip adding object:%s to roster", m.Name)
+				log.Infof("skip adding object %s/%s to roster", m.Namespace, m.Name)
 			}
 		case "delete":
 			m := crd.Parse(msg.Content)
-			if cb := a.brokers[m.Name]; cb != nil {
-				log.Infof("deleting object:%s from roster", m.Name)
+			if cb := a.getBroker(m.Name, m.Namespace); cb != nil {
+				log.Infof("deleting object %s/%s from roster", m.Namespace, m.Name)
 				cb.Stop()
-				delete(a.brokers, m.Name)
+				a.deleteBroker(m.Name, m.Namespace)
 			} else {
-				log.Infof("skip deleting object:%s to roster", m.Name)
+				log.Infof("skip deleting object %s/%s to roster", m.Namespace, m.Name)
 			}
 		case "update":
 			m := crd.Parse(msg.Content)
-			log.Infof("skip updating object:%s", m.Name)
+			log.Infof("skip updating object %s/%s", m.Namespace, m.Name)
 		default:
 		}
 	}
@@ -121,7 +122,7 @@ func (a *App) Serve() {
 	log.Infof("Serving %s, static folder:%s", bindAddr, a.Args().Dir())
 	r := mux.NewRouter()
 	r.PathPrefix("/ui/").Handler(http.StripPrefix("/ui/", http.FileServer(http.Dir(a.Args().Dir()))))
-	r.HandleFunc("/watch/{objects}", a.Watch)
+	r.HandleFunc("/watch/{namespace}/{objects}", a.Watch)
 	r.HandleFunc("/objects", a.Objects)
 	r.HandleFunc("/auth", a.AuthInitiate)
 	r.HandleFunc("/callback", a.AuthCallback)

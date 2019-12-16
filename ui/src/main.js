@@ -20,7 +20,7 @@ Vue.prototype.$auth = new Vue(Auth)
 const router = new VueRouter({
   routes: [
     { path: '/', component: Front },
-    { path: '/watch/:objects', component: Watch, props: (route) => ({ objects: route.params.objects }) }
+    { path: '/watch/:namespace/:objects', component: Watch, props: (route) => ({ namespace: route.params.namespace, objects: route.params.objects }) }
   ]
 })
 

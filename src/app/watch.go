@@ -33,15 +33,17 @@ func (a *App) Watch(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Profile is not a map", http.StatusInternalServerError)
 	}
 
-	log.Debugf("Serving sse connection for:%s at:%s", profile["name"], r.RemoteAddr)
+	name := mux.Vars(r)["objects"]
+	namespace := mux.Vars(r)["namespace"]
+	log.Debugf("Serving sse %s/%s for:%s at:%s", namespace, name, profile["name"], r.RemoteAddr)
+
 	flusher, ok := w.(http.Flusher)
 	if !ok {
 		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
 		return
 	}
 
-	name := mux.Vars(r)["objects"]
-	if cb := a.brokers[name]; cb != nil {
+	if cb := a.getBroker(name, namespace); cb != nil {
 		w.Header().Set("Content-Type", "text/event-stream")
 		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("Transfer-Encoding", "identity")
@@ -52,7 +54,7 @@ func (a *App) Watch(w http.ResponseWriter, r *http.Request) {
 		cb.broker.Serve(w, flusher)
 		log.Debugf("Closing SSE connection")
 	} else {
-		log.Errorf("Can't subscribe to:%s", name)
+		log.Errorf("Can't subscribe to name:%s, namespace:%s", name, namespace)
 		http.Error(w, "Objects not found", http.StatusNotFound)
 	}
 }
