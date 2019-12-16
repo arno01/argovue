@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"crd",
+				"crdbroker"
+			],
+			[
+				"not",
+				"notify\t  chan *msg.Msg"
+			],
+			[
+				"Hand",
+				"HandleFunc\t  func(path string, f func(http.ResponseWriter, *http.Request)) *mux.Route"
+			],
+			[
+				"Get",
+				"GetUID\t  func() types.UID"
+			],
+			[
 				"Ex",
 				"Exchange"
 			],
@@ -412,10 +428,6 @@
 				"xray_feature_issue"
 			],
 			[
-				"Get",
-				"GetOptions"
-			],
-			[
 				"name",
 				"namespace"
 			],
@@ -502,18 +514,6 @@
 			[
 				"W",
 				"WriteString\tfunc(s string) int, error ·ƒ"
-			],
-			[
-				"mci",
-				"mci_env_file"
-			],
-			[
-				"mci_",
-				"mci_label_file"
-			],
-			[
-				"Es",
-				"QueryEscape\tfunc(s string) string ·ƒ"
 			]
 		]
 	},
@@ -529,20 +529,57 @@
 			}
 		},
 		{
-			"file": "src/args/args.go",
+			"file": "src/crd/crd.go",
 			"settings":
 			{
-				"buffer_size": 2939,
+				"buffer_size": 2203,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "skaffold/k8s-dex.yaml",
+			"contents": "package app\n\nimport (\n\t\"encoding/gob\"\n\t\"fmt\"\n\t\"kubevue/args\"\n\t\"kubevue/auth\"\n\t\"kubevue/crd\"\n\t\"kubevue/crdbroker\"\n\n\t\"net/http\"\n\t\"os\"\n\n\tlog \"github.com/sirupsen/logrus\"\n\t\"k8s.io/client-go/kubernetes\"\n\t\"k8s.io/client-go/rest\"\n\n\t\"github.com/gorilla/mux\"\n\t\"github.com/gorilla/sessions\"\n)\n\n// App defines application dependencies\ntype App struct {\n\targs      *args.Args\n\tclientset *kubernetes.Clientset\n\tauth      *auth.Auth\n\tstore     *sessions.FilesystemStore\n\tobjects   *crd.List\n\tpubsub    map[string]*crdbroker.CrdBroker\n}\n\n// Args returns application argumnets\nfunc (a *App) Args() *args.Args {\n\treturn a.args\n}\n\n// Auth returns authenticator\nfunc (a *App) Auth() *auth.Auth {\n\treturn a.auth\n}\n\n// Store returns session store\nfunc (a *App) Store() *sessions.FilesystemStore {\n\treturn a.store\n}\n\n// ClientSet returns K8S Client Set\nfunc (a *App) ClientSet() *kubernetes.Clientset {\n\treturn a.clientset\n}\n\n// New creates an application instance\nfunc New() *App {\n\ta := new(App)\n\ta.args = args.New().LogLevel()\n\ta.auth = auth.New(a.Args().OIDC())\n\ta.objects = crd.New(\"kubevue.io\", \"v1\", \"objects\", a.args.Namespace())\n\ta.store = sessions.NewFilesystemStore(\"\", []byte(\"session-secret\"))\n\tgob.Register(map[string]interface{}{})\n\treturn a\n}\n\n// Connect to k8s in-cluster api\nfunc (a *App) Connect() *App {\n\tconfig, err := rest.InClusterConfig()\n\tif err != nil {\n\t\tlog.Errorf(\"In-cluster config error:%s\", err)\n\t\tos.Exit(1)\n\t}\n\tclientset, err := kubernetes.NewForConfig(config)\n\tif err != nil {\n\t\tlog.Errorf(\"Clientset error:%s\", err)\n\t\tos.Exit(1)\n\t}\n\ta.clientset = clientset\n\treturn a\n}\n\n// Serve ui and api endpoints\nfunc (a *App) Serve() {\n\tbindAddr := fmt.Sprintf(\"%s:%d\", a.Args().BindAddr(), a.Args().Port())\n\tlog.Infof(\"Serving %s, static folder:%s\", bindAddr, a.Args().Dir())\n\tr := mux.NewRouter()\n\tr.PathPrefix(\"/ui/\").Handler(http.StripPrefix(\"/ui/\", http.FileServer(http.Dir(a.Args().Dir()))))\n\tr.HandleFunc(\"/watch/{objects}\", a.Watch)\n\tr.HandleFunc(\"/auth\", a.AuthInitiate)\n\tr.HandleFunc(\"/callback\", a.AuthCallback)\n\tr.HandleFunc(\"/profile\", a.Profile)\n\tr.HandleFunc(\"/logout\", a.Logout)\n\tsrv := &http.Server{\n\t\tHandler: r,\n\t\tAddr:    bindAddr,\n\t}\n\tsrv.SetKeepAlivesEnabled(true)\n\tlog.Fatal(srv.ListenAndServe())\n}\n",
+			"file": "src/app/app.go",
+			"file_size": 2215,
+			"file_write_time": 132209738044773012,
 			"settings":
 			{
-				"buffer_size": 2471,
+				"buffer_size": 2224,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/crdbroker/crdbroker.go",
+			"settings":
+			{
+				"buffer_size": 377,
 				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/main.go",
+			"settings":
+			{
+				"buffer_size": 364,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/app/watch.go",
+			"settings":
+			{
+				"buffer_size": 1034,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/app/auth.go",
+			"settings":
+			{
+				"buffer_size": 3160,
 				"line_ending": "Unix"
 			}
 		},
@@ -680,6 +717,10 @@
 		"selected_items":
 		[
 			[
+				"update",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
 				"gofmt",
 				"Gofmt: Format this file"
 			],
@@ -790,10 +831,6 @@
 			[
 				"GoSublime: bu",
 				"GoSublime: Run build command"
-			],
-			[
-				"update",
-				"Package Control: Upgrade/Overwrite All Packages"
 			],
 			[
 				"go build",
@@ -1074,12 +1111,23 @@
 	"expanded_folders":
 	[
 		"/Users/roman_galeev/infosec/kubevue/src",
+		"/Users/roman_galeev/infosec/kubevue/src/app",
+		"/Users/roman_galeev/infosec/kubevue/src/args",
+		"/Users/roman_galeev/infosec/kubevue/src/auth",
+		"/Users/roman_galeev/infosec/kubevue/src/broker",
+		"/Users/roman_galeev/infosec/kubevue/src/crd",
+		"/Users/roman_galeev/infosec/kubevue/src/crdbroker",
+		"/Users/roman_galeev/infosec/kubevue/src/msg",
 		"/Users/roman_galeev/infosec/kubevue/ui",
 		"/Users/roman_galeev/infosec/kubevue/skaffold"
 	],
 	"file_history":
 	[
+		"/Users/roman_galeev/infosec/kubevue/src/app/watch.go",
 		"/Users/roman_galeev/infosec/kubevue/src/args/args.go",
+		"/Users/roman_galeev/infosec/kubevue/src/app/kube.go",
+		"/Users/roman_galeev/infosec/kubevue/src/crd/crd.go",
+		"/Users/roman_galeev/infosec/kubevue/skaffold/k8s-dex.yaml",
 		"/Users/roman_galeev/Library/Application Support/Sublime Text 3/Packages/Gofmt/Gofmt.sublime-settings",
 		"/Users/roman_galeev/Library/Application Support/Sublime Text 3/Packages/User/Gofmt.sublime-settings",
 		"/Users/roman_galeev/Library/Application Support/Sublime Text 3/Packages/Makefile/Make.sublime-build",
@@ -1202,11 +1250,7 @@
 		"/Users/roman_galeev/ppco/cluster-rke/cluster/tf-cluster/input.tf",
 		"/Users/roman_galeev/ppco/cluster-rke/cluster/tf-cluster/entry.sh",
 		"/Users/roman_galeev/ppco/cluster-rke/definition/tf-rancher/entry.sh",
-		"/Users/roman_galeev/ppco/cluster-rke/definition/tf-rancher/input.tf",
-		"/Users/roman_galeev/ppco/cluster-rke/definition/provision/yaml.sh",
-		"/Users/roman_galeev/ppco/cluster-config/local.sh",
-		"/Users/roman_galeev/ppco/cluster-config/svc/drone/entry.sh",
-		"/Users/roman_galeev/ppco/akdp/entry.sh"
+		"/Users/roman_galeev/ppco/cluster-rke/definition/tf-rancher/input.tf"
 	],
 	"find":
 	{
@@ -1242,7 +1286,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -1295,35 +1339,102 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 8.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "src/args/args.go",
+					"file": "src/crd/crd.go",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2939,
+						"buffer_size": 2203,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1537,
-								1537
+								670,
+								670
 							]
 						],
 						"settings":
 						{
-							"SL.29.region_keys":
+							"SL.14.region_keys":
 							[
+								"sublime_linter.protected_regions"
 							],
-							"SL.74.region_keys":
+							"SL.89.region_keys":
+							[
+								"SL.gotype.Highlights.|6cc467f0a465892334d72c9e6deb6cb28318d1054b4287b2756a2d6456fbe233|region.redish markup.error.sublime_linter|32",
+								"sublime_linter.protected_regions",
+								"SL.gotype.Highlights.|22ac576c2aee8e1b4995d191f5b3d17ead092fd76b8641a568396138f7e1fa12|region.redish markup.error.sublime_linter|32",
+								"SL.golint.Gutter.|region.yellowish markup.warning.sublime_linter|dot",
+								"SL.golint.Highlights.|ea141d58e25441cdc493d5bb1c584e00abca52b4cacce63032ca0b1863a0769d|region.yellowish markup.warning.sublime_linter|32",
+								"SL.gotype.Gutter.|region.redish markup.error.sublime_linter|dot",
+								"SL.gotype.Highlights.|c05639117f5b77db318903fb98500ff92458d4e9bc566790bced9218723fcb0e|region.redish markup.error.sublime_linter|32",
+								"SL.gotype.Highlights.|dfc265d210d9c7327a8075be45d2eb8a7d5def96a5e7094b877b6ec847eb059d|region.redish markup.error.sublime_linter|32"
+							],
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".",
+									"selector": "source.go"
+								}
+							],
+							"git_gutter_is_enabled": true,
+							"lsp_active": true,
+							"lsp_language":
+							{
+								"gopls": "go"
+							},
+							"show_definitions": false,
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "src/app/app.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2224,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								519,
+								519
+							]
+						],
+						"settings":
+						{
+							"SL.15.region_keys":
+							[
+								"SL.govet.Gutter.|region.redish markup.error.sublime_linter|dot",
+								"SL.gotype.Gutter.|region.redish markup.error.sublime_linter|dot",
+								"sublime_linter.protected_regions",
+								"SL.govet.Highlights.|fe7375a3c73695c9252e3173d14a870346b9633ea77c3c1556efdf7841682d0b|region.redish markup.error.sublime_linter|32",
+								"SL.gotype.Highlights.|1ffeb26f408f6b03c922e6c153d576f6fc8cd950bff72bf90e670ef3a9c589d9|region.redish markup.error.sublime_linter|32"
+							],
+							"SL.88.region_keys":
 							[
 							],
 							"auto_complete_triggers":
@@ -1348,45 +1459,203 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 388.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "skaffold/k8s-dex.yaml",
+					"buffer": 3,
+					"file": "src/crdbroker/crdbroker.go",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2471,
+						"buffer_size": 377,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								800,
-								800
+								377,
+								377
 							]
 						],
 						"settings":
 						{
+							"SL.16.region_keys":
+							[
+							],
+							"SL.38.region_keys":
+							[
+								"sublime_linter.protected_regions"
+							],
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".",
+									"selector": "source.go"
+								}
+							],
 							"git_gutter_is_enabled": true,
-							"syntax": "Packages/YAML/YAML.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"lsp_active": true,
+							"lsp_language":
+							{
+								"gopls": "go"
+							},
+							"open_with_edit": true,
+							"show_definitions": false,
+							"syntax": "Packages/Go/Go.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 366.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/main.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 364,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								350,
+								350
+							]
+						],
+						"settings":
+						{
+							"SL.29.region_keys":
+							[
+								"sublime_linter.protected_regions"
+							],
+							"git_gutter_is_enabled": true,
+							"lsp_active": true,
+							"lsp_language":
+							{
+								"gopls": "go"
+							},
+							"show_definitions": false,
+							"syntax": "Packages/Go/Go.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/app/watch.go",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1034,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								993,
+								993
+							]
+						],
+						"settings":
+						{
+							"SL.18.region_keys":
+							[
+								"SL.golint.Gutter.|region.yellowish markup.warning.sublime_linter|dot",
+								"sublime_linter.protected_regions",
+								"SL.golint.Highlights.|397999e3f94cff5e50ed1a2530ffe4599b07b43c2ce4e9ad8a508d39c52e9f36|region.yellowish markup.warning.sublime_linter|32"
+							],
+							"SL.27.region_keys":
+							[
+								"sublime_linter.protected_regions"
+							],
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".",
+									"selector": "source.go"
+								}
+							],
+							"git_gutter_is_enabled": true,
+							"lsp_active": true,
+							"lsp_language":
+							{
+								"gopls": "go"
+							},
+							"show_definitions": false,
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/app/auth.go",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 3160,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"SL.23.region_keys":
+							[
+							],
+							"git_gutter_is_enabled": true,
+							"lsp_active": true,
+							"lsp_language":
+							{
+								"gopls": "go"
+							},
+							"show_definitions": false,
+							"syntax": "Packages/Go/Go.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 7,
 					"file": "skaffold/k8s-deploy.yaml",
 					"semi_transient": false,
 					"settings":
@@ -1398,8 +1667,8 @@
 						"selection":
 						[
 							[
-								784,
-								784
+								508,
+								508
 							]
 						],
 						"settings":
@@ -1416,7 +1685,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 7,
 					"type": "text"
 				}
 			]
@@ -1512,6 +1781,10 @@
 	"output.git":
 	{
 		"height": 108.0
+	},
+	"output.gofmt":
+	{
+		"height": 0.0
 	},
 	"output.golang_build":
 	{
