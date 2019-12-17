@@ -16,7 +16,8 @@ func (a *App) Objects(w http.ResponseWriter, r *http.Request) {
 // Watch writes events to SSE stream
 func (a *App) Watch(w http.ResponseWriter, r *http.Request) {
 
-	name := mux.Vars(r)["objects"]
+	kind := mux.Vars(r)["kind"]
+	name := mux.Vars(r)["name"]
 	namespace := mux.Vars(r)["namespace"]
 
 	flusher, ok := w.(http.Flusher)
@@ -25,7 +26,7 @@ func (a *App) Watch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if cb := a.getBroker(name, namespace); cb != nil {
+	if cb := a.getBroker(kind, namespace); cb != nil {
 		w.Header().Set("Content-Type", "text/event-stream")
 		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("Transfer-Encoding", "identity")
@@ -33,10 +34,10 @@ func (a *App) Watch(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Connection", "keep-alive")
 		w.WriteHeader(http.StatusOK)
 		flusher.Flush()
-		cb.broker.Serve(w, flusher)
+		cb.broker.Serve(w, name, flusher)
 		log.Debugf("Closing SSE connection")
 	} else {
-		log.Errorf("Can't subscribe to %s/%s", namespace, name)
+		log.Errorf("Can't subscribe to %s/%s", namespace, kind)
 		http.Error(w, "Objects not found", http.StatusNotFound)
 	}
 }

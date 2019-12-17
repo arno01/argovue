@@ -4,7 +4,7 @@
       <h1 class="h2">{{namespace}}/{{kind}}</h1>
     </div>
     <div v-for="obj in orderedCache" v-bind:key="obj.metadata.uid">
-      <a target="_blank" :href="`/proxy/${obj.metadata.namespace}/${obj.metadata.name}`">{{ obj.metadata.name }}</a>
+      <b-link :to="`/watch/${obj.metadata.namespace}/${kind}/${obj.metadata.name}`">{{ obj.metadata.name }}</b-link>
     </div>
   </div>
 </template>
@@ -13,11 +13,12 @@
 import SSE from '@/SSE/Objects.vue'
 
 export default {
-  props: ["namespace"],
+  props: ["namespace", "kind"],
   extends: SSE,
   data() {
     return {
-      kind: "services",
+      cache: {},
+      es: undefined
     };
   },
 };

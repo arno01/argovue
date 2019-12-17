@@ -40,7 +40,6 @@
 export default {
   name: "app",
   created: async function () {
-    window.console.log("base", this.$base)
     let re = await this.$axios.get("/objects")
     this.objects = re.data
   },

@@ -21,13 +21,17 @@ type Broker struct {
 	clients        map[chan *msg.Msg]bool
 }
 
-func sendMsg(rw http.ResponseWriter, flusher http.Flusher, m *msg.Msg) {
+func sendMsg(w http.ResponseWriter, filter string, flusher http.Flusher, m *msg.Msg) {
+	mObj := m.Content.(v1.Object)
+	if len(filter) > 0 && mObj.GetName() != filter {
+		return
+	}
 	jsonMsg, err := json.Marshal(m)
 	if err != nil {
 		log.Errorf("Can't encode message:%s", m)
 		return
 	}
-	rw.Write([]byte(fmt.Sprintf("data: %s\n\n", jsonMsg)))
+	w.Write([]byte(fmt.Sprintf("data: %s\n\n", jsonMsg)))
 	flusher.Flush()
 }
 
@@ -45,11 +49,11 @@ func New() (broker *Broker) {
 }
 
 // Serve forwards events to HTTP client
-func (broker *Broker) Serve(rw http.ResponseWriter, flusher http.Flusher) {
+func (broker *Broker) Serve(w http.ResponseWriter, filter string, flusher http.Flusher) {
 	messageChan := make(chan *msg.Msg)
 	broker.newClients <- messageChan
 
-	notify := rw.(http.CloseNotifier).CloseNotify()
+	notify := w.(http.CloseNotifier).CloseNotify()
 	go func() {
 		<-notify
 		broker.closingClients <- messageChan
@@ -61,7 +65,7 @@ func (broker *Broker) Serve(rw http.ResponseWriter, flusher http.Flusher) {
 	}()
 
 	for _, obj := range broker.cache {
-		sendMsg(rw, flusher, msg.New("add", obj))
+		sendMsg(w, filter, flusher, msg.New("add", obj))
 	}
 
 	for {
@@ -69,9 +73,8 @@ func (broker *Broker) Serve(rw http.ResponseWriter, flusher http.Flusher) {
 		if !open {
 			break
 		}
-		sendMsg(rw, flusher, m)
+		sendMsg(w, filter, flusher, m)
 	}
-
 }
 
 func (broker *Broker) updateCache(m *msg.Msg) {
