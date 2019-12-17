@@ -8,11 +8,8 @@ import (
 	"kubevue/crd"
 
 	"net/http"
-	"os"
 
 	log "github.com/sirupsen/logrus"
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/rest"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -22,11 +19,10 @@ type BrokerMap map[string]map[string]*CrdBroker
 
 // App defines application dependencies
 type App struct {
-	args      *args.Args
-	clientset *kubernetes.Clientset
-	auth      *auth.Auth
-	store     *sessions.FilesystemStore
-	brokers   BrokerMap
+	args    *args.Args
+	auth    *auth.Auth
+	store   *sessions.FilesystemStore
+	brokers BrokerMap
 }
 
 // Args returns application argumnets
@@ -42,11 +38,6 @@ func (a *App) Auth() *auth.Auth {
 // Store returns session store
 func (a *App) Store() *sessions.FilesystemStore {
 	return a.store
-}
-
-// ClientSet returns K8S Client Set
-func (a *App) ClientSet() *kubernetes.Clientset {
-	return a.clientset
 }
 
 // Objects return list of known objects
@@ -98,22 +89,6 @@ func (a *App) watchObjects(cb *CrdBroker) {
 		default:
 		}
 	}
-}
-
-// Connect to k8s in-cluster api
-func (a *App) Connect() *App {
-	config, err := rest.InClusterConfig()
-	if err != nil {
-		log.Errorf("In-cluster config error:%s", err)
-		os.Exit(1)
-	}
-	clientset, err := kubernetes.NewForConfig(config)
-	if err != nil {
-		log.Errorf("Clientset error:%s", err)
-		os.Exit(1)
-	}
-	a.clientset = clientset
-	return a
 }
 
 // Serve ui and api endpoints

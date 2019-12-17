@@ -1,6 +1,4 @@
 <script>
-import axios from "axios";
-
 export default {
   data() {
     return {
@@ -16,7 +14,7 @@ export default {
       return this.auth == "false"
     },
     check: async function() {
-      let ev = await axios.get("/profile");
+      let ev = await this.$axios.get("/profile");
       if (ev.data && ev.data.name) {
         this.auth = "true"
         this.name = ev.data.name
@@ -26,10 +24,10 @@ export default {
       }
     },
     login() {
-      window.location.href = "/auth";
+      window.location.href = this.$base+"/auth";
     },
     logout() {
-      window.location = "/logout";
+      window.location = this.$base+"/logout";
     }
   }
 };

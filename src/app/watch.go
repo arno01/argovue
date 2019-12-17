@@ -16,6 +16,7 @@ func (a *App) Objects(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Not Authorized", http.StatusUnauthorized)
 		return
 	}
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(w).Encode(a.GetObjects())
 }
 

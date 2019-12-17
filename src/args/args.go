@@ -28,19 +28,28 @@ func New() *Args {
 	return new(Args).Parse()
 }
 
+func getEnvOrDefault(name, def string) string {
+	value := os.Getenv(name)
+	if value == "" {
+		return def
+	} else {
+		return value
+	}
+}
+
 // Parse parameters
 func (a *Args) Parse() *Args {
 	flag.StringVar(&a.verboseLevel, "verbose", "info", "Set verbosity level")
 	flag.IntVar(&a.port, "port", 8080, "Listen port")
-	flag.StringVar(&a.bindAddr, "bind", "", "Bind address")
-	flag.StringVar(&a.dir, "dir", "ui/dist", "Static files folder")
+	flag.StringVar(&a.bindAddr, "bind", os.Getenv("BIND_ADDR"), "Bind address")
+	flag.StringVar(&a.dir, "dir", getEnvOrDefault("UI_DIR", "ui/dist"), "Static files folder")
 	flag.StringVar(&a.oidcProvider, "oidc-provider", os.Getenv("OIDC_PROVIDER"), "OIDC provider")
 	flag.StringVar(&a.oidcClientID, "oidc-client-id", os.Getenv("OIDC_CLIENT_ID"), "OIDC client id")
 	flag.StringVar(&a.oidcClientSecret, "oidc-client-secret", os.Getenv("OIDC_CLIENT_SECRET"), "OIDC client secret")
 	flag.StringVar(&a.oidcRedirectURL, "oidc-redirect-url", os.Getenv("OIDC_REDIRECT_URL"), "OIDC redirect url")
-	flag.StringVar(&a.oidcScopes, "oidc-scopes", os.Getenv("OIDC_SCOPES"), "OIDC scopes")
-	flag.StringVar(&a.uiRootURL, "ui-root-url", os.Getenv("UI_ROOT_URL"), "UI root url for redirects")
-	flag.StringVar(&a.k8sNamespace, "k8s-namespace", os.Getenv("K8S_NAMESPACE"), "Kubernetes objects namespace")
+	flag.StringVar(&a.oidcScopes, "oidc-scopes", getEnvOrDefault("OIDC_SCOPES", "groups"), "OIDC scopes")
+	flag.StringVar(&a.uiRootURL, "ui-root-url", getEnvOrDefault("UI_ROOT_URL", "/ui/#/"), "UI root url for redirects")
+	flag.StringVar(&a.k8sNamespace, "k8s-namespace", getEnvOrDefault("K8S_NAMESPACE", "default"), "Kubernetes objects namespace")
 
 	flag.Parse()
 	a.args = flag.Args()

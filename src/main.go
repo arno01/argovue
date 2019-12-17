@@ -12,8 +12,9 @@ var date string
 var builtBy string
 
 func main() {
-	fmt.Printf("Starting kubevue, version:%s", version)
-	a := app.New()
-	a.Connect()
-	a.Serve()
+	if version == "" {
+		version = "development"
+	}
+	fmt.Printf("Starting kubevue, version:%s\n", version)
+	app.New().Serve()
 }

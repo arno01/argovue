@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VueSSE from 'vue-sse'
 import BootstrapVue from 'bootstrap-vue'
+import axios from "axios"
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -16,6 +17,8 @@ Vue.use(VueSSE)
 Vue.use(BootstrapVue)
 
 Vue.prototype.$auth = new Vue(Auth)
+Vue.prototype.$base = window.kubevue.api
+Vue.prototype.$axios = axios.create({ baseURL: window.kubevue.api })
 
 const router = new VueRouter({
   routes: [

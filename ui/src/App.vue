@@ -37,14 +37,12 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   name: "app",
   created: async function () {
-    let re = await axios.get("/objects");
+    window.console.log("base", this.$base)
+    let re = await this.$axios.get("/objects")
     this.objects = re.data
-    window.console.log("objects", this.objects);
   },
   data() {
     return {
