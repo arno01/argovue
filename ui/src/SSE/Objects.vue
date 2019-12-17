@@ -1,6 +1,6 @@
 <script>
 function objKey(obj) {
-  return obj.metadata.name
+  return obj.metadata.creationTimestamp
 }
 
 export default {
@@ -20,7 +20,7 @@ export default {
   },
   computed: {
     orderedCache: function() {
-     return Object.values(this.cache).sort( (a, b) => objKey(a).localeCompare(objKey(b)) )
+     return Object.values(this.cache).sort( (a, b) => objKey(b).localeCompare(objKey(a)) )
     }
   },
   watch: {

@@ -6,12 +6,13 @@ import axios from "axios"
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-import App from '@/App.vue'
-import Front from '@/Front.vue'
-import Object from '@/Object.vue'
-import Objects from '@/Objects.vue'
-import Services from '@/Services.vue'
-import Auth from '@/Auth.vue'
+import App from '@/App'
+import Front from '@/Front'
+import Object from '@/Object'
+import Objects from '@/Objects'
+import Services from '@/Services'
+import WorkflowObject from '@/Workflow/Object'
+import Auth from '@/Auth'
 
 Vue.use(VueRouter)
 Vue.use(BootstrapVue)
@@ -32,6 +33,7 @@ const router = new VueRouter({
   routes: [
     { path: '/', component: Front },
     { path: '/watch/:namespace/services', component: Services, props: routeProps },
+    { path: '/watch/:namespace/workflows/:name', component: WorkflowObject, props: routeProps },
     { path: '/watch/:namespace/:kind/:name', component: Object, props: routeProps },
     { path: '/watch/:namespace/:kind', component: Objects, props: routeProps }
   ]

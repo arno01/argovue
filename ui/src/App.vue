@@ -41,7 +41,7 @@ export default {
   name: "app",
   created: async function () {
     let re = await this.$axios.get("/objects")
-    this.objects = re.data
+    this.objects = re.data.sort()
   },
   data() {
     return {
