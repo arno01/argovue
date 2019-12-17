@@ -1,6 +1,6 @@
 # KubeVue
 
-This is work in progress, so beware.
+This is work in progress, check [TODO](TODO.md).
 
 ## Motivation
 
