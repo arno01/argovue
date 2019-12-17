@@ -6,6 +6,7 @@ import (
 	"kubevue/args"
 	"kubevue/auth"
 	"kubevue/crd"
+	"regexp"
 
 	"net/http"
 
@@ -90,6 +91,45 @@ func (a *App) watchObjects(cb *CrdBroker) {
 	}
 }
 
+var bypassAuth []*regexp.Regexp = []*regexp.Regexp{
+	regexp.MustCompile("^/profile$"),
+	regexp.MustCompile("^/auth$"),
+	regexp.MustCompile("^/callback.*$"),
+	regexp.MustCompile("^/ui/.*$"),
+}
+
+func (a *App) checkAuth(w http.ResponseWriter, r *http.Request) map[string]interface{} {
+	session, _ := a.Store().Get(r, "auth-session")
+	profileRef := session.Values["profile"]
+	if profileRef == nil {
+		http.Error(w, "Not Authorized", http.StatusUnauthorized)
+		return nil
+	}
+	profile, ok := profileRef.(map[string]interface{})
+	if !ok {
+		http.Error(w, "Profile is not a map", http.StatusInternalServerError)
+		return nil
+	}
+	log.Debugf("Request:%v user:%s remote:%s", r.RequestURI, profile["name"], r.RemoteAddr)
+	return profile
+}
+
+func (a *App) authMiddleWare(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		for _, re := range bypassAuth {
+			if re.MatchString(r.RequestURI) {
+				log.Debugf("Request No-Auth: %v", r.RequestURI)
+				next.ServeHTTP(w, r)
+				return
+			}
+		}
+		if a.checkAuth(w, r) != nil {
+			next.ServeHTTP(w, r)
+		}
+	})
+}
+
 // Serve ui and api endpoints
 func (a *App) Serve() {
 	bindAddr := fmt.Sprintf("%s:%d", a.Args().BindAddr(), a.Args().Port())
@@ -103,6 +143,7 @@ func (a *App) Serve() {
 	r.HandleFunc("/callback", a.AuthCallback)
 	r.HandleFunc("/profile", a.Profile)
 	r.HandleFunc("/logout", a.Logout)
+	r.Use(a.authMiddleWare)
 	srv := &http.Server{
 		Handler: r,
 		Addr:    bindAddr,

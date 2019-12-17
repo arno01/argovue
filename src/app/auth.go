@@ -20,7 +20,6 @@ func (a *App) Profile(w http.ResponseWriter, r *http.Request) {
 	} else {
 		profile = session.Values["profile"]
 	}
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	obj, err := json.Marshal(profile)
 	w.Write([]byte(obj))
 }

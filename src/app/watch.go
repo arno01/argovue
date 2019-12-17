@@ -10,33 +10,14 @@ import (
 
 // Objects returns list of known objects
 func (a *App) Objects(w http.ResponseWriter, r *http.Request) {
-	session, _ := a.Store().Get(r, "auth-session")
-	profileRef := session.Values["profile"]
-	if profileRef == nil {
-		http.Error(w, "Not Authorized", http.StatusUnauthorized)
-		return
-	}
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	json.NewEncoder(w).Encode(a.GetObjects())
 }
 
 // Watch writes events to SSE stream
 func (a *App) Watch(w http.ResponseWriter, r *http.Request) {
-	session, _ := a.Store().Get(r, "auth-session")
-	profileRef := session.Values["profile"]
-	if profileRef == nil {
-		http.Error(w, "Not Authorized", http.StatusUnauthorized)
-		return
-	}
-
-	profile, ok := profileRef.(map[string]interface{})
-	if !ok {
-		http.Error(w, "Profile is not a map", http.StatusInternalServerError)
-	}
 
 	name := mux.Vars(r)["objects"]
 	namespace := mux.Vars(r)["namespace"]
-	log.Debugf("Serving sse %s/%s for:%s at:%s", namespace, name, profile["name"], r.RemoteAddr)
 
 	flusher, ok := w.(http.Flusher)
 	if !ok {
