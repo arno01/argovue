@@ -29,17 +29,15 @@ func New() *Args {
 }
 
 func getEnvOrDefault(name, def string) string {
-	value := os.Getenv(name)
-	if value == "" {
-		return def
-	} else {
+	if value, ok := os.LookupEnv(name); ok {
 		return value
 	}
+	return def
 }
 
 // Parse parameters
 func (a *Args) Parse() *Args {
-	flag.StringVar(&a.verboseLevel, "verbose", "info", "Set verbosity level")
+	flag.StringVar(&a.verboseLevel, "verbose", getEnvOrDefault("VERBOSE", "info"), "Set verbosity level")
 	flag.IntVar(&a.port, "port", 8080, "Listen port")
 	flag.StringVar(&a.bindAddr, "bind", os.Getenv("BIND_ADDR"), "Bind address")
 	flag.StringVar(&a.dir, "dir", getEnvOrDefault("UI_DIR", "ui/dist"), "Static files folder")

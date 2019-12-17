@@ -1,2 +1,2 @@
 window.kubevue = {}
-window.kubevue.api = "http://localhost:3000"
+window.kubevue.api = ""

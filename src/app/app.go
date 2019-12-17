@@ -59,15 +59,16 @@ func New() *App {
 	a.brokers = make(BrokerMap)
 	gob.Register(map[string]interface{}{})
 	go a.watchObjects(a.newBroker("kubevue.io", "v1", "objects", a.args.Namespace()))
+	a.newBroker("", "v1", "services", a.args.Namespace()).PassMessages()
 	return a
 }
 
 func (a *App) watchObjects(cb *CrdBroker) {
 	for msg := range cb.crd.Notifier() {
 		cb.broker.Notifier <- msg
+		m := crd.Parse(msg.Content)
 		switch msg.Action {
 		case "add":
-			m := crd.Parse(msg.Content)
 			if broker := a.brokers[m.Name]; broker == nil {
 				log.Infof("adding object %s/%s to roster", m.Namespace, m.Name)
 				a.newBroker(m.Group, m.Version, m.Name, m.Namespace).PassMessages()
@@ -75,7 +76,6 @@ func (a *App) watchObjects(cb *CrdBroker) {
 				log.Infof("skip adding object %s/%s to roster", m.Namespace, m.Name)
 			}
 		case "delete":
-			m := crd.Parse(msg.Content)
 			if cb := a.getBroker(m.Name, m.Namespace); cb != nil {
 				log.Infof("deleting object %s/%s from roster", m.Namespace, m.Name)
 				cb.Stop()
@@ -84,7 +84,6 @@ func (a *App) watchObjects(cb *CrdBroker) {
 				log.Infof("skip deleting object %s/%s to roster", m.Namespace, m.Name)
 			}
 		case "update":
-			m := crd.Parse(msg.Content)
 			log.Infof("skip updating object %s/%s", m.Namespace, m.Name)
 		default:
 		}
@@ -98,6 +97,7 @@ func (a *App) Serve() {
 	r := mux.NewRouter()
 	r.PathPrefix("/ui/").Handler(http.StripPrefix("/ui/", http.FileServer(http.Dir(a.Args().Dir()))))
 	r.HandleFunc("/watch/{namespace}/{objects}", a.Watch)
+	r.HandleFunc("/proxy/{namespace}/{name}", a.ProxyService)
 	r.HandleFunc("/objects", a.Objects)
 	r.HandleFunc("/auth", a.AuthInitiate)
 	r.HandleFunc("/callback", a.AuthCallback)
