@@ -9,6 +9,7 @@
 * Add run duration to steps/pods/workflows
 * Automate access to volume with ngingx pod
 * Add workflow actions, e.g. retry
+* Add workflow templates and their actions?
 
 # DONE
 
