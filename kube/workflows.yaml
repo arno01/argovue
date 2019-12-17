@@ -1,7 +1,7 @@
 apiVersion: kubevue.io/v1
 kind: Object
 metadata:
-  name: workflow
+  name: workflows
 spec:
   group: argoproj.io
   version: v1alpha1

@@ -60,7 +60,6 @@ func New() *App {
 	a.brokers = make(BrokerMap)
 	gob.Register(map[string]interface{}{})
 	go a.watchObjects(a.newBroker("kubevue.io", "v1", "objects", a.args.Namespace()))
-	a.newBroker("", "v1", "services", a.args.Namespace()).PassMessages()
 	return a
 }
 

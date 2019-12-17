@@ -14,7 +14,7 @@ import (
 func (a *App) ProxyService(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 	namespace := mux.Vars(r)["namespace"]
-	target := fmt.Sprintf("http://%s.%s", name, namespace)
+	target := fmt.Sprintf("http://%s.%s.svc.cluster.local", name, namespace)
 	a.Proxy(name, namespace, target, w, r)
 }
 
