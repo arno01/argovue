@@ -10,9 +10,9 @@ import App from '@/App'
 import Front from '@/Front'
 import Object from '@/Object'
 import Objects from '@/Objects'
-import Services from '@/Services'
 import WorkflowObject from '@/Workflow/Object'
 import PodObject from '@/Pod/Object'
+import ServiceObject from '@/Service/Object'
 import Auth from '@/Auth'
 
 Vue.use(VueRouter)
@@ -33,7 +33,7 @@ function routeProps(route) {
 const router = new VueRouter({
   routes: [
     { path: '/', component: Front },
-    { path: '/watch/:namespace/services', component: Services, props: routeProps },
+    { path: '/watch/:namespace/services/:name', component: ServiceObject, props: routeProps },
     { path: '/watch/:namespace/pods/:name', component: PodObject, props: routeProps },
     { path: '/watch/:namespace/workflows/:name', component: WorkflowObject, props: routeProps },
     { path: '/watch/:namespace/:kind/:name', component: Object, props: routeProps },
