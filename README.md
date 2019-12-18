@@ -22,7 +22,7 @@ dex.
 
 ## Development
 
-Make sure `dex.default` resolves to `127.0.0.1` on your development machine (e.g. put an entry to `/etc/hosts`), and then in skaffold folder:
+Deploy Kubernetes objects to configure `kubevue` from `kube` folder, and:
 
 ```sh
 skaffold dev --port-forward
