@@ -1,11 +1,9 @@
 package crd
 
 import (
-	"os"
-	"path/filepath"
-
 	log "github.com/sirupsen/logrus"
 
+	"kubevue/kube"
 	"kubevue/msg"
 
 	apiv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -13,9 +11,7 @@ import (
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/dynamic/dynamicinformer"
 	"k8s.io/client-go/informers"
-	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/cache"
-	"k8s.io/client-go/tools/clientcmd"
 )
 
 // Crd
@@ -55,22 +51,11 @@ func (crd *Crd) Stop() {
 	close(crd.stop)
 }
 
-func getConfig() (*rest.Config, error) {
-	if os.Getenv("KUBERNETES_SERVICE_HOST") != "" {
-		return rest.InClusterConfig()
-	}
-	kubeConfigPath := os.Getenv("KUBECONFIG")
-	if kubeConfigPath == "" {
-		kubeConfigPath = filepath.Join(os.Getenv("HOME"), ".kube", "config")
-	}
-	return clientcmd.BuildConfigFromFlags("", kubeConfigPath)
-}
-
 // Watch resources
 func (crd *Crd) Watch() *Crd {
 	log.Debugf("Starting kubernetes watcher: %s/%s/%s/%s", crd.resource, crd.version, crd.group, crd.namespace)
 
-	cfg, err := getConfig()
+	cfg, err := kube.GetConfig()
 	dc, err := dynamic.NewForConfig(cfg)
 	if err != nil {
 		log.WithError(err).Fatal("Could not generate dynamic client for config")

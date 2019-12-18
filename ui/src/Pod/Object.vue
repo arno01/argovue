@@ -6,11 +6,11 @@
     <div>
       <b-card no-body>
         <b-tabs card>
-          <b-tab title="Nodes" active>
-            <nodes :content="object" :namespace="namespace"></nodes>
-          </b-tab>
-          <b-tab title="Workflow">
+          <b-tab title="Pod" active>
             <jsoneditor :content="object"></jsoneditor>
+          </b-tab>
+          <b-tab v-for="container in object.spec.containers" v-bind:key="container.name" :title="container.name">
+            <logs :name="name" :namespace="namespace" :container="container.name"></logs>
           </b-tab>
         </b-tabs>
       </b-card>
@@ -21,18 +21,18 @@
 <script>
 import SSE from '@/SSE/Object'
 import JsonEditor from '@/JsonEditor'
-import Nodes from '@/Workflow/Nodes'
+import Logs from '@/Pod/Logs'
 
 export default {
   props: ["namespace", "name"],
   extends: SSE,
   components: {
     jsoneditor: JsonEditor,
-    nodes: Nodes,
+    logs: Logs,
   },
   data() {
     return {
-      kind: "workflows"
+      kind: "pods"
     }
   },
 }

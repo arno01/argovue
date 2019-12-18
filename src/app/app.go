@@ -138,6 +138,7 @@ func (a *App) Serve() {
 	r.HandleFunc("/watch/{namespace}/{kind}", a.Watch)
 	r.HandleFunc("/watch/{namespace}/{kind}/{name}", a.Watch)
 	r.HandleFunc("/proxy/{namespace}/{name}", a.ProxyService)
+	r.HandleFunc("/logs/{namespace}/{name}/{container}", a.StreamLogs)
 	r.HandleFunc("/objects", a.Objects)
 	r.HandleFunc("/auth", a.AuthInitiate)
 	r.HandleFunc("/callback", a.AuthCallback)
