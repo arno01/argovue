@@ -7,6 +7,7 @@ import (
 	"kubevue/auth"
 	"kubevue/crd"
 	"regexp"
+	"sync"
 
 	"net/http"
 
@@ -23,6 +24,7 @@ type App struct {
 	args    *args.Args
 	auth    *auth.Auth
 	store   *sessions.FilesystemStore
+	wg      sync.WaitGroup
 	brokers BrokerMap
 }
 
@@ -55,11 +57,12 @@ func (a *App) GetObjects() (re []string) {
 func New() *App {
 	a := new(App)
 	a.args = args.New().LogLevel()
-	a.auth = auth.New(a.Args().OIDC())
 	a.store = sessions.NewFilesystemStore("", []byte("session-secret"))
 	a.brokers = make(BrokerMap)
 	gob.Register(map[string]interface{}{})
 	go a.watchObjects(a.newBroker("kubevue.io", "v1", "objects", a.args.Namespace()))
+	go a.Serve()
+	a.auth = auth.New(a.Args().OIDC())
 	return a
 }
 
@@ -70,21 +73,21 @@ func (a *App) watchObjects(cb *CrdBroker) {
 		switch msg.Action {
 		case "add":
 			if broker := a.brokers[m.Name]; broker == nil {
-				log.Infof("adding object %s/%s to roster", m.Namespace, m.Name)
+				log.Infof("Roster: add %s/%s", m.Namespace, m.Name)
 				a.newBroker(m.Group, m.Version, m.Name, m.Namespace).PassMessages()
 			} else {
-				log.Infof("skip adding object %s/%s to roster", m.Namespace, m.Name)
+				log.Infof("Roster: skip add %s/%s", m.Namespace, m.Name)
 			}
 		case "delete":
 			if cb := a.getBroker(m.Name, m.Namespace); cb != nil {
-				log.Infof("deleting object %s/%s from roster", m.Namespace, m.Name)
+				log.Infof("Roster: delete %s/%s", m.Namespace, m.Name)
 				cb.Stop()
 				a.deleteBroker(m.Name, m.Namespace)
 			} else {
-				log.Infof("skip deleting object %s/%s to roster", m.Namespace, m.Name)
+				log.Infof("Roster: skip delete %s/%s", m.Namespace, m.Name)
 			}
 		case "update":
-			log.Infof("skip updating object %s/%s", m.Namespace, m.Name)
+			log.Infof("Roster: skip update %s/%s", m.Namespace, m.Name)
 		default:
 		}
 	}
@@ -131,6 +134,8 @@ func (a *App) authMiddleWare(next http.Handler) http.Handler {
 
 // Serve ui and api endpoints
 func (a *App) Serve() {
+	a.wg.Add(1)
+	defer a.wg.Done()
 	bindAddr := fmt.Sprintf("%s:%d", a.Args().BindAddr(), a.Args().Port())
 	log.Infof("Serving %s, static folder:%s", bindAddr, a.Args().Dir())
 	r := mux.NewRouter()
@@ -153,4 +158,8 @@ func (a *App) Serve() {
 	}
 	srv.SetKeepAlivesEnabled(true)
 	log.Fatal(srv.ListenAndServe())
+}
+
+func (a *App) Wait() {
+	a.wg.Wait()
 }

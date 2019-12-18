@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"kubevue/broker"
 	"kubevue/crd"
 )
@@ -12,7 +13,7 @@ type CrdBroker struct {
 
 func NewBroker(group, version, name, namespace string) *CrdBroker {
 	crd := crd.New(group, version, name, namespace)
-	broker := broker.New()
+	broker := broker.New(fmt.Sprintf("%s/%s/%s/%s", group, version, name, namespace))
 	return &CrdBroker{crd, broker}
 }
 

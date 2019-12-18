@@ -14,6 +14,7 @@ import (
 
 // Broker defines broker data
 type Broker struct {
+	id             string
 	Notifier       chan *msg.Msg
 	newClients     chan chan *msg.Msg
 	closingClients chan chan *msg.Msg
@@ -36,8 +37,9 @@ func sendMsg(w http.ResponseWriter, filter string, flusher http.Flusher, m *msg.
 }
 
 // New creates broker instance
-func New() (broker *Broker) {
+func New(id string) (broker *Broker) {
 	broker = &Broker{
+		id:             id,
 		Notifier:       make(chan *msg.Msg),
 		newClients:     make(chan chan *msg.Msg),
 		closingClients: make(chan chan *msg.Msg),
@@ -89,18 +91,18 @@ func (broker *Broker) updateCache(m *msg.Msg) {
 const patience time.Duration = time.Second * 1
 
 func (broker *Broker) listen() {
-	log.Debugf("Starting message broker")
+	log.Debugf("Broker:%s start", broker.id)
 	for {
 		select {
 		case s := <-broker.newClients:
 			broker.clients[s] = true
-			log.Debugf("Client added. %d registered clients", len(broker.clients))
+			log.Debugf("Broker:%s add client, total:%d", broker.id, len(broker.clients))
 		case s := <-broker.closingClients:
 			delete(broker.clients, s)
-			log.Debugf("Removed client. %d registered clients", len(broker.clients))
+			log.Debugf("Broker:%s remove client, total:%d", broker.id, len(broker.clients))
 		case msg, ok := <-broker.Notifier:
 			if !ok {
-				log.Debugf("Stopping message broker")
+				log.Debugf("Broker:%s stop", broker.id)
 				return
 			}
 			broker.updateCache(msg)
@@ -108,7 +110,7 @@ func (broker *Broker) listen() {
 				select {
 				case clientMessageChan <- msg:
 				case <-time.After(patience):
-					log.Print("Skipping client.")
+					log.Print("Broker:%s client timeout", broker.id)
 				}
 			}
 		}

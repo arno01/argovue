@@ -16,5 +16,5 @@ func main() {
 		version = "development"
 	}
 	fmt.Printf("Starting kubevue, version:%s\n", version)
-	app.New().Serve()
+	app.New().Wait()
 }

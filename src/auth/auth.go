@@ -18,6 +18,7 @@ type Auth struct {
 
 // New creates Auth instance
 func New(oidcProvider, oidcClientID, oidcClientSecret, oidcRedirectURL, oidcScopes string) *Auth {
+	log.Debugf("Starting OIDC client, provider:%s", oidcProvider)
 	ctx := context.Background()
 
 	provider, err := oidc.NewProvider(ctx, oidcProvider)
