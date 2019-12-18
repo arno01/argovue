@@ -6,7 +6,7 @@
 * Replace ad-hoc maps to Properly defined CRD with generated code
 * Helm deployment
 * Honor service settings for redirect (maybe combine with annotations)
-* Add run duration to steps/pods/workflows
+* Add run duration to steps/pods/workflows and better time representation (moments)?
 * Automate access to volume with ngingx pod
 * Add workflow actions, e.g. retry
 * Add workflow templates and their actions?
