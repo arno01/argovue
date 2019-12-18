@@ -31,7 +31,7 @@ type Crd struct {
 // Notify channel on new message
 func (crd *Crd) Notify(action string, obj interface{}) {
 	mObj := obj.(apiv1.Object)
-	log.Debugf("CRD:%s %s %s@%s uid:%s", crd.id, action, mObj.GetName(), mObj.GetNamespace(), mObj.GetUID())
+	log.Debugf("CRD: %s %s %s@%s uid:%s", crd.id, action, mObj.GetName(), mObj.GetNamespace(), mObj.GetUID())
 	crd.notify <- msg.New(action, obj)
 }
 
@@ -51,7 +51,7 @@ func New(group, version, resource, namespace string) *Crd {
 
 // Stop watching
 func (crd *Crd) Stop() {
-	log.Debugf("CRD:%s stop", crd.id)
+	log.Debugf("CRD: %s stop", crd.id)
 
 	close(crd.notify)
 	close(crd.stop)
@@ -59,12 +59,12 @@ func (crd *Crd) Stop() {
 
 // Watch resources
 func (crd *Crd) Watch() *Crd {
-	log.Debugf("CRD:%s start", crd.id)
+	log.Debugf("CRD: %s start", crd.id)
 
 	cfg, err := kube.GetConfig()
 	dc, err := dynamic.NewForConfig(cfg)
 	if err != nil {
-		log.Fatalf("CRD:%s could not generate dynamic client for config, error:%s", crd.id, err)
+		log.Fatalf("CRD: %s could not generate dynamic client for config, error:%s", crd.id, err)
 	}
 	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(dc, 0, crd.namespace, nil)
 	gvr := schema.GroupVersionResource{Group: crd.group, Version: crd.version, Resource: crd.resource}

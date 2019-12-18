@@ -35,7 +35,7 @@ func (a *App) Watch(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		flusher.Flush()
 		cb.broker.Serve(w, name, flusher)
-		log.Debugf("Closing SSE connection")
+		log.Debugf("SSE: %s/%s/%s close", namespace, kind, name)
 	} else {
 		log.Errorf("Can't subscribe to %s/%s", namespace, kind)
 		http.Error(w, "Objects not found", http.StatusNotFound)

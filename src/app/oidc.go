@@ -98,7 +98,7 @@ func (a *App) AuthCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Debugf("Authenticated user name:%v", profile["name"])
+	log.Debugf("OIDC: auth name:%v", profile["name"])
 	session.Values["profile"] = profile
 	if err = session.Save(r, w); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

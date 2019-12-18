@@ -96,6 +96,7 @@ func (a *App) watchObjects(cb *CrdBroker) {
 var bypassAuth []*regexp.Regexp = []*regexp.Regexp{
 	regexp.MustCompile("^/profile$"),
 	regexp.MustCompile("^/auth$"),
+	regexp.MustCompile("^/dex/.*"),
 	regexp.MustCompile("^/callback.*$"),
 	regexp.MustCompile("^/ui/.*$"),
 }
@@ -112,7 +113,7 @@ func (a *App) checkAuth(w http.ResponseWriter, r *http.Request) map[string]inter
 		http.Error(w, "Profile is not a map", http.StatusInternalServerError)
 		return nil
 	}
-	log.Debugf("Request:%v user:%s remote:%s", r.RequestURI, profile["name"], r.RemoteAddr)
+	log.Debugf("HTTP: '%s' from:%s %s", profile["name"], r.RemoteAddr, r.RequestURI)
 	return profile
 }
 
@@ -121,7 +122,7 @@ func (a *App) authMiddleWare(next http.Handler) http.Handler {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		for _, re := range bypassAuth {
 			if re.MatchString(r.RequestURI) {
-				log.Debugf("Request No-Auth: %v", r.RequestURI)
+				log.Debugf("HTTP: no-auth %v", r.RequestURI)
 				next.ServeHTTP(w, r)
 				return
 			}
@@ -137,13 +138,14 @@ func (a *App) Serve() {
 	a.wg.Add(1)
 	defer a.wg.Done()
 	bindAddr := fmt.Sprintf("%s:%d", a.Args().BindAddr(), a.Args().Port())
-	log.Infof("Serving %s, static folder:%s", bindAddr, a.Args().Dir())
+	log.Infof("HTTP: at %s static:%s start", bindAddr, a.Args().Dir())
 	r := mux.NewRouter()
 	r.PathPrefix("/ui/").Handler(http.StripPrefix("/ui/", http.FileServer(http.Dir(a.Args().Dir()))))
 	r.HandleFunc("/watch/{namespace}/{kind}", a.Watch)
 	r.HandleFunc("/watch/{namespace}/{kind}/{name}", a.Watch)
 	r.HandleFunc("/proxy/{namespace}/{name}/{port}/{rest:.*}", a.ProxyService)
 	r.HandleFunc("/proxy/{namespace}/{name}/{port}", a.ProxyService)
+	r.HandleFunc("/dex/{rest:.*}", a.ProxyDex)
 	r.HandleFunc("/logs/pod/{namespace}/{name}/{container}", a.StreamLogs)
 	r.HandleFunc("/workflow/{namespace}/{name}/{action}", a.CommandWorkflow).Methods("POST")
 	r.HandleFunc("/objects", a.Objects)

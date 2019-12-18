@@ -17,7 +17,7 @@ spec:
         - name: OIDC_CLIENT_SECRET
           value: ZXhhbXBsZS1hcHAtc2VjcmV0
         - name: OIDC_PROVIDER
-          value: http://dex.default:5556
+          value: http://localhost:8080/dex
         - name: OIDC_REDIRECT_URL
           value: http://localhost:8080/callback
         - name: OIDC_SCOPE

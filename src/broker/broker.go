@@ -29,7 +29,7 @@ func sendMsg(w http.ResponseWriter, filter string, flusher http.Flusher, m *msg.
 	}
 	jsonMsg, err := json.Marshal(m)
 	if err != nil {
-		log.Errorf("Can't encode message:%s", m)
+		log.Errorf("Broker can't encode message:%s", m)
 		return
 	}
 	w.Write([]byte(fmt.Sprintf("data: %s\n\n", jsonMsg)))
@@ -59,7 +59,7 @@ func (broker *Broker) Serve(w http.ResponseWriter, filter string, flusher http.F
 	go func() {
 		<-notify
 		broker.closingClients <- messageChan
-		log.Debugf("Closing connection")
+		log.Debugf("Broker: %s close connection", broker.id)
 	}()
 
 	defer func() {
@@ -91,18 +91,18 @@ func (broker *Broker) updateCache(m *msg.Msg) {
 const patience time.Duration = time.Second * 1
 
 func (broker *Broker) listen() {
-	log.Debugf("Broker:%s start", broker.id)
+	log.Debugf("Broker: %s start", broker.id)
 	for {
 		select {
 		case s := <-broker.newClients:
 			broker.clients[s] = true
-			log.Debugf("Broker:%s add client, total:%d", broker.id, len(broker.clients))
+			log.Debugf("Broker: %s add client, total:%d", broker.id, len(broker.clients))
 		case s := <-broker.closingClients:
 			delete(broker.clients, s)
-			log.Debugf("Broker:%s remove client, total:%d", broker.id, len(broker.clients))
+			log.Debugf("Broker: %s remove client, total:%d", broker.id, len(broker.clients))
 		case msg, ok := <-broker.Notifier:
 			if !ok {
-				log.Debugf("Broker:%s stop", broker.id)
+				log.Debugf("Broker: %s stop", broker.id)
 				return
 			}
 			broker.updateCache(msg)
@@ -110,7 +110,7 @@ func (broker *Broker) listen() {
 				select {
 				case clientMessageChan <- msg:
 				case <-time.After(patience):
-					log.Print("Broker:%s client timeout", broker.id)
+					log.Print("Broker: %s client timeout", broker.id)
 				}
 			}
 		}

@@ -36,7 +36,7 @@ metadata:
   name: dex
 data:
   config.yaml: |
-    issuer: http://dex.default:5556
+    issuer: http://localhost:8080/dex
     storage:
       type: kubernetes
       config:
@@ -49,14 +49,12 @@ data:
       name: Example
     oauth2:
       skipApprovalScreen: true
-
     staticClients:
     - id: kubevue
       redirectURIs:
       - 'http://localhost:8080/callback'
       name: 'KubeVue'
       secret: ZXhhbXBsZS1hcHAtc2VjcmV0
-
     enablePasswordDB: true
     staticPasswords:
     - email: "admin@example.com"
