@@ -12,6 +12,9 @@
           <b-tab title="Workflow">
             <jsoneditor :content="object"></jsoneditor>
           </b-tab>
+          <b-tab title="Control">
+            <control :name="name" :namespace="namespace"></control>
+          </b-tab>
         </b-tabs>
       </b-card>
     </div>
@@ -22,6 +25,7 @@
 import SSE from '@/SSE/Object'
 import JsonEditor from '@/JsonEditor'
 import Nodes from '@/Workflow/Nodes'
+import Control from '@/Workflow/Control'
 
 export default {
   props: ["namespace", "name"],
@@ -29,6 +33,7 @@ export default {
   components: {
     jsoneditor: JsonEditor,
     nodes: Nodes,
+    control: Control,
   },
   data() {
     return {

@@ -140,6 +140,7 @@ func (a *App) Serve() {
 	r.HandleFunc("/proxy/{namespace}/{name}/{port}/{rest:.*}", a.ProxyService)
 	r.HandleFunc("/proxy/{namespace}/{name}/{port}", a.ProxyService)
 	r.HandleFunc("/logs/{namespace}/{name}/{container}", a.StreamLogs)
+	r.HandleFunc("/workflow/{namespace}/{name}/retry", a.RetryWorkflow).Methods("POST")
 	r.HandleFunc("/objects", a.Objects)
 	r.HandleFunc("/auth", a.AuthInitiate)
 	r.HandleFunc("/callback", a.AuthCallback)
