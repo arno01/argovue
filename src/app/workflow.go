@@ -13,6 +13,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func sendError(w http.ResponseWriter, action string, err error) {
+	json.NewEncoder(w).Encode(map[string]string{"status": "error", "action": action, "message": fmt.Sprintf("%s", err)})
+}
+
 func (a *App) CommandWorkflow(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 	namespace := mux.Vars(r)["namespace"]
@@ -21,20 +25,23 @@ func (a *App) CommandWorkflow(w http.ResponseWriter, r *http.Request) {
 	wfClientset, err := kube.GetWfClientset()
 	if err != nil {
 		log.Errorf("Can't get argo clientset, error:%s", err)
-		http.Error(w, "Can't get argo clientset", http.StatusInternalServerError)
+		sendError(w, action, err)
+		return
 	}
 	wfClient := kube.GetWfClient(wfClientset, namespace)
 	wf, err := wfClient.Get(name, metav1.GetOptions{})
 	if err != nil {
 		log.Errorf("Can't get workflow %s/%s, error:%s", namespace, name, err)
-		json.NewEncoder(w).Encode(map[string]string{"status": "error", "action": action, "message": fmt.Sprintf("%s", err)})
+		sendError(w, action, err)
+		return
 	}
 	kubeClient, _ := kube.GetClient()
 	switch action {
 	case "retry":
 		_, err = util.RetryWorkflow(kubeClient, wfClient, wf)
 	case "resubmit":
-		if newWF, err := util.FormulateResubmitWorkflow(wf, false); err != nil {
+		newWF, err := util.FormulateResubmitWorkflow(wf, false)
+		if err == nil {
 			_, err = util.SubmitWorkflow(wfClient, wfClientset, namespace, newWF, nil)
 		}
 	case "delete":
@@ -46,11 +53,11 @@ func (a *App) CommandWorkflow(w http.ResponseWriter, r *http.Request) {
 	case "terminate":
 		err = util.TerminateWorkflow(wfClient, name)
 	case "default":
-		err = fmt.Errorf("unrecognized command")
+		err = fmt.Errorf("unrecognized command %s", action)
 	}
 	if err != nil {
 		log.Errorf("Can't %s workflow %s/%s, error:%s", action, namespace, name, err)
-		json.NewEncoder(w).Encode(map[string]string{"status": "error", "action": action, "message": fmt.Sprintf("%s", err)})
+		sendError(w, action, err)
 	} else {
 		json.NewEncoder(w).Encode(map[string]string{"status": "ok", "action": action, "message": ""})
 	}

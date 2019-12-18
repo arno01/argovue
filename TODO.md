@@ -9,7 +9,6 @@
 * Add run duration to steps/pods/workflows and better time representation (moments)?
 * Automate access to volume with nginx pod
 * Add workflow templates and their actions?
-* Check why resubmit doesn't work
 * Reduce number of unauthorized requests and take action if this happens?
 
 # DONE
@@ -18,3 +17,4 @@
 * Add workflow actions, e.g. retry
 * Honor service settings for redirect (maybe combine with annotations)
 * proxy dex a-la argo ci
+* Check why resubmit doesn't work
