@@ -16,7 +16,7 @@ export default {
     }
   },
   created: async function() {
-    let re = await this.$axios.get(`/logs/${this.namespace}/${this.name}/${this.container}`)
+    let re = await this.$axios.get(`/logs/pod/${this.namespace}/${this.name}/${this.container}`)
     this.logs = re.data
   }
 }

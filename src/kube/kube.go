@@ -40,9 +40,11 @@ func GetPodLogs(name, namespace, container string) (io.ReadCloser, error) {
 	return req.Stream()
 }
 
-func GetWfClient(namespace string) v1alpha1.WorkflowInterface {
+func GetWfClient(wfClientset *versioned.Clientset, namespace string) v1alpha1.WorkflowInterface {
+	return wfClientset.ArgoprojV1alpha1().Workflows(namespace)
+}
+
+func GetWfClientset() (*versioned.Clientset, error) {
 	config, _ := GetConfig()
-	wfClientset := versioned.NewForConfigOrDie(config)
-	wfClient := wfClientset.ArgoprojV1alpha1().Workflows(namespace)
-	return wfClient
+	return versioned.NewForConfig(config)
 }

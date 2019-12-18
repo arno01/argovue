@@ -40,7 +40,7 @@ export default {
         var obj = msg.Content;
         switch (msg.Action) {
           case "delete":
-            // do something, go up?
+            self.$router.replace(`/watch/${self.namespace}/${self.kind}`)
             break
           case "add":
             self.$set(self, "object", obj)

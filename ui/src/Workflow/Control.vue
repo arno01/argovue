@@ -1,27 +1,72 @@
 <template>
-<b-container fluid>
-	<b-row>
-		<b-col><b-button @click="retry()" variant="danger">Retry</b-button>
-		</b-col>
-	</b-row>
-</b-container>
+<b-button-toolbar>
+  <b-button-group size="sm" class="mr-1">
+    <b-button :disabled="cantRetry()" @click="retry()">Retry</b-button>
+    <b-button @click="resubmit()">Resubmit</b-button>
+    <b-button @click="del()">Delete</b-button>
+  </b-button-group>
+  <b-button-group size="sm" class="mr-1">
+    <b-button :disabled="cantSuspend()" @click="suspend()">Suspend</b-button>
+    <b-button :disabled="cantResume()" @click="resume()">Resume</b-button>
+    <b-button :disabled="cantTerminate()" @click="terminate()">Terminate</b-button>
+  </b-button-group>
+</b-button-toolbar>
 </template>
 
 <script>
 export default {
-	props: ['name', 'namespace'],
-	data () {
-		return {
-			nodes: []
-		}
-	},
-	methods: {
-		retry () {
-			let re = this.$axios.post(`/workflow/${this.namespace}/${this.name}/retry`)
-			window.console.log(re)
-		}
-	},
+  props: ['object', 'name', 'namespace'],
+  data () {
+    return {
+      nodes: []
+    }
+  },
+  methods: {
+    status(status) {
+      return this.object && this.object.status && this.object.status.phase == status
+    },
+    action: async function(action) {
+      let re = await this.$axios.post(`/workflow/${this.namespace}/${this.name}/${action}`)
+      this.$bvToast.toast(`${re.data.action} ${re.data.status} ${re.data.message}`, {
+        title: re.data.action,
+        toaster: 'b-toaster-bottom-right',
+        'auto-hide-delay': 3000,
+        'no-close-button': true,
+      })
+    },
+    cantRetry() {
+      return ! (this.status('Failed') || this.status('Error'))
+    },
+    cantSuspend() {
+      return ! (this.status('Running') || this.isSuspended())
+    },
+    cantResume() {
+      return ! this.isSuspended()
+    },
+    cantTerminate() {
+      return ! this.status('Running')
+    },
+    isSuspended() {
+      return this.object && this.object.spec && this.object.spec.suspend
+    },
+    retry () {
+      this.action('retry')
+    },
+    del () {
+      this.action('delete')
+    },
+    resubmit () {
+      this.action('resubmit')
+    },
+    suspend () {
+      this.action('suspsend')
+    },
+    resume () {
+      this.action('resume')
+    },
+    terminate () {
+      this.action('terminate')
+    },
+  },
 }
 </script>
-
-
