@@ -30,8 +30,9 @@ export default {
       this.$bvToast.toast(`${re.data.action} ${re.data.status} ${re.data.message}`, {
         title: re.data.action,
         toaster: 'b-toaster-bottom-right',
-        'auto-hide-delay': 3000,
-        'no-close-button': true,
+        autoHideDelay: 3000,
+        noCloseButton: true,
+        variant: re.data.status == 'ok'? 'info' : 'error'
       })
     },
     cantRetry() {
@@ -59,7 +60,7 @@ export default {
       this.action('resubmit')
     },
     suspend () {
-      this.action('suspsend')
+      this.action('suspend')
     },
     resume () {
       this.action('resume')
