@@ -12,8 +12,8 @@ export default {
     };
   },
   created () {
-    if (window.kubevue && window.kubevue.api) {
-      this.baseURL = window.kubevue.api
+    if (window.kubevue && window.kubevue.api_base_url) {
+      this.baseURL = window.kubevue.api_base_url
     } else {
       this.baseURL = ''
     }
