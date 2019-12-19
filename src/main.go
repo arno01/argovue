@@ -6,9 +6,10 @@ import (
 )
 
 var version = "devel"
+var commit string
 var builddate string
 
 func main() {
-	fmt.Printf("Starting kubevue, version:%s builddate:%s\n", version, builddate)
+	fmt.Printf("Starting kubevue, version:%s, commit:%s, builddate:%s\n", version, commit, builddate)
 	app.New().Wait()
 }
