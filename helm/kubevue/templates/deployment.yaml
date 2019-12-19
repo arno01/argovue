@@ -42,6 +42,8 @@ spec:
               value: {{ .Values.kubevue.rootUrl }}
             - name: K8S_NAMESPACE
               value: {{ .Release.Namespace }}
+            - name: DEX_SERVICE_NAME
+              value: {{ include "kubevue.fullname" . }}-dex
           ports:
             - name: http
               containerPort: 8080

@@ -21,6 +21,7 @@ type Args struct {
 	oidcScopes       string
 	uiRootURL        string
 	k8sNamespace     string
+	dexServiceName   string
 }
 
 // New type
@@ -48,6 +49,7 @@ func (a *Args) Parse() *Args {
 	flag.StringVar(&a.oidcScopes, "oidc-scopes", getEnvOrDefault("OIDC_SCOPES", "groups"), "OIDC scopes")
 	flag.StringVar(&a.uiRootURL, "ui-root-url", getEnvOrDefault("UI_ROOT_URL", "/ui/#/"), "UI root url for redirects")
 	flag.StringVar(&a.k8sNamespace, "k8s-namespace", getEnvOrDefault("K8S_NAMESPACE", "default"), "Kubernetes objects namespace")
+	flag.StringVar(&a.dexServiceName, "dex-service-name", getEnvOrDefault("DEX_SERVICE_NAME", "dex"), "Dex service name")
 
 	flag.Parse()
 	a.args = flag.Args()
