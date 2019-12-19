@@ -1,0 +1,33 @@
+replicaCount: 1
+
+image:
+  repository: jamhed/kubevue
+  pullPolicy: IfNotPresent
+
+serviceAccount:
+  create: true
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths: []
+  tls: []
+
+kubevue:
+  oidcClientId: kubevue
+  oidcClientSecret: ZXhhbXBsZS1hcHAtc2VjcmV0
+  oidcProvider: http://localhost:8080/dex
+  oidcRedirectURL: http://localhost:8080/callback
+  oidcScope: groups
+  uiRoot: /ui/#/
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1000Mi
