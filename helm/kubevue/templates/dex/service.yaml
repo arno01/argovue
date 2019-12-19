@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ include "kubevue.fullname" . }}-dex
 spec:
-  type: NodePort
+  type: {{ .Values.service.type }}
   ports:
   - name: {{ include "kubevue.fullname" . }}-dex
     port: 5556
