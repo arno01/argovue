@@ -86,6 +86,10 @@ func (a *Args) Namespace() string {
 	return a.k8sNamespace
 }
 
+func (a *Args) DexServiceName() string {
+	return a.dexServiceName
+}
+
 // LogLevel set loglevel
 func (a *Args) LogLevel() *Args {
 	switch a.verboseLevel {

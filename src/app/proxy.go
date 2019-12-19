@@ -13,7 +13,7 @@ import (
 
 func (a *App) ProxyDex(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	r = mux.SetURLVars(r, map[string]string{"namespace": a.args.Namespace(), "name": a.Args().DexName(), "port": "5556", "rest": vars["rest"]})
+	r = mux.SetURLVars(r, map[string]string{"namespace": a.args.Namespace(), "name": a.Args().DexServiceName(), "port": "5556", "rest": vars["rest"]})
 	a.ProxyService(w, r)
 }
 
