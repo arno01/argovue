@@ -1,3 +1,4 @@
+{{- if .Values.dex.enabled -}}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -29,3 +30,4 @@ spec:
           items:
           - key: config.yaml
             path: config.yaml
+{{- end -}}

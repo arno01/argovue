@@ -1,3 +1,4 @@
+{{- if .Values.dex.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -11,3 +12,4 @@ spec:
     targetPort: 5556
   selector:
     app: {{ include "kubevue.fullname" . }}-dex
+{{- end -}}

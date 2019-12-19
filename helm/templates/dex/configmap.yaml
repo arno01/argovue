@@ -1,3 +1,4 @@
+{{- if .Values.dex.enabled -}}
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -36,3 +37,4 @@ data:
     frontend: {{ toYaml .frontend | nindent 6 }}
 {{- end }}
 {{- end }}
+{{- end -}}
