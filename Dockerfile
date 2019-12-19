@@ -4,9 +4,9 @@ RUN cd kubevue/ui && yarn install
 RUN cd kubevue/ui && yarn build
 RUN apk add git && \
 	cd kubevue && \
-	VERSION=$(git describe --tags) sed -i "s/_VERSION_/$VERSION/" ui/dist/config.js && \
-	COMMIT=$(git rev-parse --short HEAD) sed -i "s/_COMMIT_/$COMMIT/" ui/dist/config.js && \
-	BUILDDATE=$(date +%Y%m%d%H%M%S) sed -i "s/_BUILDDATE_/$BUILDDATE/" ui/dist/config.js
+	export VERSION=$(git describe --tags) && sed -i "s/_VERSION_/$VERSION/" ui/dist/config.js && \
+	export COMMIT=$(git rev-parse --short HEAD) && sed -i "s/_COMMIT_/$COMMIT/" ui/dist/config.js && \
+	export BUILDDATE=$(date +%Y%m%d%H%M%S) && sed -i "s/_BUILDDATE_/$BUILDDATE/" ui/dist/config.js
 
 FROM golang:1.13-alpine as backend
 COPY . /home/kubevue
