@@ -28,6 +28,8 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            - name: VERBOSE
+              value: {{ .Values.kubevue.verbose }}
             - name: OIDC_CLIENT_ID
               value: {{ .Values.kubevue.oidcClientId }}
             - name: OIDC_CLIENT_SECRET
@@ -48,14 +50,6 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
