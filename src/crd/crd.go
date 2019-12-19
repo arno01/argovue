@@ -62,6 +62,9 @@ func (crd *Crd) Watch() *Crd {
 	log.Debugf("CRD: %s start", crd.id)
 
 	cfg, err := kube.GetConfig()
+	if err != nil {
+		log.Fatalf("CRD: %s could not configure kubernetes access, error:%s", crd.id, err)
+	}
 	dc, err := dynamic.NewForConfig(cfg)
 	if err != nil {
 		log.Fatalf("CRD: %s could not generate dynamic client for config, error:%s", crd.id, err)
