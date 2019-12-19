@@ -10,7 +10,7 @@ export default {
     };
   },
   created() {
-    this.setupStream();
+    this.setupStream()
   },
   destroyed() {
     this.tearDown()
@@ -30,26 +30,21 @@ export default {
       this.es = undefined
     },
     setupStream() {
-      this.es = new EventSource(`/watch/${this.namespace}/${this.kind}/${this.name}`)
-      this.es.onerror = function(err) {
-        window.console.log("sse error", err)
-      };
-      var self = this;
-      this.es.onmessage = function(event) {
-        var msg = JSON.parse(event.data);
-        var obj = msg.Content;
+      this.es = this.$api.sse(`/watch/${this.namespace}/${this.kind}/${this.name}`, (event) => {
+        let msg = JSON.parse(event.data);
+        let obj = msg.Content;
         switch (msg.Action) {
           case "delete":
-            self.$router.replace(`/watch/${self.namespace}/${self.kind}`)
+            this.$router.replace(`/watch/${this.namespace}/${this.kind}`)
             break
           case "add":
-            self.$set(self, "object", obj)
+            this.$set(this, "object", obj)
             break
           case "update":
-            self.$set(self, "object", obj)
+            this.$set(this, "object", obj)
             break
         }
-      };
+      })
     }
   }
 };

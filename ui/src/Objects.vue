@@ -8,10 +8,10 @@
         <b-col>
           <b-link :to="`/watch/${obj.metadata.namespace}/${kind}/${obj.metadata.name}`">{{ obj.metadata.name }}</b-link>
         </b-col>
-        <b-col>
+        <b-col cols=2>
           {{ obj.metadata.creationTimestamp }}
         </b-col>
-        <b-col v-if="obj.status">
+        <b-col cols=2 v-if="obj.status">
           {{ obj.status.phase }}
         </b-col>
       </b-row>

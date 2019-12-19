@@ -1,54 +1,41 @@
 <template>
-  <div style="height: 100%">
-
-    <div v-if="$auth.isAuth()">
-      <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#/">KubeVue</a>
-        <ul class="navbar-nav px-3">
-          <li class="nav-item text-nowrap">
-            <a class="nav-link" style="cursor: pointer" @click="$auth.logout()">{{$auth.name}}</a>
-          </li>
-        </ul>
-      </nav>
-      <div class="container-fluid" v-if="$auth.isAuth()">
-        <div class="row">
-          <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-            <div class="sidebar-sticky">
-              <ul class="nav flex-column">
-                <b-nav-item v-for="obj in objects" v-bind:key="obj" :to="`/watch/${obj}`">{{obj}}</b-nav-item>
-              </ul>
-            </div>
-          </nav>
-          <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-            <router-view />
-          </main>
-        </div>
-      </div>
-    </div>
-
-    <div v-if="$auth.isNot()" class="container-fluid signin text-center">
-      <div class="form-signin">
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <button class="btn btn-lg btn-primary btn-block" @click="$auth.login()">Sign in</button>
-      </div>
-    </div>
-  
+<div style="height: 100%">
+  <div v-if="$api.isAuth()">
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#/">KubeVue</a>
+      <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+          <a class="nav-link" style="cursor: pointer" @click="$api.logout()">{{$api.username}}</a>
+        </li>
+      </ul>
+    </nav>
+    <b-container fluid>
+      <b-row>
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky"><objects /></div>
+        </nav>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+          <router-view />
+        </main>
+      </b-row>
+    </b-container>
   </div>
+
+  <b-container fluid v-if="$api.isNot()" class="signin text-center">
+    <div class="form-signin">
+      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+      <button class="btn btn-lg btn-primary btn-block" @click="$api.login()">Sign in</button>
+    </div>
+  </b-container>
+</div>
 </template>
 
 <script>
+import Objects from '@/App/Objects'
+
 export default {
-  name: "app",
-  created: async function () {
-    let re = await this.$axios.get("/objects")
-    this.objects = re.data.sort()
-  },
-  data() {
-    return {
-      objects: [],
-      version: null,
-      version_ref: null
-    };
+  components: {
+    objects: Objects,
   }
 };
 </script>

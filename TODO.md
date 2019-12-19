@@ -1,5 +1,7 @@
 # TODO
 
+* and take action if this happens?
+
 * Use name/presentation name for objects.kubevue.io kind
 * Check OIDC groups and how to use them to limit access, probably using another crd, e.g. rules
 * Filter services and/or other objects by annotations?
@@ -9,10 +11,10 @@
 * Add run duration to steps/pods/workflows and better time representation (moments)?
 * Automate access to volume with nginx pod
 * Add workflow templates and their actions?
-* Reduce number of unauthorized requests and take action if this happens?
 
 # DONE
 
+* Reduce number of unauthorized requests
 * Subscribe to single object (filter?)
 * Add workflow actions, e.g. retry
 * Honor service settings for redirect (maybe combine with annotations)

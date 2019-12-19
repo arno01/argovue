@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import BootstrapVue from 'bootstrap-vue'
-import axios from "axios"
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -13,14 +12,13 @@ import Objects from '@/Objects'
 import WorkflowObject from '@/Workflow/Object'
 import PodObject from '@/Pod/Object'
 import ServiceObject from '@/Service/Object'
-import Auth from '@/Auth'
+import API from '@/API'
 
 Vue.use(VueRouter)
 Vue.use(BootstrapVue)
 
-Vue.prototype.$auth = new Vue(Auth)
-Vue.prototype.$base = window.kubevue.api
-Vue.prototype.$axios = axios.create({ baseURL: window.kubevue.api })
+Vue.prototype.$api = new Vue(API)
+Vue.prototype.$log = window.console.log.bind(console)
 
 function routeProps(route) {
   return {
@@ -42,10 +40,10 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (router.app.$auth.isAuth()) {
+  if (router.app.$api.isAuth()) {
     next()
   } else {
-    router.app.$auth.check()
+    router.app.$api.verifyAuth()
     next()
   }
 })
