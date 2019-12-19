@@ -1,7 +1,5 @@
 # TODO
 
-* Helm deployment and image build workflow
-
 * Check OIDC groups and how to use them to limit access, probably using another crd, e.g. rules
 
 * Filter services and/or other objects by annotations?
@@ -19,6 +17,7 @@
 
 # DONE
 
+* Helm deployment and image build workflow
 * Reduce number of unauthorized requests
 * Subscribe to single object (filter?)
 * Add workflow actions, e.g. retry
