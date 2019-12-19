@@ -56,7 +56,7 @@ export default {
       this.redirect('/auth')
     },
     logout() {
-      this.redirect('/logoug')
+      this.redirect('/logout')
     }
   }
 };
