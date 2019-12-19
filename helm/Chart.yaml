@@ -3,4 +3,4 @@ name: kubevue
 description: KubeVue Helm Chart
 type: application
 version: 0.1.3
-appVersion: 0.1.6
+appVersion: 0.1.7
