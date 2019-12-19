@@ -5,16 +5,10 @@ import (
 	"kubevue/app"
 )
 
-// Default is `-s -w -X main.version={{.Version}} -X main.commit={{.ShortCommit}} -X main.date={{.Date}} -X main.builtBy=goreleaser`.
-var version string
-var commit string
-var date string
-var builtBy string
+var version = "devel"
+var builddate string
 
 func main() {
-	if version == "" {
-		version = "development"
-	}
-	fmt.Printf("Starting kubevue, version:%s\n", version)
+	fmt.Printf("Starting kubevue, version:%s builddate:%s\n", version, builddate)
 	app.New().Wait()
 }
