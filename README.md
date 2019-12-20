@@ -1,4 +1,4 @@
-# KubeVue
+# ArgoVue
 
 This is work in progress, check [TODO](TODO.md).
 
@@ -13,7 +13,7 @@ Provide per project (namespace) UI to run and manage argo workflows and expose p
 
 ## Architecture
 
-KubeVue uses custom resource definitions to configure what objects and services to expose.
+ArgoVue uses custom resource definitions to configure what objects and services to expose.
 
 ## Pre-requisites
 
@@ -22,7 +22,7 @@ dex.
 
 ## Development
 
-Deploy Kubernetes objects to configure `kubevue` from `kube` folder, and:
+Deploy Kubernetes objects to configure `argovue` from `kube` folder, and:
 
 ```sh
 skaffold dev --port-forward

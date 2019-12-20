@@ -1,19 +1,19 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: kubevue
-  namespace: kubevue
+  name: argovue
+  namespace: argovue
   labels:
-    app: kubevue
+    app: argovue
 spec:
   containers:
     - name: main
-      image: kubevue
+      image: argovue
       command: ["sh", "-c"]
-      args: ["./kubevue -verbose=debug"]
+      args: ["./argovue -verbose=debug"]
       env:
         - name: OIDC_CLIENT_ID
-          value: kubevue
+          value: argovue
         - name: OIDC_CLIENT_SECRET
           value: ZXhhbXBsZS1hcHAtc2VjcmV0
         - name: OIDC_PROVIDER

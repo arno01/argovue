@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "kubevue.fullname" . }}
+  name: {{ include "argovue.fullname" . }}
   labels:
-    {{- include "kubevue.labels" . | nindent 4 }}
+    {{- include "argovue.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "kubevue.selectorLabels" . | nindent 6 }}
+      {{- include "argovue.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "kubevue.selectorLabels" . | nindent 8 }}
+        {{- include "argovue.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "kubevue.serviceAccountName" . }}
+      serviceAccountName: {{ include "argovue.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -29,23 +29,23 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: VERBOSE
-              value: {{ .Values.kubevue.verbose }}
+              value: {{ .Values.argovue.verbose }}
             - name: OIDC_CLIENT_ID
-              value: {{ .Values.kubevue.oidcClientId }}
+              value: {{ .Values.argovue.oidcClientId }}
             - name: OIDC_CLIENT_SECRET
-              value: {{ .Values.kubevue.oidcClientSecret }}
+              value: {{ .Values.argovue.oidcClientSecret }}
             - name: OIDC_PROVIDER
-              value: {{ .Values.kubevue.oidcProvider }}
+              value: {{ .Values.argovue.oidcProvider }}
             - name: OIDC_REDIRECT_URL
-              value: {{ .Values.kubevue.oidcRedirectUrl }}
+              value: {{ .Values.argovue.oidcRedirectUrl }}
             - name: OIDC_SCOPE
-              value: {{ .Values.kubevue.oidcScope }}
+              value: {{ .Values.argovue.oidcScope }}
             - name: UI_ROOT_URL
-              value: {{ .Values.kubevue.rootUrl }}
+              value: {{ .Values.argovue.rootUrl }}
             - name: K8S_NAMESPACE
               value: {{ .Release.Namespace }}
             - name: DEX_SERVICE_NAME
-              value: {{ include "kubevue.fullname" . }}-dex
+              value: {{ include "argovue.fullname" . }}-dex
           ports:
             - name: http
               containerPort: 8080

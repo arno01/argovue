@@ -3,9 +3,9 @@ package app
 import (
 	"encoding/gob"
 	"fmt"
-	"kubevue/args"
-	"kubevue/auth"
-	"kubevue/crd"
+	"argovue/args"
+	"argovue/auth"
+	"argovue/crd"
 	"regexp"
 	"sync"
 
@@ -60,7 +60,7 @@ func New() *App {
 	a.store = sessions.NewFilesystemStore("", []byte("session-secret"))
 	a.brokers = make(BrokerMap)
 	gob.Register(map[string]interface{}{})
-	go a.watchObjects(a.newBroker("kubevue.io", "v1", "objects", a.args.Namespace()))
+	go a.watchObjects(a.newBroker("argovue.io", "v1", "objects", a.args.Namespace()))
 	go a.Serve()
 	a.auth = auth.New(a.Args().OIDC())
 	return a

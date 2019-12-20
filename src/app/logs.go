@@ -2,7 +2,7 @@ package app
 
 import (
 	"io"
-	"kubevue/kube"
+	"argovue/kube"
 	"net/http"
 
 	"github.com/gorilla/mux"

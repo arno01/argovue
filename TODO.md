@@ -1,5 +1,11 @@
 # TODO
 
+* Rules
+	- workflow + workflow labelled pods (not all of them)
+	- only services with lables/annotations
+	- map oidc groups to labels
+	- map oidc user id (email to labels)
+
 * Check OIDC groups and how to use them to limit access, probably using another crd, e.g. rules
 * Filter services and/or other objects by annotations?
 * Start a copy of pre-defined service per user with shared volumes and private volumes
@@ -9,7 +15,7 @@
 * take name/namespace from crd, e.g. create watchable objects per namespace?
 
 * Replace ad-hoc maps to properly defined CRD with generated code
-* Use name/presentation name for objects.kubevue.io kind
+* Use name/presentation name for objects.argovue.io kind
 * Add graph representation for workflows
 
 * Add run duration to steps/pods/workflows and better time representation (moments)?

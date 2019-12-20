@@ -2,8 +2,8 @@ package app
 
 import (
 	"fmt"
-	"kubevue/broker"
-	"kubevue/crd"
+	"argovue/broker"
+	"argovue/crd"
 )
 
 type CrdBroker struct {

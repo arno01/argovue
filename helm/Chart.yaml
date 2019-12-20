@@ -1,6 +1,6 @@
 apiVersion: v2
-name: kubevue
-description: KubeVue Helm Chart
+name: argovue
+description: ArgoVue Helm Chart
 type: application
 version: 0.1.3
 appVersion: 0.1.7

@@ -1,9 +1,9 @@
-/kubevue
-/src/kubevue
-/skaffold/kubevue
+/argovue
+/src/argovue
+/skaffold/argovue
 /skaffold/ui
 /skaffold/k8s-deploy.yaml.real
-kubevue.sublime-project
-kubevue.sublime-workspace
+argovue.sublime-project
+argovue.sublime-workspace
 /src/gin-bin
 /src/.env

@@ -1,5 +1,5 @@
 {
-  "name": "kubevue",
+  "name": "argovue",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -14,6 +14,7 @@
     "core-js": "^3.4.3",
     "jquery": "^3.4.1",
     "jsoneditor": "^8.0.0",
+    "moment": "^2.24.0",
     "popper": "^1.0.1",
     "popper.js": "^1.16.0",
     "vue": "^2.6.10",

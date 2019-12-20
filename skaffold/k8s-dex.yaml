@@ -50,10 +50,10 @@ data:
     oauth2:
       skipApprovalScreen: true
     staticClients:
-    - id: kubevue
+    - id: argovue
       redirectURIs:
       - 'http://localhost:8080/callback'
-      name: 'KubeVue'
+      name: 'ArgoVue'
       secret: ZXhhbXBsZS1hcHAtc2VjcmV0
     enablePasswordDB: true
     staticPasswords:

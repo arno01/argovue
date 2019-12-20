@@ -1,4 +1,4 @@
-apiVersion: kubevue.io/v1
+apiVersion: argovue.io/v1
 kind: Object
 metadata:
   name: services

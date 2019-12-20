@@ -1,4 +1,4 @@
-module kubevue
+module argovue
 
 go 1.13
 

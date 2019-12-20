@@ -5,8 +5,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"kubevue/kube"
-	"kubevue/msg"
+	"argovue/kube"
+	"argovue/msg"
 
 	apiv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"

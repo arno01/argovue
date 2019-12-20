@@ -3,7 +3,7 @@ package app
 import (
 	"encoding/json"
 	"fmt"
-	"kubevue/kube"
+	"argovue/kube"
 	"net/http"
 
 	"github.com/argoproj/argo/workflow/util"

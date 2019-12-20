@@ -3,19 +3,19 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
-    app: {{ include "kubevue.fullname" . }}-dex
-  name: {{ include "kubevue.fullname" . }}-dex
+    app: {{ include "argovue.fullname" . }}-dex
+  name: {{ include "argovue.fullname" . }}-dex
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: {{ include "kubevue.fullname" . }}-dex
+        app: {{ include "argovue.fullname" . }}-dex
     spec:
-      serviceAccountName: {{ include "kubevue.fullname" . }}-dex
+      serviceAccountName: {{ include "argovue.fullname" . }}-dex
       containers:
       - image: quay.io/dexidp/dex:v2.10.0
-        name: {{ include "kubevue.fullname" . }}-dex
+        name: {{ include "argovue.fullname" . }}-dex
         command: ["/usr/local/bin/dex", "serve", "/etc/dex/cfg/config.yaml"]
         ports:
         - name: http
@@ -26,7 +26,7 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: {{ include "kubevue.fullname" . }}-dex
+          name: {{ include "argovue.fullname" . }}-dex
           items:
           - key: config.yaml
             path: config.yaml

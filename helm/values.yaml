@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: jamhed/kubevue
+  repository: jamhed/argovue
   pullPolicy: IfNotPresent
 
 serviceAccount:
@@ -19,9 +19,9 @@ ingress:
       paths: []
   tls: []
 
-kubevue:
+argovue:
   verbose: debug
-  oidcClientId: kubevue
+  oidcClientId: argovue
   oidcClientSecret: ZXhhbXBsZS1hcHAtc2VjcmV0
   oidcProvider: http://localhost:8080/dex
   oidcRedirectURL: http://localhost:8080/callback
@@ -40,10 +40,10 @@ dex:
   oauth2:
     skipApprovalScreen: true
   staticClients:
-  - id: kubevue
+  - id: argovue
     redirectURIs:
     - http://localhost:8080/callback
-    name: 'KubeVue'
+    name: 'ArgoVue'
     secret: ZXhhbXBsZS1hcHAtc2VjcmV0
   enablePasswordDB: true
   staticPasswords:

@@ -1,15 +1,15 @@
-.PHONY: all kubevue ui skaffold
+.PHONY: all argovue ui skaffold
 
-all: kubevue ui
+all: argovue ui
 
-kubevue:
+argovue:
 	cd src && GOOS=linux go build
 
 ui:
 	cd ui && yarn build
 
-skaffold: ui kubevue
-	cp src/kubevue skaffold/kubevue
+skaffold: ui argovue
+	cp src/argovue skaffold/argovue
 	rm -rf skaffold/ui
 	mkdir skaffold/ui
 	cp -a ui/dist skaffold/ui/

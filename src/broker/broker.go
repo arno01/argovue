@@ -3,7 +3,7 @@ package broker
 import (
 	"encoding/json"
 	"fmt"
-	"kubevue/msg"
+	"argovue/msg"
 	"net/http"
 	"time"
 
