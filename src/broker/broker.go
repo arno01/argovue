@@ -22,6 +22,16 @@ type Broker struct {
 	clients        map[chan *msg.Msg]bool
 }
 
+func (broker *Broker) Find(name, namespace string) interface{} {
+	for _, obj := range broker.cache {
+		mObj := obj.(v1.Object)
+		if mObj.GetName() == name && mObj.GetNamespace() == namespace {
+			return obj
+		}
+	}
+	return nil
+}
+
 func sendMsg(w http.ResponseWriter, filter string, flusher http.Flusher, m *msg.Msg) {
 	mObj := m.Content.(v1.Object)
 	if len(filter) > 0 && mObj.GetName() != filter {

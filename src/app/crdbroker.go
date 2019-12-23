@@ -69,3 +69,7 @@ func (cb *CrdBroker) Stop() {
 	}
 	close(cb.broker.Notifier)
 }
+
+func (cb *CrdBroker) Broker() *broker.Broker {
+	return cb.broker
+}

@@ -114,6 +114,7 @@ func (a *App) Serve() {
 	r.HandleFunc("/dex/{rest:.*}", a.proxyDex)
 	r.HandleFunc("/logs/pod/{namespace}/{name}/{container}", a.streamLogs)
 	r.HandleFunc("/workflow/{namespace}/{name}/{action}", a.commandWorkflow).Methods("POST")
+	r.HandleFunc("/catalogue/{namespace}/{name}/{action}", a.commandCatalogue).Methods("POST")
 	r.HandleFunc("/objects", a.Objects)
 	r.HandleFunc("/auth", a.AuthInitiate)
 	r.HandleFunc("/callback", a.AuthCallback)

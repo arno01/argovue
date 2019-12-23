@@ -10,6 +10,7 @@ import Front from '@/Front'
 import Object from '@/Object'
 import Objects from '@/Objects'
 import WorkflowObject from '@/Workflow/Object'
+import CatalogueObject from '@/Catalogue/Object'
 import PodObject from '@/Pod/Object'
 import ServiceObject from '@/Service/Object'
 import API from '@/API'
@@ -34,6 +35,7 @@ const router = new VueRouter({
     { path: '/watch/:namespace/services/:name', component: ServiceObject, props: routeProps },
     { path: '/watch/:namespace/pods/:name', component: PodObject, props: routeProps },
     { path: '/watch/:namespace/workflows/:name', component: WorkflowObject, props: routeProps },
+    { path: '/watch/:namespace/catalogue/:name', component: CatalogueObject, props: routeProps },
     { path: '/watch/:namespace/:kind/:name', component: Object, props: routeProps },
     { path: '/watch/:namespace/:kind', component: Objects, props: routeProps },
     { path: '/watch/:kind', component: Objects, props: routeProps }

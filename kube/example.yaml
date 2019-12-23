@@ -1,0 +1,9 @@
+apiVersion: argovue.io/v1
+kind: Object
+metadata:
+  name: nginx
+  labels:
+    oidc.argovue.io/group: authors
+spec:
+  image: nginx:latest
+  privateVolumeSize: 1M
