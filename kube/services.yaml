@@ -1,9 +1,0 @@
-apiVersion: argovue.io/v1
-kind: Object
-metadata:
-  name: services
-spec:
-  group: ""
-  version: v1
-  name: services
-  namespace: default
