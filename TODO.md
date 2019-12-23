@@ -1,33 +1,12 @@
 # TODO
 
-* Rules to display objects:
-	- workflows with matching labels (oidc fields of logged in person, e.g email and groups)
-	- pods bearing workflow labels
-	- example workflow labels:
-		- argovue.io/oidc/group: admin
-		- argovue.io/oidc/id: roman_galeev@mckinsey.com
-	- user subscribes to:
-		- argovue.io/oidc/group in (admin, user)
-		- argovue.io/oidc/id=roman_galeev@mckinsey.com
-
-* Filter services and/or other objects by annotations?
 * Start a copy of pre-defined service per user with shared volumes and private volumes
 * Automate access to volume with nginx pod
-
 * Keep URL option for proxy services
-* take name/namespace from crd, e.g. create watchable objects per namespace?
-
-* Replace ad-hoc maps to properly defined CRD with generated code
-* Use name/presentation name for objects.argovue.io kind
 * Add graph representation for workflows
-
 * Add run duration to steps/pods/workflows and better time representation (moments)?
-
 * Add workflow templates and their actions?
-* Redirect to front page in case of SSE not-authorized error
-
 * Display user profile as we get it from OIDC
-* Display namespace for objects
 
 # DONE
 
@@ -38,3 +17,9 @@
 * Honor service settings for redirect (maybe combine with annotations)
 * proxy dex a-la argo ci
 * Check why resubmit doesn't work
+* Filter services and/or other objects by annotations?
+* take name/namespace from crd, e.g. create watchable objects per namespace?
+* Replace ad-hoc maps to properly defined CRD with generated code
+* Use name/presentation name for objects.argovue.io kind
+* Redirect to front page in case of SSE not-authorized error
+* Display namespace for objects
