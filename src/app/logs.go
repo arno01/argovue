@@ -1,15 +1,15 @@
 package app
 
 import (
-	"io"
 	"argovue/kube"
+	"io"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 )
 
-func (a *App) StreamLogs(w http.ResponseWriter, r *http.Request) {
+func (a *App) streamLogs(w http.ResponseWriter, r *http.Request) {
 
 	name := mux.Vars(r)["name"]
 	namespace := mux.Vars(r)["namespace"]

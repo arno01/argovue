@@ -1,9 +1,9 @@
 package app
 
 import (
+	"argovue/kube"
 	"encoding/json"
 	"fmt"
-	"argovue/kube"
 	"net/http"
 
 	"github.com/argoproj/argo/workflow/util"
@@ -17,7 +17,7 @@ func sendError(w http.ResponseWriter, action string, err error) {
 	json.NewEncoder(w).Encode(map[string]string{"status": "error", "action": action, "message": fmt.Sprintf("%s", err)})
 }
 
-func (a *App) CommandWorkflow(w http.ResponseWriter, r *http.Request) {
+func (a *App) commandWorkflow(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 	namespace := mux.Vars(r)["namespace"]
 	action := mux.Vars(r)["action"]

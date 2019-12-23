@@ -5,11 +5,50 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/coreos/go-oidc"
 	log "github.com/sirupsen/logrus"
 )
+
+func (a *App) onLogout(sessionId string) {
+	sessionData, ok := a.brokers[sessionId]
+	if !ok {
+		return
+	}
+	for name, _ := range sessionData {
+		log.Debugf("Delete broker: %s", name)
+		if broker, ok := sessionData[name]; ok {
+			broker.Stop()
+			delete(sessionData, name)
+		}
+	}
+}
+
+func (a *App) onLogin(sessionId string, profile map[string]interface{}) {
+	groups := profile["groups"].([]interface{})
+	wfBroker := a.newBroker(sessionId, "workflows")
+	svcBroker := a.newBroker(sessionId, "services")
+	a.newBroker(sessionId, "pods")
+	if len(groups) > 0 {
+		strGroups := []string{}
+		for _, group := range groups {
+			if strGroup, ok := group.(string); ok {
+				strGroups = append(strGroups, strGroup)
+			}
+		}
+		selector := fmt.Sprintf("oidc.argovue.io/group in (%s)", strings.Join(strGroups, ","))
+		wfBroker.AddCrd("argoproj.io", "v1alpha1", "workflows", selector)
+		svcBroker.AddCrd("", "v1", "services", selector)
+	}
+	if sub, ok := profile["sub"].(string); ok {
+		selector := fmt.Sprintf("oidc.argovue.io/id in (%s)", sub)
+		wfBroker.AddCrd("argoproj.io", "v1alpha1", "workflows", selector)
+		svcBroker.AddCrd("", "v1", "services", selector)
+	}
+}
 
 // Profile returns user's profile if autorised
 func (a *App) Profile(w http.ResponseWriter, r *http.Request) {
@@ -30,6 +69,7 @@ func (a *App) Logout(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
+	a.onLogout(session.ID)
 	delete(session.Values, "state")
 	delete(session.Values, "auth-session")
 	delete(session.Values, "profile")

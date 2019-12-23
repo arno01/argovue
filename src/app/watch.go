@@ -4,36 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 )
-
-func (a *App) onLogin(sessionId string, profile map[string]interface{}) {
-	log.Debugf("profile:%s", profile)
-	groups := profile["groups"].([]interface{})
-	wfBroker := a.newBroker(sessionId, "workflows")
-	svcBroker := a.newBroker(sessionId, "services")
-	if len(groups) > 0 {
-		strGroups := []string{}
-		for _, group := range groups {
-			if strGroup, ok := group.(string); ok {
-				strGroups = append(strGroups, strGroup)
-			}
-		}
-		selector := fmt.Sprintf("oidc.argovue.io/group in (%s)", strings.Join(strGroups, ","))
-		wfBroker.AddCrd("argoproj.io", "v1alpha1", "workflows", selector)
-		svcBroker.AddCrd("", "v1", "services", selector)
-	}
-	if sub, ok := profile["sub"].(string); ok {
-		selector := fmt.Sprintf("oidc.argovue.io/id in (%s)", sub)
-		wfBroker.AddCrd("argoproj.io", "v1alpha1", "workflows", selector)
-		svcBroker.AddCrd("", "v1", "services", selector)
-	}
-	wfBroker.PassMessages()
-	svcBroker.PassMessages()
-}
 
 // Objects return list of known objects
 func (a *App) GetObjects(sessionId string) (re []string) {
@@ -63,6 +37,11 @@ func (a *App) Watch(w http.ResponseWriter, r *http.Request) {
 
 	kind := mux.Vars(r)["kind"]
 	name := mux.Vars(r)["name"]
+
+	if kind == "workflows" && len(name) > 0 {
+		cb := a.getBroker(session.ID, "pods")
+		cb.AddCrd("", "v1", "pods", fmt.Sprintf("workflows.argoproj.io/workflow=%s", name))
+	}
 
 	flusher, ok := w.(http.Flusher)
 	if !ok {

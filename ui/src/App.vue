@@ -17,6 +17,7 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
           <router-view />
         </main>
+        <events />
       </b-row>
     </b-container>
   </div>
@@ -32,10 +33,12 @@
 
 <script>
 import Objects from '@/App/Objects'
+import Events from '@/Events'
 
 export default {
   components: {
     objects: Objects,
+    events: Events,
   }
 };
 </script>

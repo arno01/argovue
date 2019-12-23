@@ -38,7 +38,7 @@ func (crd *Crd) Notify(action string, obj interface{}) {
 // New crd
 func New(group, version, resource, selector string) *Crd {
 	crd := new(Crd)
-	crd.id = fmt.Sprintf("%s/%s/%s selector:%s", group, version, resource, selector)
+	crd.id = MakeId(group, version, resource, selector)
 	crd.group = group
 	crd.version = version
 	crd.resource = resource
@@ -47,6 +47,14 @@ func New(group, version, resource, selector string) *Crd {
 	crd.stop = make(chan struct{})
 	crd.Watch()
 	return crd
+}
+
+func MakeId(group, version, resource, selector string) string {
+	return fmt.Sprintf("%s/%s/%s selector:%s", group, version, resource, selector)
+}
+
+func (crd *Crd) Id() string {
+	return crd.id
 }
 
 // Stop watching

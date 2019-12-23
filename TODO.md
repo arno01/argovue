@@ -26,6 +26,9 @@
 * Add workflow templates and their actions?
 * Redirect to front page in case of SSE not-authorized error
 
+* Display user profile as we get it from OIDC
+* Display namespace for objects
+
 # DONE
 
 * Helm deployment and image build workflow

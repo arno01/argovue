@@ -11,13 +11,13 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (a *App) ProxyDex(w http.ResponseWriter, r *http.Request) {
+func (a *App) proxyDex(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	r = mux.SetURLVars(r, map[string]string{"namespace": a.args.Namespace(), "name": a.Args().DexServiceName(), "port": "5556", "rest": vars["rest"]})
-	a.ProxyService(w, r)
+	a.proxyService(w, r)
 }
 
-func (a *App) ProxyService(w http.ResponseWriter, r *http.Request) {
+func (a *App) proxyService(w http.ResponseWriter, r *http.Request) {
 	name := mux.Vars(r)["name"]
 	namespace := mux.Vars(r)["namespace"]
 	port := mux.Vars(r)["port"]

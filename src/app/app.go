@@ -25,6 +25,7 @@ type App struct {
 	store   *sessions.FilesystemStore
 	wg      sync.WaitGroup
 	brokers BrokerMap
+	events  chan *Event
 }
 
 // Args returns application argumnets
@@ -48,6 +49,7 @@ func New() *App {
 	a.args = args.New().LogLevel()
 	a.store = sessions.NewFilesystemStore("", []byte("session-secret"))
 	a.brokers = make(BrokerMap)
+	a.events = make(chan *Event)
 	gob.Register(map[string]interface{}{})
 	go a.Serve()
 	a.auth = auth.New(a.Args().OIDC())
@@ -102,14 +104,15 @@ func (a *App) Serve() {
 	log.Infof("HTTP: at %s static:%s start", bindAddr, a.Args().Dir())
 	r := mux.NewRouter()
 	r.PathPrefix("/ui/").Handler(http.StripPrefix("/ui/", http.FileServer(http.Dir(a.Args().Dir()))))
+	r.HandleFunc("/events", a.handleEvents)
 	r.HandleFunc("/watch/{kind}", a.Watch)
 	r.HandleFunc("/watch/{namespace}/{kind}", a.Watch)
 	r.HandleFunc("/watch/{namespace}/{kind}/{name}", a.Watch)
-	r.HandleFunc("/proxy/{namespace}/{name}/{port}/{rest:.*}", a.ProxyService)
-	r.HandleFunc("/proxy/{namespace}/{name}/{port}", a.ProxyService)
-	r.HandleFunc("/dex/{rest:.*}", a.ProxyDex)
-	r.HandleFunc("/logs/pod/{namespace}/{name}/{container}", a.StreamLogs)
-	r.HandleFunc("/workflow/{namespace}/{name}/{action}", a.CommandWorkflow).Methods("POST")
+	r.HandleFunc("/proxy/{namespace}/{name}/{port}/{rest:.*}", a.proxyService)
+	r.HandleFunc("/proxy/{namespace}/{name}/{port}", a.proxyService)
+	r.HandleFunc("/dex/{rest:.*}", a.proxyDex)
+	r.HandleFunc("/logs/pod/{namespace}/{name}/{container}", a.streamLogs)
+	r.HandleFunc("/workflow/{namespace}/{name}/{action}", a.commandWorkflow).Methods("POST")
 	r.HandleFunc("/objects", a.Objects)
 	r.HandleFunc("/auth", a.AuthInitiate)
 	r.HandleFunc("/callback", a.AuthCallback)
