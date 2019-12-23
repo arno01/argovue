@@ -12,7 +12,7 @@ spec:
   names:
     plural: services
     singular: service
-    kind: Object
+    kind: Service
   validation:
     openAPIV3Schema:
       type: object

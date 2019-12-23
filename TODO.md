@@ -1,6 +1,6 @@
 # TODO
 
-* Start a copy of pre-defined service per user with shared volumes and private volumes
+* List volumes/pvc and provide access to them?
 * Automate access to volume with nginx pod
 
 * Keep URL option for proxy services
@@ -25,3 +25,4 @@
 * Redirect to front page in case of SSE not-authorized error
 * Display namespace for objects
 * Add run duration to steps/pods/workflows and better time representation (moments)
+* Start a copy of pre-defined service per user with shared volumes and private volumes

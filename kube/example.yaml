@@ -1,5 +1,5 @@
 apiVersion: argovue.io/v1
-kind: Object
+kind: Service
 metadata:
   name: nginx
   labels:

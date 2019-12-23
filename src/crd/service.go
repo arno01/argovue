@@ -1,6 +1,8 @@
 package crd
 
 import (
+	"fmt"
+
 	log "github.com/sirupsen/logrus"
 	appsv1 "k8s.io/api/apps/v1"
 	apiv1 "k8s.io/api/core/v1"
@@ -15,9 +17,9 @@ func (s *Service) createPVC(clientset *kubernetes.Clientset, owner string) (*api
 	log.Debugf("Kube: create pvc %s/%s for %s", s.Namespace, s.Name, owner)
 	pvc := &apiv1.PersistentVolumeClaim{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      s.Name,
-			Namespace: s.Namespace,
-			Labels:    map[string]string{"app": s.Name, "oidc.argovue.io/id": owner},
+			GenerateName: fmt.Sprintf("%s-", s.Name),
+			Namespace:    s.Namespace,
+			Labels:       map[string]string{"service": s.Name, "oidc.argovue.io/id": owner, "argovue.io/service": s.Name},
 		},
 		Spec: apiv1.PersistentVolumeClaimSpec{
 			AccessModes: []apiv1.PersistentVolumeAccessMode{apiv1.ReadWriteOnce},
@@ -31,13 +33,13 @@ func (s *Service) createPVC(clientset *kubernetes.Clientset, owner string) (*api
 	return clientset.CoreV1().PersistentVolumeClaims(s.Namespace).Create(pvc)
 }
 
-func (s *Service) createService(clientset *kubernetes.Clientset, owner string) (*apiv1.Service, error) {
+func (s *Service) createService(clientset *kubernetes.Clientset, name, owner string) (*apiv1.Service, error) {
 	log.Debugf("Kube: create service %s/%s for %s", s.Namespace, s.Name, owner)
 	svc := &apiv1.Service{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      s.Name,
+			Name:      name,
 			Namespace: s.Namespace,
-			Labels:    map[string]string{"app": s.Name, "oidc.argovue.io/id": owner},
+			Labels:    map[string]string{"service": name, "oidc.argovue.io/id": owner, "argovue.io/service": s.Name},
 		},
 		Spec: apiv1.ServiceSpec{
 			Ports: []apiv1.ServicePort{
@@ -47,7 +49,7 @@ func (s *Service) createService(clientset *kubernetes.Clientset, owner string) (
 				},
 			},
 			Type:     apiv1.ServiceTypeClusterIP,
-			Selector: map[string]string{"app": s.Name, "oidc.argovue.io/id": owner},
+			Selector: map[string]string{"service": name, "oidc.argovue.io/id": owner},
 		},
 	}
 	return clientset.CoreV1().Services(s.Namespace).Create(svc)
@@ -60,26 +62,24 @@ func (s *Service) Deploy(clientset *kubernetes.Clientset, owner string) (*appsv1
 		log.Errorf("Kube: can't create pvc, error:%s", err)
 		return nil, err
 	}
-	_, err = s.createService(clientset, owner)
+	name := pvc.GetName()
+	_, err = s.createService(clientset, name, owner)
 	if err != nil {
 		log.Errorf("Kube: can't create service, error:%s", err)
 		return nil, err
 	}
 	deployment := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      s.Name,
-			Namespace: s.Namespace,
-			Labels:    map[string]string{"app": s.Name, "oidc.argovue.io/id": owner},
+			Name:            s.Name,
+			Namespace:       s.Namespace,
+			Labels:          map[string]string{"service": name, "oidc.argovue.io/id": owner, "argovue.io/service": s.Name},
+			OwnerReferences: []metav1.OwnerReference{{APIVersion: "argovue.io/v1", Kind: "Service", Name: s.Name, UID: s.UID}},
 		},
 		Spec: appsv1.DeploymentSpec{
 			Replicas: int32Ptr(1),
-			Selector: &metav1.LabelSelector{
-				MatchLabels: map[string]string{"app": s.Name, "oidc.argovue.io/id": owner},
-			},
+			Selector: &metav1.LabelSelector{MatchLabels: map[string]string{"service": name, "oidc.argovue.io/id": owner, "argovue.io/service": s.Name}},
 			Template: apiv1.PodTemplateSpec{
-				ObjectMeta: metav1.ObjectMeta{
-					Labels: map[string]string{"app": s.Name, "oidc.argovue.io/id": owner},
-				},
+				ObjectMeta: metav1.ObjectMeta{Labels: map[string]string{"service": name, "oidc.argovue.io/id": owner, "argovue.io/service": s.Name}},
 				Spec: apiv1.PodSpec{
 					Containers: []apiv1.Container{
 						{
@@ -91,12 +91,8 @@ func (s *Service) Deploy(clientset *kubernetes.Clientset, owner string) (*appsv1
 					},
 					Volumes: []apiv1.Volume{
 						{
-							Name: "work",
-							VolumeSource: apiv1.VolumeSource{
-								PersistentVolumeClaim: &apiv1.PersistentVolumeClaimVolumeSource{
-									ClaimName: pvc.GetName(),
-								},
-							},
+							Name:         "work",
+							VolumeSource: apiv1.VolumeSource{PersistentVolumeClaim: &apiv1.PersistentVolumeClaimVolumeSource{ClaimName: pvc.GetName()}},
 						},
 					},
 				},
