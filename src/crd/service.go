@@ -72,7 +72,7 @@ func (s *Service) Deploy(clientset *kubernetes.Clientset, owner string) (*appsv1
 			Labels:    map[string]string{"app": s.Name, "oidc.argovue.io/id": owner},
 		},
 		Spec: appsv1.DeploymentSpec{
-			Replicas: int32Ptr(2),
+			Replicas: int32Ptr(1),
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{"app": s.Name, "oidc.argovue.io/id": owner},
 			},
