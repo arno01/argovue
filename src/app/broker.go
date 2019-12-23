@@ -1,31 +1,32 @@
 package app
 
-func (a *App) addBroker(name, namespace string, broker *CrdBroker) *CrdBroker {
-	nameMap, ok := a.brokers[namespace]
+import "fmt"
+
+func (a *App) addBroker(sessionId, name string, broker *CrdBroker) *CrdBroker {
+	nameMap, ok := a.brokers[sessionId]
 	if !ok {
 		nameMap = make(map[string]*CrdBroker)
-		a.brokers[namespace] = nameMap
+		a.brokers[sessionId] = nameMap
 	}
 	nameMap[name] = broker
 	return broker
 }
 
-func (a *App) deleteBroker(name, namespace string) {
-	nameMap, ok := a.brokers[namespace]
+func (a *App) deleteBroker(sessionId, name string) {
+	nameMap, ok := a.brokers[sessionId]
 	if !ok {
 		return
 	}
 	delete(nameMap, name)
 }
 
-func (a *App) newBroker(group, version, name, namespace string) *CrdBroker {
-	return a.addBroker(name, namespace, NewBroker(group, version, name, namespace))
+func (a *App) newBroker(sessionId, name string) *CrdBroker {
+	return a.addBroker(sessionId, name, NewCrdBroker(fmt.Sprintf("%s/%s", sessionId, name)))
 }
 
-func (a *App) getBroker(name, namespace string) *CrdBroker {
-	if nameMap, ok := a.brokers[namespace]; ok {
+func (a *App) getBroker(sessionId, name string) *CrdBroker {
+	if nameMap, ok := a.brokers[sessionId]; ok {
 		return nameMap[name]
-	} else {
-		return nil
 	}
+	return nil
 }

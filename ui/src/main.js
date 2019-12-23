@@ -35,7 +35,8 @@ const router = new VueRouter({
     { path: '/watch/:namespace/pods/:name', component: PodObject, props: routeProps },
     { path: '/watch/:namespace/workflows/:name', component: WorkflowObject, props: routeProps },
     { path: '/watch/:namespace/:kind/:name', component: Object, props: routeProps },
-    { path: '/watch/:namespace/:kind', component: Objects, props: routeProps }
+    { path: '/watch/:namespace/:kind', component: Objects, props: routeProps },
+    { path: '/watch/:kind', component: Objects, props: routeProps }
   ]
 })
 

@@ -1,12 +1,15 @@
 # TODO
 
-* Rules
-	- workflow + workflow labelled pods (not all of them)
-	- only services with lables/annotations
-	- map oidc groups to labels
-	- map oidc user id (email to labels)
+* Rules to display objects:
+	- workflows with matching labels (oidc fields of logged in person, e.g email and groups)
+	- pods bearing workflow labels
+	- example workflow labels:
+		- argovue.io/oidc/group: admin
+		- argovue.io/oidc/id: roman_galeev@mckinsey.com
+	- user subscribes to:
+		- argovue.io/oidc/group in (admin, user)
+		- argovue.io/oidc/id=roman_galeev@mckinsey.com
 
-* Check OIDC groups and how to use them to limit access, probably using another crd, e.g. rules
 * Filter services and/or other objects by annotations?
 * Start a copy of pre-defined service per user with shared volumes and private volumes
 * Automate access to volume with nginx pod

@@ -1,11 +1,10 @@
 package app
 
 import (
-	"encoding/gob"
-	"fmt"
 	"argovue/args"
 	"argovue/auth"
-	"argovue/crd"
+	"encoding/gob"
+	"fmt"
 	"regexp"
 	"sync"
 
@@ -43,16 +42,6 @@ func (a *App) Store() *sessions.FilesystemStore {
 	return a.store
 }
 
-// Objects return list of known objects
-func (a *App) GetObjects() (re []string) {
-	for namespace, _ := range a.brokers {
-		for name, _ := range a.brokers[namespace] {
-			re = append(re, fmt.Sprintf("%s/%s", namespace, name))
-		}
-	}
-	return
-}
-
 // New creates an application instance
 func New() *App {
 	a := new(App)
@@ -60,37 +49,9 @@ func New() *App {
 	a.store = sessions.NewFilesystemStore("", []byte("session-secret"))
 	a.brokers = make(BrokerMap)
 	gob.Register(map[string]interface{}{})
-	go a.watchObjects(a.newBroker("argovue.io", "v1", "objects", a.args.Namespace()))
 	go a.Serve()
 	a.auth = auth.New(a.Args().OIDC())
 	return a
-}
-
-func (a *App) watchObjects(cb *CrdBroker) {
-	for msg := range cb.crd.Notifier() {
-		cb.broker.Notifier <- msg
-		m := crd.Parse(msg.Content)
-		switch msg.Action {
-		case "add":
-			if broker := a.brokers[m.Name]; broker == nil {
-				log.Infof("Roster: add %s/%s", m.Namespace, m.Name)
-				a.newBroker(m.Group, m.Version, m.Name, m.Namespace).PassMessages()
-			} else {
-				log.Infof("Roster: skip add %s/%s", m.Namespace, m.Name)
-			}
-		case "delete":
-			if cb := a.getBroker(m.Name, m.Namespace); cb != nil {
-				log.Infof("Roster: delete %s/%s", m.Namespace, m.Name)
-				cb.Stop()
-				a.deleteBroker(m.Name, m.Namespace)
-			} else {
-				log.Infof("Roster: skip delete %s/%s", m.Namespace, m.Name)
-			}
-		case "update":
-			log.Infof("Roster: skip update %s/%s", m.Namespace, m.Name)
-		default:
-		}
-	}
 }
 
 var bypassAuth []*regexp.Regexp = []*regexp.Regexp{
@@ -141,6 +102,7 @@ func (a *App) Serve() {
 	log.Infof("HTTP: at %s static:%s start", bindAddr, a.Args().Dir())
 	r := mux.NewRouter()
 	r.PathPrefix("/ui/").Handler(http.StripPrefix("/ui/", http.FileServer(http.Dir(a.Args().Dir()))))
+	r.HandleFunc("/watch/{kind}", a.Watch)
 	r.HandleFunc("/watch/{namespace}/{kind}", a.Watch)
 	r.HandleFunc("/watch/{namespace}/{kind}/{name}", a.Watch)
 	r.HandleFunc("/proxy/{namespace}/{name}/{port}/{rest:.*}", a.ProxyService)

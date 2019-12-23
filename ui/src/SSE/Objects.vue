@@ -4,7 +4,6 @@ function objKey(obj) {
 }
 
 export default {
-  props: ["namespace"],
   data() {
     return {
       cache: {},
@@ -38,7 +37,7 @@ export default {
       this.es = undefined
     },
     setupStream() {
-      this.es = this.$api.sse(`/watch/${this.namespace}/${this.kind}`, (event) => {
+      this.es = this.$api.sse(`/watch/${this.kind}`, (event) => {
         var msg = JSON.parse(event.data)
         var obj = msg.Content
         switch (msg.Action) {

@@ -8,7 +8,7 @@ import (
 	"argovue/kube"
 	"argovue/msg"
 
-	apiv1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/dynamic/dynamicinformer"
@@ -18,31 +18,31 @@ import (
 
 // Crd
 type Crd struct {
-	id        string
-	group     string
-	version   string
-	resource  string
-	namespace string
-	notify    chan *msg.Msg
-	stop      chan struct{}
-	informer  informers.GenericInformer
+	id       string
+	group    string
+	version  string
+	resource string
+	selector string
+	notify   chan *msg.Msg
+	stop     chan struct{}
+	informer informers.GenericInformer
 }
 
 // Notify channel on new message
 func (crd *Crd) Notify(action string, obj interface{}) {
-	mObj := obj.(apiv1.Object)
+	mObj := obj.(metav1.Object)
 	log.Debugf("CRD: %s %s %s@%s uid:%s", crd.id, action, mObj.GetName(), mObj.GetNamespace(), mObj.GetUID())
 	crd.notify <- msg.New(action, obj)
 }
 
 // New crd
-func New(group, version, resource, namespace string) *Crd {
+func New(group, version, resource, selector string) *Crd {
 	crd := new(Crd)
-	crd.id = fmt.Sprintf("%s/%s/%s/%s", group, version, resource, namespace)
+	crd.id = fmt.Sprintf("%s/%s/%s selector:%s", group, version, resource, selector)
 	crd.group = group
 	crd.version = version
 	crd.resource = resource
-	crd.namespace = namespace
+	crd.selector = selector
 	crd.notify = make(chan *msg.Msg)
 	crd.stop = make(chan struct{})
 	crd.Watch()
@@ -57,6 +57,10 @@ func (crd *Crd) Stop() {
 	close(crd.stop)
 }
 
+func (crd *Crd) tweakListOptions(opts *metav1.ListOptions) {
+	opts.LabelSelector = crd.selector
+}
+
 // Watch resources
 func (crd *Crd) Watch() *Crd {
 	log.Debugf("CRD: %s start", crd.id)
@@ -69,7 +73,7 @@ func (crd *Crd) Watch() *Crd {
 	if err != nil {
 		log.Fatalf("CRD: %s could not generate dynamic client for config, error:%s", crd.id, err)
 	}
-	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(dc, 0, crd.namespace, nil)
+	factory := dynamicinformer.NewFilteredDynamicSharedInformerFactory(dc, 0, metav1.NamespaceAll, crd.tweakListOptions)
 	gvr := schema.GroupVersionResource{Group: crd.group, Version: crd.version, Resource: crd.resource}
 	crd.informer = factory.ForResource(gvr)
 
