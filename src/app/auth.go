@@ -67,6 +67,7 @@ func (a *App) Profile(w http.ResponseWriter, r *http.Request) {
 func (a *App) Logout(w http.ResponseWriter, r *http.Request) {
 	session, err := a.Store().Get(r, "auth-session")
 	if err != nil {
+		http.Redirect(w, r, a.Args().UIRootURL(), http.StatusFound)
 		return
 	}
 	a.onLogout(session.ID)

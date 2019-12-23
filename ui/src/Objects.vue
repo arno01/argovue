@@ -11,8 +11,8 @@
         <b-col cols=2 v-if="obj.status">
           {{ obj.status.phase }}
         </b-col>
-        <b-col cols=3>
-          {{ obj.metadata.creationTimestamp }}
+        <b-col cols=4>
+          {{ formatTs(obj) }}
         </b-col>
       </b-row>
     </b-container>
@@ -21,6 +21,7 @@
 
 <script>
 import SSE from '@/SSE/Objects.vue'
+import moment from 'moment'
 
 export default {
   props: ["kind"],
@@ -30,6 +31,11 @@ export default {
       cache: {},
       es: undefined
     };
+  },
+  methods: {
+    formatTs(obj) {
+      return moment(obj.metadata.creationTimestamp).format("YYYY-MM-DD HH:mm:ss")
+    }
   },
 };
 </script>

@@ -59,6 +59,7 @@ func New() *App {
 var bypassAuth []*regexp.Regexp = []*regexp.Regexp{
 	regexp.MustCompile("^/profile$"),
 	regexp.MustCompile("^/auth$"),
+	regexp.MustCompile("^/logout$"),
 	regexp.MustCompile("^/dex/.*"),
 	regexp.MustCompile("^/callback.*$"),
 	regexp.MustCompile("^/ui/.*$"),
@@ -85,7 +86,7 @@ func (a *App) authMiddleWare(next http.Handler) http.Handler {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		for _, re := range bypassAuth {
 			if re.MatchString(r.RequestURI) {
-				log.Debugf("HTTP: no-auth %v", r.RequestURI)
+				log.Debugf("HTTP: no-auth from:%s %v", r.RemoteAddr, r.RequestURI)
 				next.ServeHTTP(w, r)
 				return
 			}
