@@ -9,6 +9,7 @@ type Service struct {
 	Name              string
 	Namespace         string
 	Image             string
+	Args              []string
 	SharedVolume      string
 	PrivateVolumeSize string
 	UID               types.UID
@@ -27,6 +28,11 @@ func Parse(obj interface{}) *Service {
 	}
 	if privateVolumeSize, ok := spec["privateVolumeSize"].(string); ok {
 		m.PrivateVolumeSize = privateVolumeSize
+	}
+	if args, ok := spec["args"].([]interface{}); ok {
+		for _, arg := range args {
+			m.Args = append(m.Args, arg.(string))
+		}
 	}
 	return m
 }

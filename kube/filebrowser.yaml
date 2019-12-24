@@ -1,9 +1,10 @@
 apiVersion: argovue.io/v1
 kind: Service
 metadata:
-  name: nginx
+  name: filebrowser
   labels:
     oidc.argovue.io/group: authors
 spec:
-  image: nginx:latest
+  image: filebrowser/filebrowser:latest
+  args: ["--noauth", "--root", "/work", "--baseurl", "BASE_URL"]
   privateVolumeSize: 1M

@@ -35,6 +35,7 @@ require (
 	github.com/prometheus/client_golang v1.2.1 // indirect
 	github.com/prometheus/client_model v0.0.0-20191202183732-d1d2010b5bee // indirect
 	github.com/prometheus/procfs v0.0.8 // indirect
+	github.com/rs/xid v1.2.1
 	github.com/securego/gosec v0.0.0-20191119104125-df484bfa9e9f // indirect
 	github.com/sirupsen/logrus v1.4.2
 	github.com/slimsag/godocmd v0.0.0-20161025000126-a1005ad29fe3 // indirect
