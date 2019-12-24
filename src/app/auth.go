@@ -31,9 +31,7 @@ func (a *App) onLogout(sessionId string) {
 func (a *App) onLogin(sessionId string, profile map[string]interface{}) {
 	groups := profile["groups"].([]interface{})
 	wfBroker := a.newBroker(sessionId, "workflows")
-	svcBroker := a.newBroker(sessionId, "services")
 	catBroker := a.newBroker(sessionId, "catalogue")
-	a.newBroker(sessionId, "pods")
 	if len(groups) > 0 {
 		strGroups := []string{}
 		for _, group := range groups {
@@ -43,13 +41,11 @@ func (a *App) onLogin(sessionId string, profile map[string]interface{}) {
 		}
 		selector := fmt.Sprintf("oidc.argovue.io/group in (%s)", strings.Join(strGroups, ","))
 		wfBroker.AddCrd(crd.New("argoproj.io", "v1alpha1", "workflows").SetLabelSelector(selector))
-		svcBroker.AddCrd(crd.New("", "v1", "services").SetLabelSelector(selector))
 		catBroker.AddCrd(crd.New("argovue.io", "v1", "services").SetLabelSelector(selector))
 	}
 	if sub, ok := profile["sub"].(string); ok {
 		selector := fmt.Sprintf("oidc.argovue.io/id in (%s)", sub)
 		wfBroker.AddCrd(crd.New("argoproj.io", "v1alpha1", "workflows").SetLabelSelector(selector))
-		svcBroker.AddCrd(crd.New("", "v1", "services").SetLabelSelector(selector))
 		catBroker.AddCrd(crd.New("argovue.io", "v1", "services").SetLabelSelector(selector))
 	}
 }

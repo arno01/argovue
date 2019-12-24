@@ -1,7 +1,7 @@
 # TODO
 
 * List workflow PVC
-* Add OIDC id as Service selector
+* Add OIDC id as Service selector/copy labels from parent objects
 * Better instance navigation (click to proxy)
 * Delete service instances
 * Delete watchers on connection close
