@@ -29,6 +29,9 @@ export default {
     }
   },
   methods: {
+    uri() {
+      return `/watch/${this.kind}`
+    },
     tearDown() {
       if (this.es) {
         this.es.close()
@@ -37,7 +40,7 @@ export default {
       this.es = undefined
     },
     setupStream() {
-      this.es = this.$api.sse(`/watch/${this.kind}`, (event) => {
+      this.es = this.$api.sse(this.uri(), (event) => {
         var msg = JSON.parse(event.data)
         var obj = msg.Content
         switch (msg.Action) {

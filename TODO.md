@@ -1,7 +1,10 @@
 # TODO
 
-* List volumes/pvc and provide access to them?
-* Automate access to volume with nginx pod
+* List workflow PVC
+* Add OIDC id as Service selector
+* Better instance navigation (click to proxy)
+* Delete service instances
+* Delete watchers on connection close
 
 * Keep URL option for proxy services
 * Add graph representation for workflows
@@ -26,3 +29,4 @@
 * Display namespace for objects
 * Add run duration to steps/pods/workflows and better time representation (moments)
 * Start a copy of pre-defined service per user with shared volumes and private volumes
+* Automate access to volume with nginx pod

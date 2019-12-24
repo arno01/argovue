@@ -7,6 +7,9 @@
       <control :object="object" :name="name" :namespace="namespace" style="margin-bottom: 20px"></control>
       <b-card no-body>
         <b-tabs card>
+          <b-tab title="Instances" active>
+            <instances :name="name" :namespace="namespace" :kind="kind"></instances>
+          </b-tab>
           <b-tab title="Service">
             <jsoneditor :content="object"></jsoneditor>
           </b-tab>
@@ -20,6 +23,7 @@
 import SSE from '@/SSE/Object'
 import JsonEditor from '@/JsonEditor'
 import Control from '@/Catalogue/Control'
+import Instances from '@/Catalogue/Instances'
 
 export default {
   props: ['namespace', 'name'],
@@ -27,6 +31,7 @@ export default {
   components: {
     jsoneditor: JsonEditor,
     control: Control,
+    instances: Instances,
   },
   data() {
     return {

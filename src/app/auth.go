@@ -1,6 +1,7 @@
 package app
 
 import (
+	"argovue/crd"
 	"context"
 	"crypto/rand"
 	"encoding/base64"
@@ -41,15 +42,15 @@ func (a *App) onLogin(sessionId string, profile map[string]interface{}) {
 			}
 		}
 		selector := fmt.Sprintf("oidc.argovue.io/group in (%s)", strings.Join(strGroups, ","))
-		wfBroker.AddCrd("argoproj.io", "v1alpha1", "workflows", selector)
-		svcBroker.AddCrd("", "v1", "services", selector)
-		catBroker.AddCrd("argovue.io", "v1", "services", selector)
+		wfBroker.AddCrd(crd.New("argoproj.io", "v1alpha1", "workflows").SetLabelSelector(selector))
+		svcBroker.AddCrd(crd.New("", "v1", "services").SetLabelSelector(selector))
+		catBroker.AddCrd(crd.New("argovue.io", "v1", "services").SetLabelSelector(selector))
 	}
 	if sub, ok := profile["sub"].(string); ok {
 		selector := fmt.Sprintf("oidc.argovue.io/id in (%s)", sub)
-		wfBroker.AddCrd("argoproj.io", "v1alpha1", "workflows", selector)
-		svcBroker.AddCrd("", "v1", "services", selector)
-		catBroker.AddCrd("argovue.io", "v1", "services", selector)
+		wfBroker.AddCrd(crd.New("argoproj.io", "v1alpha1", "workflows").SetLabelSelector(selector))
+		svcBroker.AddCrd(crd.New("", "v1", "services").SetLabelSelector(selector))
+		catBroker.AddCrd(crd.New("argovue.io", "v1", "services").SetLabelSelector(selector))
 	}
 }
 

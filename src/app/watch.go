@@ -9,47 +9,54 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// Objects return list of known objects
-func (a *App) GetObjects(sessionId string) (re []string) {
-	for name, _ := range a.brokers[sessionId] {
+func (a *App) Objects(w http.ResponseWriter, r *http.Request) {
+	session, _ := a.Store().Get(r, "auth-session")
+	var re []string
+	for name, _ := range a.brokers[session.ID] {
 		re = append(re, fmt.Sprintf("%s", name))
 	}
-	return
+	json.NewEncoder(w).Encode(re)
 }
 
-// Objects returns list of known objects
-func (a *App) Objects(w http.ResponseWriter, r *http.Request) {
-	session, err := a.Store().Get(r, "auth-session")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	json.NewEncoder(w).Encode(a.GetObjects(session.ID))
+func (a *App) watchKind(w http.ResponseWriter, r *http.Request) {
+	session, _ := a.Store().Get(r, "auth-session")
+	vars := mux.Vars(r)
+	a.watchBroker(a.getBroker(session.ID, vars["kind"]), w, r)
 }
 
-// Watch writes events to SSE stream
-func (a *App) Watch(w http.ResponseWriter, r *http.Request) {
-	session, err := a.Store().Get(r, "auth-session")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+func (a *App) watchName(w http.ResponseWriter, r *http.Request) {
+	session, _ := a.Store().Get(r, "auth-session")
+	vars := mux.Vars(r)
+	if broker := a.getSubsetBroker(session.ID, vars["namespace"], vars["kind"], vars["name"]); broker != nil {
+		a.watchBroker(broker, w, r)
 		return
 	}
+	log.Errorf("watchName: not found %s/%s/%s", vars["namespace"], vars["kind"], vars["name"])
+	http.Error(w, "Objects not found", http.StatusNotFound)
+}
 
-	kind := mux.Vars(r)["kind"]
-	name := mux.Vars(r)["name"]
-
-	if kind == "workflows" && len(name) > 0 {
-		cb := a.getBroker(session.ID, "pods")
-		cb.AddCrd("", "v1", "pods", fmt.Sprintf("workflows.argoproj.io/workflow=%s", name))
+func (a *App) watchNameSubset(w http.ResponseWriter, r *http.Request) {
+	session, _ := a.Store().Get(r, "auth-session")
+	vars := mux.Vars(r)
+	if vars["kind"] == "catalogue" && vars["subset"] == "instances" {
+		labelSelector := fmt.Sprintf("%s=%s", "argovue.io/service", vars["name"])
+		if broker := a.getSubsetBroker(session.ID, vars["namespace"], vars["kind"], vars["name"], labelSelector); broker != nil {
+			a.watchBroker(broker, w, r)
+			return
+		}
 	}
+	log.Errorf("watchNameSubset: not found %s/%s/%s/%s", vars["namespace"], vars["kind"], vars["name"], vars["subset"])
+	http.Error(w, "Objects not found", http.StatusNotFound)
+}
 
+func (a *App) watchBroker(cb *CrdBroker, w http.ResponseWriter, r *http.Request) {
 	flusher, ok := w.(http.Flusher)
 	if !ok {
 		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
 		return
 	}
 
-	if cb := a.getBroker(session.ID, kind); cb != nil {
+	if cb != nil {
 		w.Header().Set("Content-Type", "text/event-stream")
 		w.Header().Set("Cache-Control", "no-cache")
 		w.Header().Set("Transfer-Encoding", "identity")
@@ -57,10 +64,9 @@ func (a *App) Watch(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Connection", "keep-alive")
 		w.WriteHeader(http.StatusOK)
 		flusher.Flush()
-		cb.broker.Serve(w, name, flusher)
-		log.Debugf("SSE: %s/%s close", kind, name)
+		cb.broker.Serve(w, flusher)
 	} else {
-		log.Errorf("Can't subscribe to %s/%s", kind, name)
+		log.Errorf("watchBroker: not found:%s", mux.Vars(r))
 		http.Error(w, "Objects not found", http.StatusNotFound)
 	}
 }

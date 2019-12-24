@@ -25,6 +25,7 @@ type App struct {
 	store   *sessions.FilesystemStore
 	wg      sync.WaitGroup
 	brokers BrokerMap
+	subset  BrokerMap
 	events  chan *Event
 }
 
@@ -92,6 +93,10 @@ func (a *App) authMiddleWare(next http.Handler) http.Handler {
 			}
 		}
 		if a.checkAuth(w, r) != nil {
+			if _, err := a.Store().Get(r, "auth-session"); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
 			next.ServeHTTP(w, r)
 		}
 	})
@@ -106,9 +111,9 @@ func (a *App) Serve() {
 	r := mux.NewRouter()
 	r.PathPrefix("/ui/").Handler(http.StripPrefix("/ui/", http.FileServer(http.Dir(a.Args().Dir()))))
 	r.HandleFunc("/events", a.handleEvents)
-	r.HandleFunc("/watch/{kind}", a.Watch)
-	r.HandleFunc("/watch/{namespace}/{kind}", a.Watch)
-	r.HandleFunc("/watch/{namespace}/{kind}/{name}", a.Watch)
+	r.HandleFunc("/watch/{kind}", a.watchKind)
+	r.HandleFunc("/watch/{namespace}/{kind}/{name}", a.watchName)
+	r.HandleFunc("/watch/{namespace}/{kind}/{name}/{subset}", a.watchNameSubset)
 	r.HandleFunc("/proxy/{namespace}/{name}/{port}/{rest:.*}", a.proxyService)
 	r.HandleFunc("/proxy/{namespace}/{name}/{port}", a.proxyService)
 	r.HandleFunc("/dex/{rest:.*}", a.proxyDex)

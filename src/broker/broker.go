@@ -32,11 +32,7 @@ func (broker *Broker) Find(name, namespace string) interface{} {
 	return nil
 }
 
-func sendMsg(w http.ResponseWriter, filter string, flusher http.Flusher, m *msg.Msg) {
-	mObj := m.Content.(v1.Object)
-	if len(filter) > 0 && mObj.GetName() != filter {
-		return
-	}
+func sendMsg(w http.ResponseWriter, flusher http.Flusher, m *msg.Msg) {
 	jsonMsg, err := json.Marshal(m)
 	if err != nil {
 		log.Errorf("Broker can't encode message:%s", m)
@@ -61,7 +57,7 @@ func New(id string) (broker *Broker) {
 }
 
 // Serve forwards events to HTTP client
-func (broker *Broker) Serve(w http.ResponseWriter, filter string, flusher http.Flusher) {
+func (broker *Broker) Serve(w http.ResponseWriter, flusher http.Flusher) {
 	messageChan := make(chan *msg.Msg)
 	broker.newClients <- messageChan
 
@@ -77,7 +73,7 @@ func (broker *Broker) Serve(w http.ResponseWriter, filter string, flusher http.F
 	}()
 
 	for _, obj := range broker.cache {
-		sendMsg(w, filter, flusher, msg.New("add", obj))
+		sendMsg(w, flusher, msg.New("add", obj))
 	}
 
 	for {
@@ -85,7 +81,7 @@ func (broker *Broker) Serve(w http.ResponseWriter, filter string, flusher http.F
 		if !open {
 			break
 		}
-		sendMsg(w, filter, flusher, m)
+		sendMsg(w, flusher, m)
 	}
 }
 
@@ -99,6 +95,10 @@ func (broker *Broker) updateCache(m *msg.Msg) {
 }
 
 const patience time.Duration = time.Second * 1
+
+func (broker *Broker) Id() string {
+	return broker.id
+}
 
 func (broker *Broker) listen() {
 	log.Debugf("Broker: %s start", broker.id)
