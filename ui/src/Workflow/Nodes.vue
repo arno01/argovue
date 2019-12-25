@@ -1,6 +1,6 @@
 <template>
 <b-container fluid>
-  <node v-for="node in nodes" v-bind:key="node.name" :content="node" :namespace="namespace"></node>
+  <node v-for="node in nodes" v-bind:key="node.name" :content="node" :name="content.metadata.name" :namespace="content.metadata.namespace"></node>
 </b-container>
 </template>
 

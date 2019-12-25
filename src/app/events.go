@@ -40,7 +40,7 @@ func (a *App) handleEvents(w http.ResponseWriter, r *http.Request) {
 		<-notify
 		if session, err := a.Store().Get(r, "auth-session"); err == nil {
 			log.Debugf("Events: close connection, session id:%s", session.ID)
-			a.onLogout(session.ID)
+			// a.onLogout(session.ID)
 		}
 	}()
 

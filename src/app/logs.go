@@ -10,10 +10,11 @@ import (
 )
 
 func (a *App) streamLogs(w http.ResponseWriter, r *http.Request) {
-
-	name := mux.Vars(r)["name"]
-	namespace := mux.Vars(r)["namespace"]
-	container := mux.Vars(r)["container"]
+	v := mux.Vars(r)
+	// name := v["name"]
+	namespace := v["namespace"]
+	pod := v["pod"]
+	container := v["container"]
 
 	flusher, ok := w.(http.Flusher)
 	if !ok {
@@ -21,9 +22,9 @@ func (a *App) streamLogs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stream, err := kube.GetPodLogs(name, namespace, container)
+	stream, err := kube.GetPodLogs(pod, namespace, container)
 	if err != nil {
-		log.Errorf("Error getting pod logs %s/%s/%s, error:%s", namespace, name, container, err)
+		log.Errorf("Error getting pod logs %s/%s/%s, error:%s", namespace, pod, container, err)
 		http.Error(w, "Error getting logs", http.StatusInternalServerError)
 		return
 	}

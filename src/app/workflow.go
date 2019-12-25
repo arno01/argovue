@@ -52,7 +52,8 @@ func (a *App) commandWorkflow(w http.ResponseWriter, r *http.Request) {
 		err = util.ResumeWorkflow(wfClient, name)
 	case "terminate":
 		err = util.TerminateWorkflow(wfClient, name)
-	case "default":
+	case "mount":
+	default:
 		err = fmt.Errorf("unrecognized command %s", action)
 	}
 	if err != nil {

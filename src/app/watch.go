@@ -1,6 +1,7 @@
 package app
 
 import (
+	"argovue/crd"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -21,32 +22,62 @@ func (a *App) Objects(w http.ResponseWriter, r *http.Request) {
 func (a *App) watchKind(w http.ResponseWriter, r *http.Request) {
 	session, _ := a.Store().Get(r, "auth-session")
 	vars := mux.Vars(r)
-	a.watchBroker(a.getBroker(session.ID, vars["kind"]), w, r)
-}
-
-func (a *App) watchName(w http.ResponseWriter, r *http.Request) {
-	session, _ := a.Store().Get(r, "auth-session")
-	vars := mux.Vars(r)
-	if broker := a.getSubsetBroker(session.ID, vars["namespace"], vars["kind"], vars["name"]); broker != nil {
-		a.watchBroker(broker, w, r)
+	kind := vars["kind"]
+	log.Debugf("SSE: start kind %s", kind)
+	broker := a.getBroker(session.ID, kind)
+	if broker == nil {
+		http.Error(w, "Objects not found", http.StatusNotFound)
 		return
 	}
-	log.Errorf("watchName: not found %s/%s/%s", vars["namespace"], vars["kind"], vars["name"])
-	http.Error(w, "Objects not found", http.StatusNotFound)
+	a.watchBroker(broker, w, r)
+	log.Debugf("SSE: stop kind %s", kind)
 }
 
-func (a *App) watchNameSubset(w http.ResponseWriter, r *http.Request) {
-	session, _ := a.Store().Get(r, "auth-session")
-	vars := mux.Vars(r)
-	if vars["kind"] == "catalogue" && vars["subset"] == "instances" {
-		labelSelector := fmt.Sprintf("%s=%s", "argovue.io/service", vars["name"])
-		if broker := a.getSubsetBroker(session.ID, vars["namespace"], vars["kind"], vars["name"], labelSelector); broker != nil {
-			a.watchBroker(broker, w, r)
-			return
+func (a *App) authWorkflowPod(sessionId, name, namespace string) bool {
+	if broker := a.getBroker(sessionId, "workflows"); broker != nil {
+		if wf := broker.Broker().Find(name, namespace); wf != nil {
+			return true
+		} else {
+			log.Debugf("authWorkflowPod: no workflow %s/%s", namespace, name)
+			return false
 		}
 	}
-	log.Errorf("watchNameSubset: not found %s/%s/%s/%s", vars["namespace"], vars["kind"], vars["name"], vars["subset"])
-	http.Error(w, "Objects not found", http.StatusNotFound)
+	log.Debugf("authWorkflowPod: no workflow broker")
+	return false
+}
+
+func (a *App) watchWorkflowPods(w http.ResponseWriter, r *http.Request) {
+	session, _ := a.Store().Get(r, "auth-session")
+	v := mux.Vars(r)
+	name, namespace, pod := v["name"], v["namespace"], v["pod"]
+	log.Debugf("SSE: start workflow/%s/%s/%s", namespace, name, pod)
+	if !a.authWorkflowPod(session.ID, name, namespace) {
+		log.Debugf("SSE: access denied, no workflow %s/%s", namespace, name)
+		http.Error(w, "Access denied", http.StatusForbidden)
+		return
+	}
+	crd := crd.New("", "v1", "pods").
+		SetLabelSelector("workflows.argoproj.io/workflow=" + name).
+		SetFieldSelector("metadata.name=" + pod)
+	cb := a.maybeNewSubsetBroker(session.ID, crd)
+	a.watchBroker(cb, w, r)
+	log.Debugf("SSE: stop workflow/%s/%s/%s", namespace, name, pod)
+}
+
+func (a *App) watchWorkflow(w http.ResponseWriter, r *http.Request) {
+	session, _ := a.Store().Get(r, "auth-session")
+	v := mux.Vars(r)
+	name, namespace := v["name"], v["namespace"]
+	log.Debugf("SSE: start workflow/%s/%s", namespace, name)
+	if !a.authWorkflowPod(session.ID, name, namespace) {
+		log.Debugf("SSE: access denied, no workflow %s/%s", namespace, name)
+		http.Error(w, "Access denied", http.StatusForbidden)
+		return
+	}
+	crd := crd.New("argoproj.io", "v1alpha1", "workflows").SetFieldSelector("metadata.name=" + name)
+	cb := a.maybeNewSubsetBroker(session.ID, crd)
+	a.watchBroker(cb, w, r)
+	log.Debugf("SSE: stop workflow/%s/%s", namespace, name)
 }
 
 func (a *App) watchBroker(cb *CrdBroker, w http.ResponseWriter, r *http.Request) {
@@ -55,7 +86,6 @@ func (a *App) watchBroker(cb *CrdBroker, w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
 		return
 	}
-
 	if cb != nil {
 		w.Header().Set("Content-Type", "text/event-stream")
 		w.Header().Set("Cache-Control", "no-cache")

@@ -7,12 +7,10 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import App from '@/App'
 import Front from '@/Front'
-import Object from '@/Object'
 import Objects from '@/Objects'
 import WorkflowObject from '@/Workflow/Object'
 import CatalogueObject from '@/Catalogue/Object'
-import PodObject from '@/Pod/Object'
-import ServiceObject from '@/Service/Object'
+import PodObject from '@/Workflow/Pod/Object'
 import API from '@/API'
 
 Vue.use(VueRouter)
@@ -21,24 +19,21 @@ Vue.use(BootstrapVue)
 Vue.prototype.$api = new Vue(API)
 Vue.prototype.$log = window.console.log.bind(console)
 
-function routeProps(route) {
-  return {
-    namespace: route.params.namespace,
-    name: route.params.name,
-    kind: route.params.kind
-  }
+function routeProps({params}) {
+  return { namespace: params.namespace, name: params.name, kind: params.kind, pod: params.pod }
+}
+
+function workflowPods({params}) {
+  return { namespace: params.namespace, name: params.name, pod: params.pod }
 }
 
 const router = new VueRouter({
   routes: [
     { path: '/', component: Front },
-    { path: '/watch/:namespace/services/:name', component: ServiceObject, props: routeProps },
-    { path: '/watch/:namespace/pods/:name', component: PodObject, props: routeProps },
-    { path: '/watch/:namespace/workflows/:name', component: WorkflowObject, props: routeProps },
-    { path: '/watch/:namespace/catalogue/:name', component: CatalogueObject, props: routeProps },
-    { path: '/watch/:namespace/:kind/:name', component: Object, props: routeProps },
-    { path: '/watch/:namespace/:kind', component: Objects, props: routeProps },
-    { path: '/watch/:kind', component: Objects, props: routeProps }
+    { path: '/watch/:kind', component: Objects, props: routeProps },
+    { path: '/workflows/:namespace/:name', component: WorkflowObject, props: routeProps },
+    { path: '/workflow/:namespace/:name/pod/:pod', component: PodObject, props: workflowPods },
+    { path: '/catalogue/:namespace/:name', component: CatalogueObject, props: routeProps },
   ]
 })
 

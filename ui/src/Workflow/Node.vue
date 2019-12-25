@@ -1,7 +1,7 @@
 <template>
 <b-row>
   <b-col v-if="isPod()">
-    <b-link :to="`/watch/${namespace}/pods/${content.id}`">{{content.displayName}}</b-link>
+    <b-link :to="`/workflow/${namespace}/${name}/pod/${content.id}`">{{content.displayName}}</b-link>
   </b-col>
   <b-col v-else>
     {{content.displayName}}
@@ -17,7 +17,7 @@ import moment from 'moment'
 import 'moment-duration-format'
 
 export default {
-  props: ['content', 'namespace'],
+  props: ['content', 'name', 'namespace'],
   data () {
     return {
       duration: 0

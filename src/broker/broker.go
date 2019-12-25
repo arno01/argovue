@@ -64,8 +64,7 @@ func (broker *Broker) Serve(w http.ResponseWriter, flusher http.Flusher) {
 	notify := w.(http.CloseNotifier).CloseNotify()
 	go func() {
 		<-notify
-		broker.closingClients <- messageChan
-		log.Debugf("Broker: %s close connection", broker.id)
+		close(messageChan)
 	}()
 
 	defer func() {

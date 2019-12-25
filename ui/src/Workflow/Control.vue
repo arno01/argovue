@@ -10,6 +10,9 @@
     <b-button :disabled="cantResume()" @click="resume()">Resume</b-button>
     <b-button :disabled="cantTerminate()" @click="terminate()">Terminate</b-button>
   </b-button-group>
+  <b-button-group size="sm" class="mr-1">
+    <b-button :disabled="cantMount()" @click="mount()">Mount</b-button>
+  </b-button-group>
 </b-button-toolbar>
 </template>
 
@@ -22,11 +25,11 @@ export default {
     }
   },
   methods: {
-    status(status) {
+    status (status) {
       return this.object && this.object.status && this.object.status.phase == status
     },
     action: async function(action) {
-      let re = await this.$api.post(`/workflow/${this.namespace}/${this.name}/${action}`)
+      let re = await this.$api.post(`/workflow/${this.namespace}/${this.name}/action/${action}`)
       this.$bvToast.toast(`${re.data.action} ${re.data.status} ${re.data.message}`, {
         title: re.data.action,
         toaster: 'b-toaster-bottom-right',
@@ -35,20 +38,23 @@ export default {
         variant: re.data.status == 'ok'? 'info' : 'error'
       })
     },
-    cantRetry() {
+    cantRetry () {
       return ! (this.status('Failed') || this.status('Error'))
     },
-    cantSuspend() {
+    cantSuspend () {
       return ! (this.status('Running') || this.isSuspended())
     },
-    cantResume() {
+    cantResume () {
       return ! this.isSuspended()
     },
-    cantTerminate() {
+    cantTerminate () {
       return ! this.status('Running')
     },
-    isSuspended() {
+    isSuspended () {
       return this.object && this.object.spec && this.object.spec.suspend
+    },
+    cantMount () {
+      return false
     },
     retry () {
       this.action('retry')
@@ -68,6 +74,9 @@ export default {
     terminate () {
       this.action('terminate')
     },
+    mount () {
+      this.action('mount')
+    }
   },
 }
 </script>

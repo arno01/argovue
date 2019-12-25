@@ -5,12 +5,19 @@
 * Better instance navigation (click to proxy)
 * Delete service instances
 * Delete watchers on connection close
+* Stream logs line by line with SSE, the same way as all objects
 
 * Keep URL option for proxy services
 * Add graph representation for workflows
 * Add workflow templates and their actions?
 * Display user profile as we get it from OIDC
 * OIDC values remapping: e.g. OIDC groups and ID to more readable?
+
+# FIX
+
+* UI allows to command any workflow (must be only allowed ones)
+* UI allows to view any service (must be only allowed ones)
+* On connection break give it some time (10-15 seconds) before clean up
 
 # DONE
 
@@ -30,3 +37,4 @@
 * Add run duration to steps/pods/workflows and better time representation (moments)
 * Start a copy of pre-defined service per user with shared volumes and private volumes
 * Automate access to volume with nginx pod
+* Lazy load pod logs

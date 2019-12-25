@@ -8,7 +8,10 @@
       <b-card no-body>
         <b-tabs card>
           <b-tab title="Nodes" active>
-            <nodes :content="object" :namespace="namespace"></nodes>
+            <nodes :content="object"></nodes>
+          </b-tab>
+          <b-tab title="Volumes">
+            <volumes :content="object"></volumes>
           </b-tab>
           <b-tab title="Workflow">
             <jsoneditor :content="object"></jsoneditor>
@@ -23,6 +26,7 @@
 import SSE from '@/SSE/Object'
 import JsonEditor from '@/JsonEditor'
 import Nodes from '@/Workflow/Nodes'
+import Volumes from '@/Workflow/Volumes'
 import Control from '@/Workflow/Control'
 
 export default {
@@ -32,6 +36,7 @@ export default {
     jsoneditor: JsonEditor,
     nodes: Nodes,
     control: Control,
+    volumes: Volumes,
   },
   data() {
     return {
@@ -39,6 +44,9 @@ export default {
     }
   },
   methods: {
+    uri() {
+      return `/watch/${this.namespace}/workflows/${this.name}`
+    },
   }
 }
 </script>

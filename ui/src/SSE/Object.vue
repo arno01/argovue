@@ -29,8 +29,11 @@ export default {
       this.object = {}
       this.es = undefined
     },
+    uri() {
+      return `/watch/${this.namespace}/${this.kind}/${this.name}`
+    },
     setupStream() {
-      this.es = this.$api.sse(`/watch/${this.namespace}/${this.kind}/${this.name}`, (event) => {
+      this.es = this.$api.sse(this.uri(), (event) => {
         let msg = JSON.parse(event.data);
         let obj = msg.Content;
         switch (msg.Action) {
