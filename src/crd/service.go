@@ -115,3 +115,11 @@ func (s *Service) Deploy(clientset *kubernetes.Clientset, owner string) error {
 	}
 	return nil
 }
+
+func (s *Service) Delete(clientset *kubernetes.Clientset, instance string) {
+	deletePolicy := metav1.DeletePropagationForeground
+	opts := &metav1.DeleteOptions{PropagationPolicy: &deletePolicy}
+	clientset.CoreV1().PersistentVolumeClaims(s.Namespace).Delete(instance, opts)
+	clientset.CoreV1().Services(s.Namespace).Delete(instance, opts)
+	clientset.AppsV1().Deployments(s.Namespace).Delete(instance, opts)
+}

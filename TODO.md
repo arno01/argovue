@@ -1,23 +1,24 @@
 # TODO
 
-* Better instance navigation (click to proxy)
-* Delete service instances
-* Stream logs line by line with SSE, the same way as all objects
+* Mount workflow volume and display associated service
+* Display user profile as we get it from OIDC
 
 * Keep URL option for proxy services
 * Add graph representation for workflows
 * Add workflow templates and their actions?
-* Display user profile as we get it from OIDC
 * OIDC values remapping: e.g. OIDC groups and ID to more readable?
+* Better kube error/info handling on service create/delete
 
 # MAYBE
 
 * Delete brokers on zero connections after timeout
+* Better instance navigation (click to proxy)? Need ports
+* Stream logs line by line with SSE, the same way as all objects
 
 # FIX
 
 * On connection break give it some time (10-15 seconds) before clean up
-* Proxy service must authorize user
+* Proxy service must authorize user by checking service label
 
 # DONE
 
@@ -42,3 +43,4 @@
 * Add OIDC id as Service selector/copy labels from parent objects
 * UI allows to command any workflow (must be only allowed ones)
 * UI allows to view any service (must be only allowed ones)
+* Delete service instances
