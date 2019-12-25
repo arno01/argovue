@@ -47,6 +47,9 @@ export default {
     uri() {
       return `/workflow/${this.namespace}/${this.name}`
     },
+    parent() {
+      return `/watch/workflows`
+    },
   }
 }
 </script>

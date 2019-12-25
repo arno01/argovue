@@ -32,13 +32,16 @@ export default {
     uri() {
       return `/watch/${this.namespace}/${this.kind}/${this.name}`
     },
+    parent() {
+      return `/watch/${this.namespace}/${this.kind}`
+    },
     setupStream() {
       this.es = this.$api.sse(this.uri(), (event) => {
         let msg = JSON.parse(event.data);
         let obj = msg.Content;
         switch (msg.Action) {
           case "delete":
-            this.$router.replace(`/watch/${this.namespace}/${this.kind}`)
+            this.$router.replace(this.parent())
             break
           case "add":
             this.$set(this, "object", obj)

@@ -2,7 +2,7 @@
   <b-container>
     <b-row v-for="obj in orderedCache" v-bind:key="obj.metadata.uid">
       <b-col>
-        <b-link :to="`/catalogue/${namespace}/${name}/instance/${obj.metadata.name}`">{{obj.metadata.namespace}}/{{ obj.metadata.name }}</b-link>
+        <b-link :to="`/catalogue/${namespace}/${name}/instance/${obj.metadata.name}`">{{ obj.metadata.name }}</b-link>
       </b-col>
       <b-col cols=3>
         {{ formatTs(obj) }}
