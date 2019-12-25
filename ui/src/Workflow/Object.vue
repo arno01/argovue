@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     uri() {
-      return `/watch/${this.namespace}/workflows/${this.name}`
+      return `/workflow/${this.namespace}/${this.name}`
     },
   }
 }

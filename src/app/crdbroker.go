@@ -39,6 +39,13 @@ func (a *App) getBroker(sessionId, name string) *CrdBroker {
 	return nil
 }
 
+func (a *App) getSubsetBroker(sessionId, id string) *CrdBroker {
+	if nameMap, ok := a.subset[sessionId]; ok {
+		return nameMap[id]
+	}
+	return nil
+}
+
 func (a *App) maybeNewSubsetBroker(sessionId string, crd *crd.Crd) *CrdBroker {
 	m, ok := a.subset[sessionId]
 	if !ok {

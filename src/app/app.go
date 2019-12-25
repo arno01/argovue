@@ -112,22 +112,24 @@ func (a *App) Serve() {
 	r := mux.NewRouter()
 	r.PathPrefix("/ui/").Handler(http.StripPrefix("/ui/", http.FileServer(http.Dir(a.Args().Dir()))))
 	r.HandleFunc("/events", a.handleEvents)
-	r.HandleFunc("/watch/{kind}", a.watchKind)
-	r.HandleFunc("/proxy/{namespace}/{name}/{port}/{rest:.*}", a.proxyService)
-	r.HandleFunc("/proxy/{namespace}/{name}/{port}", a.proxyService)
-	r.HandleFunc("/dex/{rest:.*}", a.proxyDex)
-	r.HandleFunc("/catalogue/{namespace}/{name}/{action}", a.commandCatalogue).Methods("POST")
-
-	r.HandleFunc("/watch/{namespace}/workflows/{name}", a.watchWorkflow)
-	r.HandleFunc("/workflow/{namespace}/{name}/action/{action}", a.commandWorkflow).Methods("POST")
-	r.HandleFunc("/workflow/{namespace}/{name}/pod/{pod}", a.watchWorkflowPods)
-	r.HandleFunc("/workflow/{namespace}/{name}/pod/{pod}/container/{container}/logs", a.streamLogs)
-
 	r.HandleFunc("/objects", a.Objects)
 	r.HandleFunc("/auth", a.AuthInitiate)
 	r.HandleFunc("/callback", a.AuthCallback)
 	r.HandleFunc("/profile", a.Profile)
 	r.HandleFunc("/logout", a.Logout)
+	r.HandleFunc("/watch/{kind}", a.watchKind)
+
+	r.HandleFunc("/proxy/{namespace}/{name}/{port}/{rest:.*}", a.proxyService)
+	r.HandleFunc("/proxy/{namespace}/{name}/{port}", a.proxyService)
+	r.HandleFunc("/dex/{rest:.*}", a.proxyDex)
+
+	r.HandleFunc("/catalogue/{namespace}/{name}/{action}", a.commandCatalogue).Methods("POST")
+
+	r.HandleFunc("/workflow/{namespace}/{name}", a.watchWorkflow)
+	r.HandleFunc("/workflow/{namespace}/{name}/action/{action}", a.commandWorkflow).Methods("POST")
+	r.HandleFunc("/workflow/{namespace}/{name}/pod/{pod}", a.watchWorkflowPods)
+	r.HandleFunc("/workflow/{namespace}/{name}/pod/{pod}/container/{container}/logs", a.watchWorkflowPodLogs)
+
 	r.Use(a.authMiddleWare)
 	srv := &http.Server{
 		Handler: r,

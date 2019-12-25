@@ -1,7 +1,5 @@
 # TODO
 
-* List workflow PVC
-* Add OIDC id as Service selector/copy labels from parent objects
 * Better instance navigation (click to proxy)
 * Delete service instances
 * Delete watchers on connection close
@@ -38,3 +36,5 @@
 * Start a copy of pre-defined service per user with shared volumes and private volumes
 * Automate access to volume with nginx pod
 * Lazy load pod logs
+* List workflow PVC
+* Add OIDC id as Service selector/copy labels from parent objects
