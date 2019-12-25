@@ -39,6 +39,9 @@ export default {
     }
   },
   methods: {
+    uri() {
+      return `/catalogue/${this.namespace}/${this.name}`
+    },
   }
 }
 </script>

@@ -123,12 +123,15 @@ func (a *App) Serve() {
 	r.HandleFunc("/proxy/{namespace}/{name}/{port}", a.proxyService)
 	r.HandleFunc("/dex/{rest:.*}", a.proxyDex)
 
+	r.HandleFunc("/catalogue/{namespace}/{name}", a.watchCatalogue)
+	r.HandleFunc("/catalogue/{namespace}/{name}/instances", a.watchCatalogueInstances)
+	r.HandleFunc("/catalogue/{namespace}/{name}/instance/{instance}", a.watchCatalogueInstance)
 	r.HandleFunc("/catalogue/{namespace}/{name}/{action}", a.commandCatalogue).Methods("POST")
 
 	r.HandleFunc("/workflow/{namespace}/{name}", a.watchWorkflow)
-	r.HandleFunc("/workflow/{namespace}/{name}/action/{action}", a.commandWorkflow).Methods("POST")
 	r.HandleFunc("/workflow/{namespace}/{name}/pod/{pod}", a.watchWorkflowPods)
 	r.HandleFunc("/workflow/{namespace}/{name}/pod/{pod}/container/{container}/logs", a.watchWorkflowPodLogs)
+	r.HandleFunc("/workflow/{namespace}/{name}/action/{action}", a.commandWorkflow).Methods("POST")
 
 	r.Use(a.authMiddleWare)
 	srv := &http.Server{

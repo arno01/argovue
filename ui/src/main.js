@@ -10,6 +10,7 @@ import Front from '@/Front'
 import Objects from '@/Objects'
 import WorkflowObject from '@/Workflow/Object'
 import CatalogueObject from '@/Catalogue/Object'
+import CatalogueInstance from '@/Catalogue/Instance'
 import PodObject from '@/Workflow/Pod/Object'
 import API from '@/API'
 
@@ -20,11 +21,7 @@ Vue.prototype.$api = new Vue(API)
 Vue.prototype.$log = window.console.log.bind(console)
 
 function routeProps({params}) {
-  return { namespace: params.namespace, name: params.name, kind: params.kind, pod: params.pod }
-}
-
-function workflowPods({params}) {
-  return { namespace: params.namespace, name: params.name, pod: params.pod }
+  return params
 }
 
 const router = new VueRouter({
@@ -32,8 +29,9 @@ const router = new VueRouter({
     { path: '/', component: Front },
     { path: '/watch/:kind', component: Objects, props: routeProps },
     { path: '/workflows/:namespace/:name', component: WorkflowObject, props: routeProps },
-    { path: '/workflow/:namespace/:name/pod/:pod', component: PodObject, props: workflowPods },
+    { path: '/workflow/:namespace/:name/pod/:pod', component: PodObject, props: routeProps },
     { path: '/catalogue/:namespace/:name', component: CatalogueObject, props: routeProps },
+    { path: '/catalogue/:namespace/:name/instance/:instance', component: CatalogueInstance, props: routeProps },
   ]
 })
 
