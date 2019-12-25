@@ -14,13 +14,13 @@ import (
 
 func int32Ptr(i int32) *int32 { return &i }
 
-func (s *Service) createPVC(clientset *kubernetes.Clientset, instance string, owner string) (*apiv1.PersistentVolumeClaim, error) {
-	log.Debugf("Kube: create pvc %s/%s for %s", s.Namespace, s.Name, owner)
+func (s *Service) createPVC(clientset *kubernetes.Clientset, instance, owner string) (*apiv1.PersistentVolumeClaim, error) {
+	log.Debugf("Kube: create pvc %s/%s, owner:%s", s.Namespace, instance, owner)
 	pvc := &apiv1.PersistentVolumeClaim{
 		ObjectMeta: metav1.ObjectMeta{
-			GenerateName: fmt.Sprintf("%s-", s.Name),
-			Namespace:    s.Namespace,
-			Labels:       map[string]string{"service": instance, "oidc.argovue.io/id": owner, "argovue.io/service": s.Name},
+			Name:      instance,
+			Namespace: s.Namespace,
+			Labels:    map[string]string{"service": instance, "oidc.argovue.io/id": owner, "argovue.io/service": s.Name},
 		},
 		Spec: apiv1.PersistentVolumeClaimSpec{
 			AccessModes: []apiv1.PersistentVolumeAccessMode{apiv1.ReadWriteOnce},
@@ -34,11 +34,11 @@ func (s *Service) createPVC(clientset *kubernetes.Clientset, instance string, ow
 	return clientset.CoreV1().PersistentVolumeClaims(s.Namespace).Create(pvc)
 }
 
-func (s *Service) createService(clientset *kubernetes.Clientset, name, instance, owner string) (*apiv1.Service, error) {
-	log.Debugf("Kube: create service %s/%s for %s", s.Namespace, s.Name, owner)
+func (s *Service) createService(clientset *kubernetes.Clientset, instance, owner string) (*apiv1.Service, error) {
+	log.Debugf("Kube: create service %s/%s, owner:%s", s.Namespace, instance, owner)
 	svc := &apiv1.Service{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      name,
+			Name:      instance,
 			Namespace: s.Namespace,
 			Labels:    map[string]string{"service": instance, "oidc.argovue.io/id": owner, "argovue.io/service": s.Name},
 		},
@@ -51,28 +51,11 @@ func (s *Service) createService(clientset *kubernetes.Clientset, name, instance,
 	return clientset.CoreV1().Services(s.Namespace).Create(svc)
 }
 
-func (s *Service) Deploy(clientset *kubernetes.Clientset, owner string) (*appsv1.Deployment, error) {
-	instance := fmt.Sprintf("%s-%s", s.Name, xid.New().String())
-	baseUrl := fmt.Sprintf("/proxy/%s/%s/%d", s.Namespace, instance, 80)
-	log.Debugf("Kube: create deployment %s/%s service:%s instance:%s %s", s.Namespace, s.Name, owner, instance, s.Args)
-	for i, arg := range s.Args {
-		if arg == "BASE_URL" {
-			s.Args[i] = baseUrl
-		}
-	}
-	pvc, err := s.createPVC(clientset, instance, owner)
-	if err != nil {
-		log.Errorf("Kube: can't create pvc, error:%s", err)
-		return nil, err
-	}
-	_, err = s.createService(clientset, instance, instance, owner)
-	if err != nil {
-		log.Errorf("Kube: can't create service, error:%s", err)
-		return nil, err
-	}
+func (s *Service) createDeployment(clientset *kubernetes.Clientset, instance, owner, baseUrl string, pvc *apiv1.PersistentVolumeClaim) (*appsv1.Deployment, error) {
+	log.Debugf("Kube: create deployment %s/%s, owner:%s", s.Namespace, instance, owner)
 	deployment := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
-			GenerateName:    fmt.Sprintf("%s-", s.Name),
+			Name:            instance,
 			Namespace:       s.Namespace,
 			Labels:          map[string]string{"service": instance, "oidc.argovue.io/id": owner, "argovue.io/service": s.Name},
 			OwnerReferences: []metav1.OwnerReference{{APIVersion: "argovue.io/v1", Kind: "Service", Name: s.Name, UID: s.UID}},
@@ -104,4 +87,31 @@ func (s *Service) Deploy(clientset *kubernetes.Clientset, owner string) (*appsv1
 		},
 	}
 	return clientset.AppsV1().Deployments(s.Namespace).Create(deployment)
+}
+
+func (s *Service) Deploy(clientset *kubernetes.Clientset, owner string) error {
+	instance := fmt.Sprintf("%s-%s", s.Name, xid.New().String())
+	baseUrl := fmt.Sprintf("/proxy/%s/%s/%d", s.Namespace, instance, 80)
+	log.Debugf("Kube: create service %s/%s owner:%s instance:%s args:%s", s.Namespace, s.Name, owner, instance, s.Args)
+	for i, arg := range s.Args {
+		if arg == "BASE_URL" {
+			s.Args[i] = baseUrl
+		}
+	}
+	pvc, err := s.createPVC(clientset, instance, owner)
+	if err != nil {
+		log.Errorf("Kube: can't create pvc, error:%s", err)
+		return err
+	}
+	_, err = s.createService(clientset, instance, owner)
+	if err != nil {
+		log.Errorf("Kube: can't create service, error:%s", err)
+		return err
+	}
+	_, err = s.createDeployment(clientset, instance, owner, baseUrl, pvc)
+	if err != nil {
+		log.Errorf("Kube: can't create deployment, error:%s", err)
+		return err
+	}
+	return nil
 }
