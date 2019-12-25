@@ -2,7 +2,6 @@
 
 * Better instance navigation (click to proxy)
 * Delete service instances
-* Delete watchers on connection close
 * Stream logs line by line with SSE, the same way as all objects
 
 * Keep URL option for proxy services
@@ -10,6 +9,10 @@
 * Add workflow templates and their actions?
 * Display user profile as we get it from OIDC
 * OIDC values remapping: e.g. OIDC groups and ID to more readable?
+
+# MAYBE
+
+* Delete brokers on zero connections after timeout
 
 # FIX
 
