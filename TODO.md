@@ -13,9 +13,8 @@
 
 # FIX
 
-* UI allows to command any workflow (must be only allowed ones)
-* UI allows to view any service (must be only allowed ones)
 * On connection break give it some time (10-15 seconds) before clean up
+* Proxy service must authorize user
 
 # DONE
 
@@ -38,3 +37,5 @@
 * Lazy load pod logs
 * List workflow PVC
 * Add OIDC id as Service selector/copy labels from parent objects
+* UI allows to command any workflow (must be only allowed ones)
+* UI allows to view any service (must be only allowed ones)
