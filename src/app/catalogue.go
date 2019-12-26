@@ -2,7 +2,6 @@ package app
 
 import (
 	"argovue/crd"
-	"argovue/kube"
 	"encoding/json"
 	"net/http"
 
@@ -81,12 +80,13 @@ func (a *App) commandCatalogue(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Access granted, perform action
-	svc := a.getBroker(session.ID, "catalogue").Broker().Find(name, namespace)
 	switch action {
 	case "deploy":
 		profile := session.Values["profile"].(map[string]interface{})
-		kubeClient, _ := kube.GetClient()
-		crd.Parse(svc).Deploy(kubeClient, profile["sub"].(string))
+		svc, err := crd.Typecast(a.getBroker(session.ID, "catalogue").Broker().Find(name, namespace))
+		if err == nil {
+			crd.Deploy(svc, profile["sub"].(string))
+		}
 	}
 	if err != nil {
 		log.Errorf("Can't %s catalogue %s/%s, error:%s", action, namespace, name, err)
@@ -123,9 +123,10 @@ func (a *App) controlCatalogueInstance(w http.ResponseWriter, r *http.Request) {
 	// Access granted, perform action
 	switch action {
 	case "delete":
-		kubeClient, _ := kube.GetClient()
-		svc := a.getBroker(session.ID, "catalogue").Broker().Find(name, namespace)
-		crd.Parse(svc).Delete(kubeClient, instance)
+		svc, err := crd.Typecast(a.getBroker(session.ID, "catalogue").Broker().Find(name, namespace))
+		if err == nil {
+			crd.Delete(svc, instance)
+		}
 	}
 	if err != nil {
 		log.Errorf("Can't %s catalogue %s/%s instance:%s, error:%s", action, namespace, name, instance, err)

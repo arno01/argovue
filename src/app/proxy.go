@@ -18,10 +18,8 @@ func (a *App) proxyDex(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) proxyService(w http.ResponseWriter, r *http.Request) {
-	name := mux.Vars(r)["name"]
-	namespace := mux.Vars(r)["namespace"]
-	port := mux.Vars(r)["port"]
-	rest := mux.Vars(r)["rest"]
+	v := mux.Vars(r)
+	name, namespace, port, rest := v["name"], v["namespace"], v["port"], v["rest"]
 
 	schema := "http"
 	if port == "443" {
@@ -31,6 +29,8 @@ func (a *App) proxyService(w http.ResponseWriter, r *http.Request) {
 	target := fmt.Sprintf("%s://%s.%s.svc.cluster.local:%s", schema, name, namespace, port)
 	if regexp.MustCompile("^/dex.*").MatchString(r.RequestURI) {
 		rest = fmt.Sprintf("%s/%s", "/dex", rest)
+	} else {
+		rest = fmt.Sprintf("/proxy/%s/%s/%s/%s", namespace, name, port, rest)
 	}
 	log.Debugf("Proxy: %s to %s%s", r.URL.Path, target, rest)
 

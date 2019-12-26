@@ -1,6 +1,11 @@
 package crd
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+
+	v1 "argovue/apis/argovue.io/v1"
+)
 
 func WorkflowPods(wfName, pod string) *Crd {
 	return New("", "v1", "pods").
@@ -26,4 +31,20 @@ func CatalogueInstances(name string) *Crd {
 func CatalogueInstance(name, instance string) *Crd {
 	return New("", "v1", "services").
 		SetLabelSelector(fmt.Sprintf("argovue.io/service=%s,service=%s", name, instance))
+}
+
+func Typecast(thing interface{}) (*v1.ServiceType, error) {
+	if thing == nil {
+		return nil, fmt.Errorf("Service typecast nil input")
+	}
+	buf, err := json.Marshal(thing)
+	if err != nil {
+		return nil, err
+	}
+	svc := new(v1.ServiceType)
+	err = json.Unmarshal(buf, svc)
+	if err != nil {
+		return nil, err
+	}
+	return svc, nil
 }

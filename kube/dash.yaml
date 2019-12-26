@@ -5,6 +5,6 @@ metadata:
   labels:
     oidc.argovue.io/group: authors
 spec:
-  image: jamhed/dash:latest
+  image: jamhed/dash:0.1.1
   port: 8000
   privateVolumeSize: 1M
