@@ -21,7 +21,7 @@ package versioned
 import (
 	"fmt"
 
-	kubevuev1 "argovue/client/clientset/versioned/typed/argovue.io/v1"
+	argovuev1 "argovue/client/clientset/versioned/typed/argovue.io/v1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"
@@ -29,19 +29,19 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
-	KubevueV1() kubevuev1.KubevueV1Interface
+	ArgovueV1() argovuev1.ArgovueV1Interface
 }
 
 // Clientset contains the clients for groups. Each group has exactly one
 // version included in a Clientset.
 type Clientset struct {
 	*discovery.DiscoveryClient
-	kubevueV1 *kubevuev1.KubevueV1Client
+	argovueV1 *argovuev1.ArgovueV1Client
 }
 
-// KubevueV1 retrieves the KubevueV1Client
-func (c *Clientset) KubevueV1() kubevuev1.KubevueV1Interface {
-	return c.kubevueV1
+// ArgovueV1 retrieves the ArgovueV1Client
+func (c *Clientset) ArgovueV1() argovuev1.ArgovueV1Interface {
+	return c.argovueV1
 }
 
 // Discovery retrieves the DiscoveryClient
@@ -65,7 +65,7 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 	}
 	var cs Clientset
 	var err error
-	cs.kubevueV1, err = kubevuev1.NewForConfig(&configShallowCopy)
+	cs.argovueV1, err = argovuev1.NewForConfig(&configShallowCopy)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 // panics if there is an error in the config.
 func NewForConfigOrDie(c *rest.Config) *Clientset {
 	var cs Clientset
-	cs.kubevueV1 = kubevuev1.NewForConfigOrDie(c)
+	cs.argovueV1 = argovuev1.NewForConfigOrDie(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClientForConfigOrDie(c)
 	return &cs
@@ -90,7 +90,7 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 // New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
-	cs.kubevueV1 = kubevuev1.New(c)
+	cs.argovueV1 = argovuev1.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)
 	return &cs

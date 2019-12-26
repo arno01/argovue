@@ -61,13 +61,13 @@ func NewFilteredServiceTypeInformer(client versioned.Interface, namespace string
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubevueV1().ServiceTypes(namespace).List(options)
+				return client.ArgovueV1().ServiceTypes(namespace).List(options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubevueV1().ServiceTypes(namespace).Watch(options)
+				return client.ArgovueV1().ServiceTypes(namespace).Watch(options)
 			},
 		},
 		&argovueiov1.ServiceType{},

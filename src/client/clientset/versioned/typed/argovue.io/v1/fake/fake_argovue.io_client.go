@@ -24,17 +24,17 @@ import (
 	testing "k8s.io/client-go/testing"
 )
 
-type FakeKubevueV1 struct {
+type FakeArgovueV1 struct {
 	*testing.Fake
 }
 
-func (c *FakeKubevueV1) ServiceTypes(namespace string) v1.ServiceTypeInterface {
+func (c *FakeArgovueV1) ServiceTypes(namespace string) v1.ServiceTypeInterface {
 	return &FakeServiceTypes{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
-func (c *FakeKubevueV1) RESTClient() rest.Interface {
+func (c *FakeArgovueV1) RESTClient() rest.Interface {
 	var ret *rest.RESTClient
 	return ret
 }

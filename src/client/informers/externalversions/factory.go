@@ -172,9 +172,9 @@ type SharedInformerFactory interface {
 	ForResource(resource schema.GroupVersionResource) (GenericInformer, error)
 	WaitForCacheSync(stopCh <-chan struct{}) map[reflect.Type]bool
 
-	Kubevue() argovueio.Interface
+	Argovue() argovueio.Interface
 }
 
-func (f *sharedInformerFactory) Kubevue() argovueio.Interface {
+func (f *sharedInformerFactory) Argovue() argovueio.Interface {
 	return argovueio.New(f, f.namespace, f.tweakListOptions)
 }

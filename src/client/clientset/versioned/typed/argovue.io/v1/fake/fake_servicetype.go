@@ -30,13 +30,13 @@ import (
 
 // FakeServiceTypes implements ServiceTypeInterface
 type FakeServiceTypes struct {
-	Fake *FakeKubevueV1
+	Fake *FakeArgovueV1
 	ns   string
 }
 
-var servicetypesResource = schema.GroupVersionResource{Group: "kubevue.io", Version: "v1", Resource: "servicetypes"}
+var servicetypesResource = schema.GroupVersionResource{Group: "argovue.io", Version: "v1", Resource: "servicetypes"}
 
-var servicetypesKind = schema.GroupVersionKind{Group: "kubevue.io", Version: "v1", Kind: "ServiceType"}
+var servicetypesKind = schema.GroupVersionKind{Group: "argovue.io", Version: "v1", Kind: "ServiceType"}
 
 // Get takes name of the serviceType, and returns the corresponding serviceType object, and an error if there is any.
 func (c *FakeServiceTypes) Get(name string, options v1.GetOptions) (result *argovueiov1.ServiceType, err error) {

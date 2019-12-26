@@ -8,7 +8,7 @@ import (
 
 // Define your schema name and the version
 var SchemeGroupVersion = schema.GroupVersion{
-	Group:   "kubevue.io",
+	Group:   "argovue.io",
 	Version: "v1",
 }
 

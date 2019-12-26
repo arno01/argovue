@@ -52,9 +52,9 @@ func (f *genericInformer) Lister() cache.GenericLister {
 // TODO extend this to unknown resources with a client pool
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
 	switch resource {
-	// Group=kubevue.io, Version=v1
+	// Group=argovue.io, Version=v1
 	case v1.SchemeGroupVersion.WithResource("servicetypes"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubevue().V1().ServiceTypes().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Argovue().V1().ServiceTypes().Informer()}, nil
 
 	}
 

@@ -55,7 +55,7 @@ type serviceTypes struct {
 }
 
 // newServiceTypes returns a ServiceTypes
-func newServiceTypes(c *KubevueV1Client, namespace string) *serviceTypes {
+func newServiceTypes(c *ArgovueV1Client, namespace string) *serviceTypes {
 	return &serviceTypes{
 		client: c.RESTClient(),
 		ns:     namespace,

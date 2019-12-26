@@ -21,8 +21,8 @@ package fake
 import (
 	clientset "argovue/client/clientset/versioned"
 
-	kubevuev1 "argovue/client/clientset/versioned/typed/argovue.io/v1"
-	fakekubevuev1 "argovue/client/clientset/versioned/typed/argovue.io/v1/fake"
+	argovuev1 "argovue/client/clientset/versioned/typed/argovue.io/v1"
+	fakeargovuev1 "argovue/client/clientset/versioned/typed/argovue.io/v1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"
@@ -77,7 +77,7 @@ func (c *Clientset) Tracker() testing.ObjectTracker {
 
 var _ clientset.Interface = &Clientset{}
 
-// KubevueV1 retrieves the KubevueV1Client
-func (c *Clientset) KubevueV1() kubevuev1.KubevueV1Interface {
-	return &fakekubevuev1.FakeKubevueV1{Fake: &c.Fake}
+// ArgovueV1 retrieves the ArgovueV1Client
+func (c *Clientset) ArgovueV1() argovuev1.ArgovueV1Interface {
+	return &fakeargovuev1.FakeArgovueV1{Fake: &c.Fake}
 }

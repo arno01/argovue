@@ -25,22 +25,22 @@ import (
 	rest "k8s.io/client-go/rest"
 )
 
-type KubevueV1Interface interface {
+type ArgovueV1Interface interface {
 	RESTClient() rest.Interface
 	ServiceTypesGetter
 }
 
-// KubevueV1Client is used to interact with features provided by the kubevue.io group.
-type KubevueV1Client struct {
+// ArgovueV1Client is used to interact with features provided by the argovue.io group.
+type ArgovueV1Client struct {
 	restClient rest.Interface
 }
 
-func (c *KubevueV1Client) ServiceTypes(namespace string) ServiceTypeInterface {
+func (c *ArgovueV1Client) ServiceTypes(namespace string) ServiceTypeInterface {
 	return newServiceTypes(c, namespace)
 }
 
-// NewForConfig creates a new KubevueV1Client for the given config.
-func NewForConfig(c *rest.Config) (*KubevueV1Client, error) {
+// NewForConfig creates a new ArgovueV1Client for the given config.
+func NewForConfig(c *rest.Config) (*ArgovueV1Client, error) {
 	config := *c
 	if err := setConfigDefaults(&config); err != nil {
 		return nil, err
@@ -49,12 +49,12 @@ func NewForConfig(c *rest.Config) (*KubevueV1Client, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &KubevueV1Client{client}, nil
+	return &ArgovueV1Client{client}, nil
 }
 
-// NewForConfigOrDie creates a new KubevueV1Client for the given config and
+// NewForConfigOrDie creates a new ArgovueV1Client for the given config and
 // panics if there is an error in the config.
-func NewForConfigOrDie(c *rest.Config) *KubevueV1Client {
+func NewForConfigOrDie(c *rest.Config) *ArgovueV1Client {
 	client, err := NewForConfig(c)
 	if err != nil {
 		panic(err)
@@ -62,9 +62,9 @@ func NewForConfigOrDie(c *rest.Config) *KubevueV1Client {
 	return client
 }
 
-// New creates a new KubevueV1Client for the given RESTClient.
-func New(c rest.Interface) *KubevueV1Client {
-	return &KubevueV1Client{c}
+// New creates a new ArgovueV1Client for the given RESTClient.
+func New(c rest.Interface) *ArgovueV1Client {
+	return &ArgovueV1Client{c}
 }
 
 func setConfigDefaults(config *rest.Config) error {
@@ -82,7 +82,7 @@ func setConfigDefaults(config *rest.Config) error {
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
-func (c *KubevueV1Client) RESTClient() rest.Interface {
+func (c *ArgovueV1Client) RESTClient() rest.Interface {
 	if c == nil {
 		return nil
 	}
