@@ -9,5 +9,6 @@ ln -s $(pwd)/src $GOPATH/src/argovue
 
 $GOPATH/src/k8s.io/code-generator/generate-groups.sh all argovue/client argovue/apis "argovue.io:v1"
 
+rm -f src/src
 #find go -exec chmod +w {} \;
 #rm -rf go
