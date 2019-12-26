@@ -1,12 +1,13 @@
 #!/bin/bash 
 
-mkdir -p /tmp/go/src
-export GOPATH=/tmp/go
+mkdir -p $(pwd)/go/src
+export GOPATH=$(pwd)/go
 go get k8s.io/code-generator
 go get k8s.io/apimachinery
 
 ln -s $(pwd)/src $GOPATH/src/argovue
 
-$GOPATH/src/k8s.io/code-generator/generate-groups.sh all argovue/client argovue/apis "kubevue.io:v1"
+$GOPATH/src/k8s.io/code-generator/generate-groups.sh all argovue/client argovue/apis "argovue.io:v1"
 
-rm -rf /tmp/go
+#find go -exec chmod +w {} \;
+#rm -rf go

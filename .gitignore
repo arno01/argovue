@@ -7,3 +7,4 @@ argovue.sublime-project
 argovue.sublime-workspace
 /src/gin-bin
 /src/.env
+/go

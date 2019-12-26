@@ -22,6 +22,12 @@ spec:
           properties:
             image:
               type: string
+            port:
+              type: integer
+            args:
+              type: array
+              items:
+                type: string
             sharedVolume:
               type: string
             privateVolumeSize:

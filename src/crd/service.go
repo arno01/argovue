@@ -9,6 +9,7 @@ import (
 	apiv1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/client-go/kubernetes"
 )
 
@@ -43,7 +44,7 @@ func (s *Service) createService(clientset *kubernetes.Clientset, instance, owner
 			Labels:    map[string]string{"service": instance, "oidc.argovue.io/id": owner, "argovue.io/service": s.Name},
 		},
 		Spec: apiv1.ServiceSpec{
-			Ports:    []apiv1.ServicePort{{Port: 80, Protocol: apiv1.ProtocolTCP}},
+			Ports:    []apiv1.ServicePort{{Port: 80, Protocol: apiv1.ProtocolTCP, TargetPort: intstr.IntOrString{Type: intstr.Int, IntVal: s.Port}}},
 			Type:     apiv1.ServiceTypeClusterIP,
 			Selector: map[string]string{"service": instance, "oidc.argovue.io/id": owner},
 		},
@@ -73,7 +74,7 @@ func (s *Service) createDeployment(clientset *kubernetes.Clientset, instance, ow
 							Args:         s.Args,
 							VolumeMounts: []apiv1.VolumeMount{{Name: "work", MountPath: "/work"}},
 							Env:          []apiv1.EnvVar{{Name: "BASE_URL", Value: baseUrl}},
-							Ports:        []apiv1.ContainerPort{{Name: "http", Protocol: apiv1.ProtocolTCP, ContainerPort: 80}},
+							Ports:        []apiv1.ContainerPort{{Name: "http", Protocol: apiv1.ProtocolTCP, ContainerPort: s.Port}},
 						},
 					},
 					Volumes: []apiv1.Volume{
@@ -91,7 +92,7 @@ func (s *Service) createDeployment(clientset *kubernetes.Clientset, instance, ow
 
 func (s *Service) Deploy(clientset *kubernetes.Clientset, owner string) error {
 	instance := fmt.Sprintf("%s-%s", s.Name, xid.New().String())
-	baseUrl := fmt.Sprintf("/proxy/%s/%s/%d", s.Namespace, instance, 80)
+	baseUrl := fmt.Sprintf("/proxy/%s/%s/%d", s.Namespace, instance, s.Port)
 	log.Debugf("Kube: create service %s/%s owner:%s instance:%s args:%s", s.Namespace, s.Name, owner, instance, s.Args)
 	for i, arg := range s.Args {
 		if arg == "BASE_URL" {
