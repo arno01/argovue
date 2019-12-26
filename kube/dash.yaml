@@ -1,0 +1,10 @@
+apiVersion: argovue.io/v1
+kind: Service
+metadata:
+  name: dash
+  labels:
+    oidc.argovue.io/group: authors
+spec:
+  image: jamhed/dash:latest
+  port: 8000
+  privateVolumeSize: 1M
