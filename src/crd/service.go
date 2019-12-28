@@ -24,7 +24,11 @@ func createPVC(s *v1.ServiceType, clientset *kubernetes.Clientset, instance, own
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      instance,
 			Namespace: s.Namespace,
-			Labels:    map[string]string{"service": instance, "oidc.argovue.io/id": owner, "argovue.io/service": s.Name},
+			Labels: map[string]string{
+				"service.argovue.io/name":     s.Name,
+				"service.argovue.io/instance": instance,
+				"oidc.argovue.io/id":          owner,
+			},
 		},
 		Spec: apiv1.PersistentVolumeClaimSpec{
 			AccessModes: []apiv1.PersistentVolumeAccessMode{apiv1.ReadWriteOnce},
@@ -44,12 +48,19 @@ func createService(s *v1.ServiceType, clientset *kubernetes.Clientset, instance,
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      instance,
 			Namespace: s.Namespace,
-			Labels:    map[string]string{"service": instance, "oidc.argovue.io/id": owner, "argovue.io/service": s.Name},
+			Labels: map[string]string{
+				"service.argovue.io/name":     s.Name,
+				"service.argovue.io/instance": instance,
+				"oidc.argovue.io/id":          owner,
+			},
 		},
 		Spec: apiv1.ServiceSpec{
-			Ports:    []apiv1.ServicePort{{Port: 80, Protocol: apiv1.ProtocolTCP, TargetPort: intstr.IntOrString{Type: intstr.Int, IntVal: s.Spec.Port}}},
-			Type:     apiv1.ServiceTypeClusterIP,
-			Selector: map[string]string{"service": instance, "oidc.argovue.io/id": owner},
+			Ports: []apiv1.ServicePort{{Port: 80, Protocol: apiv1.ProtocolTCP, TargetPort: intstr.IntOrString{Type: intstr.Int, IntVal: s.Spec.Port}}},
+			Type:  apiv1.ServiceTypeClusterIP,
+			Selector: map[string]string{
+				"service.argovue.io/instance": instance,
+				"oidc.argovue.io/id":          owner
+			},
 		},
 	}
 	return clientset.CoreV1().Services(s.Namespace).Create(svc)
@@ -59,16 +70,28 @@ func createDeployment(s *v1.ServiceType, clientset *kubernetes.Clientset, instan
 	log.Debugf("Kube: create deployment %s/%s, owner:%s", s.Namespace, instance, owner)
 	deployment := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:            instance,
-			Namespace:       s.Namespace,
-			Labels:          map[string]string{"service": instance, "oidc.argovue.io/id": owner, "argovue.io/service": s.Name},
+			Name:      instance,
+			Namespace: s.Namespace,
+			Labels: map[string]string{
+				"service.argovue.io/name":     s.Name,
+				"service.argovue.io/instance": instance,
+				"oidc.argovue.io/id":          owner,
+			},
 			OwnerReferences: []metav1.OwnerReference{{APIVersion: "argovue.io/v1", Kind: "Service", Name: s.Name, UID: s.UID}},
 		},
 		Spec: appsv1.DeploymentSpec{
 			Replicas: int32Ptr(1),
-			Selector: &metav1.LabelSelector{MatchLabels: map[string]string{"service": instance, "oidc.argovue.io/id": owner, "argovue.io/service": s.Name}},
+			Selector: &metav1.LabelSelector{MatchLabels: map[string]string{
+				"service.argovue.io/name":     s.Name,
+				"service.argovue.io/instance": instance,
+				"oidc.argovue.io/id":          owner,
+			}},
 			Template: apiv1.PodTemplateSpec{
-				ObjectMeta: metav1.ObjectMeta{Labels: map[string]string{"service": instance, "oidc.argovue.io/id": owner, "argovue.io/service": s.Name}},
+				ObjectMeta: metav1.ObjectMeta{Labels: map[string]string{
+					"service.argovue.io/name":     s.Name,
+					"service.argovue.io/instance": instance,
+					"oidc.argovue.io/id":          owner,
+				}},
 				Spec: apiv1.PodSpec{
 					Containers: []apiv1.Container{
 						{

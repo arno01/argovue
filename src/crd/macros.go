@@ -25,12 +25,12 @@ func Catalogue(name string) *Crd {
 
 func CatalogueInstances(name string) *Crd {
 	return New("", "v1", "services").
-		SetLabelSelector("argovue.io/service=" + name)
+		SetLabelSelector("service.argovue.io/name=" + name)
 }
 
 func CatalogueInstance(name, instance string) *Crd {
 	return New("", "v1", "services").
-		SetLabelSelector(fmt.Sprintf("argovue.io/service=%s,service=%s", name, instance))
+		SetLabelSelector(fmt.Sprintf("service.argovue.io/name=%s,service.argovue.io/instance=%s", name, instance))
 }
 
 func Typecast(thing interface{}) (*v1.ServiceType, error) {
