@@ -1,14 +1,17 @@
 # TODO
 
-* Add graph representation for workflows
 * Mount workflow volume and display associated service
 * Add shared volumes to services
-* Display user profile as we get it from OIDC
+* Add graph representation for workflows
+* Better kube error/info handling on service create/delete
 
-* Keep URL option for proxy services
 * Add workflow templates and their actions?
 * OIDC values remapping: e.g. OIDC groups and ID to more readable?
-* Better kube error/info handling on service create/delete
+
+# FIX
+
+* On connection break give it some time (10-15 seconds) before clean up
+* Proxy service must authorize user by checking service label (or generate unique id)
 
 # MAYBE
 
@@ -16,14 +19,12 @@
 * Better instance navigation (click to proxy)? Need ports
 * Stream logs line by line with SSE, the same way as all objects
 * Ingress objects for services
-
-# FIX
-
-* On connection break give it some time (10-15 seconds) before clean up
-* Proxy service must authorize user by checking service label (or generate unique id)
+* Use helm operator to install services?
 
 # DONE
 
+* Keep URL option for proxy services (it should be always on)
+* Display user profile as we get it from OIDC
 * Helm deployment and image build workflow
 * Reduce number of unauthorized requests
 * Subscribe to single object (filter?)

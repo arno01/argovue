@@ -5,7 +5,9 @@ import (
 
 	"argovue/kube"
 
-	v1 "argovue/apis/argovue.io/v1"
+	argovuev1 "argovue/apis/argovue.io/v1"
+
+	wfv1alpha1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
 	"github.com/rs/xid"
 	log "github.com/sirupsen/logrus"
 	appsv1 "k8s.io/api/apps/v1"
@@ -18,7 +20,22 @@ import (
 
 func int32Ptr(i int32) *int32 { return &i }
 
-func createPVC(s *v1.ServiceType, clientset *kubernetes.Clientset, instance, owner string) (*apiv1.PersistentVolumeClaim, error) {
+func maybeReadOnly(volumeName string) bool {
+	if volumeName == "private" {
+		return false
+	}
+	return true
+}
+
+func makeVolumeMounts(volumes []apiv1.Volume) []apiv1.VolumeMount {
+	mounts := []apiv1.VolumeMount{}
+	for _, v := range volumes {
+		mounts = append(mounts, apiv1.VolumeMount{Name: v.Name, MountPath: "/mnt/" + v.Name, ReadOnly: maybeReadOnly(v.Name)})
+	}
+	return mounts
+}
+
+func createPVC(s *argovuev1.Service, clientset *kubernetes.Clientset, instance, owner string) (*apiv1.PersistentVolumeClaim, error) {
 	log.Debugf("Kube: create pvc %s/%s, owner:%s", s.Namespace, instance, owner)
 	pvc := &apiv1.PersistentVolumeClaim{
 		ObjectMeta: metav1.ObjectMeta{
@@ -42,7 +59,7 @@ func createPVC(s *v1.ServiceType, clientset *kubernetes.Clientset, instance, own
 	return clientset.CoreV1().PersistentVolumeClaims(s.Namespace).Create(pvc)
 }
 
-func createService(s *v1.ServiceType, clientset *kubernetes.Clientset, instance, owner string) (*apiv1.Service, error) {
+func createService(s *argovuev1.Service, clientset *kubernetes.Clientset, instance, owner string) (*apiv1.Service, error) {
 	log.Debugf("Kube: create service %s/%s, owner:%s", s.Namespace, instance, owner)
 	svc := &apiv1.Service{
 		ObjectMeta: metav1.ObjectMeta{
@@ -59,14 +76,14 @@ func createService(s *v1.ServiceType, clientset *kubernetes.Clientset, instance,
 			Type:  apiv1.ServiceTypeClusterIP,
 			Selector: map[string]string{
 				"service.argovue.io/instance": instance,
-				"oidc.argovue.io/id":          owner
+				"oidc.argovue.io/id":          owner,
 			},
 		},
 	}
 	return clientset.CoreV1().Services(s.Namespace).Create(svc)
 }
 
-func createDeployment(s *v1.ServiceType, clientset *kubernetes.Clientset, instance, owner, baseUrl string, pvc *apiv1.PersistentVolumeClaim) (*appsv1.Deployment, error) {
+func createDeployment(s *argovuev1.Service, clientset *kubernetes.Clientset, instance, owner, baseUrl string, volumes []apiv1.Volume) (*appsv1.Deployment, error) {
 	log.Debugf("Kube: create deployment %s/%s, owner:%s", s.Namespace, instance, owner)
 	deployment := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
@@ -98,17 +115,12 @@ func createDeployment(s *v1.ServiceType, clientset *kubernetes.Clientset, instan
 							Name:         s.Name,
 							Image:        s.Spec.Image,
 							Args:         s.Spec.Args,
-							VolumeMounts: []apiv1.VolumeMount{{Name: "work", MountPath: "/work"}},
+							VolumeMounts: makeVolumeMounts(volumes),
 							Env:          []apiv1.EnvVar{{Name: "BASE_URL", Value: baseUrl}},
 							Ports:        []apiv1.ContainerPort{{Name: "http", Protocol: apiv1.ProtocolTCP, ContainerPort: s.Spec.Port}},
 						},
 					},
-					Volumes: []apiv1.Volume{
-						{
-							Name:         "work",
-							VolumeSource: apiv1.VolumeSource{PersistentVolumeClaim: &apiv1.PersistentVolumeClaimVolumeSource{ClaimName: pvc.GetName()}},
-						},
-					},
+					Volumes: volumes,
 				},
 			},
 		},
@@ -116,7 +128,7 @@ func createDeployment(s *v1.ServiceType, clientset *kubernetes.Clientset, instan
 	return clientset.AppsV1().Deployments(s.Namespace).Create(deployment)
 }
 
-func Deploy(s *v1.ServiceType, owner string) error {
+func Deploy(s *argovuev1.Service, owner string) error {
 	clientset, err := kube.GetClient()
 	if err != nil {
 		return err
@@ -129,17 +141,31 @@ func Deploy(s *v1.ServiceType, owner string) error {
 			s.Spec.Args[i] = baseUrl
 		}
 	}
-	pvc, err := createPVC(s, clientset, instance, owner)
-	if err != nil {
-		log.Errorf("Kube: can't create pvc, error:%s", err)
-		return err
+
+	volumes := []apiv1.Volume{}
+
+	if len(s.Spec.PrivateVolumeSize) > 0 {
+		pvc, err := createPVC(s, clientset, instance, owner)
+		if err != nil {
+			log.Errorf("Kube: can't create pvc, error:%s", err)
+		}
+		volumes = append(volumes, apiv1.Volume{
+			Name:         "private",
+			VolumeSource: apiv1.VolumeSource{PersistentVolumeClaim: &apiv1.PersistentVolumeClaimVolumeSource{ClaimName: pvc.GetName()}},
+		})
+	}
+	if len(s.Spec.SharedVolume) > 0 {
+		volumes = append(volumes, apiv1.Volume{
+			Name:         "shared",
+			VolumeSource: apiv1.VolumeSource{PersistentVolumeClaim: &apiv1.PersistentVolumeClaimVolumeSource{ClaimName: s.Spec.SharedVolume}},
+		})
 	}
 	_, err = createService(s, clientset, instance, owner)
 	if err != nil {
 		log.Errorf("Kube: can't create service, error:%s", err)
 		return err
 	}
-	_, err = createDeployment(s, clientset, instance, owner, baseUrl, pvc)
+	_, err = createDeployment(s, clientset, instance, owner, baseUrl, volumes)
 	if err != nil {
 		log.Errorf("Kube: can't create deployment, error:%s", err)
 		return err
@@ -147,7 +173,7 @@ func Deploy(s *v1.ServiceType, owner string) error {
 	return nil
 }
 
-func Delete(s *v1.ServiceType, instance string) error {
+func Delete(s *argovuev1.Service, instance string) error {
 	clientset, err := kube.GetClient()
 	if err != nil {
 		return err
@@ -157,5 +183,37 @@ func Delete(s *v1.ServiceType, instance string) error {
 	clientset.CoreV1().PersistentVolumeClaims(s.Namespace).Delete(instance, opts)
 	clientset.CoreV1().Services(s.Namespace).Delete(instance, opts)
 	clientset.AppsV1().Deployments(s.Namespace).Delete(instance, opts)
+	return nil
+}
+
+func DeployFilebrowser(wf *wfv1alpha1.Workflow, owner string) error {
+	clientset, err := kube.GetV1Clientset()
+	if err != nil {
+		return err
+	}
+	for _, pvc := range wf.Status.PersistentVolumeClaims {
+		log.Infof("CRD: Deploy filebrowser service for workflow:%s, pvc:%s", wf.GetName(), pvc.Name)
+		svc := argovuev1.Service{
+			ObjectMeta: metav1.ObjectMeta{
+				Namespace: wf.GetNamespace(),
+				Name:      wf.GetName(),
+				Labels: map[string]string{
+					"oidc.argovue.io/id":        owner,
+					"workflow.argoproj.io/name": wf.GetName(),
+				},
+			},
+			Spec: argovuev1.ServiceSpec{
+				Image:        "filebrowser/filebrowser:latest",
+				Args:         []string{"--noauth", "--root", "/mnt", "--baseurl", "BASE_URL"},
+				Port:         80,
+				SharedVolume: pvc.PersistentVolumeClaim.ClaimName,
+			},
+		}
+		if obj, err := clientset.ArgovueV1().Services(wf.GetNamespace()).Create(&svc); err != nil {
+			log.Errorf("CRD: DeployFilebrowser error:%s", err)
+		} else {
+			Deploy(obj, owner)
+		}
+	}
 	return nil
 }

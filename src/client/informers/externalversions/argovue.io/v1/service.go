@@ -31,59 +31,59 @@ import (
 	cache "k8s.io/client-go/tools/cache"
 )
 
-// ServiceTypeInformer provides access to a shared informer and lister for
-// ServiceTypes.
-type ServiceTypeInformer interface {
+// ServiceInformer provides access to a shared informer and lister for
+// Services.
+type ServiceInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.ServiceTypeLister
+	Lister() v1.ServiceLister
 }
 
-type serviceTypeInformer struct {
+type serviceInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 	namespace        string
 }
 
-// NewServiceTypeInformer constructs a new informer for ServiceType type.
+// NewServiceInformer constructs a new informer for Service type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewServiceTypeInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredServiceTypeInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewServiceInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredServiceInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredServiceTypeInformer constructs a new informer for ServiceType type.
+// NewFilteredServiceInformer constructs a new informer for Service type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredServiceTypeInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredServiceInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options metav1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ArgovueV1().ServiceTypes(namespace).List(options)
+				return client.ArgovueV1().Services(namespace).List(options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ArgovueV1().ServiceTypes(namespace).Watch(options)
+				return client.ArgovueV1().Services(namespace).Watch(options)
 			},
 		},
-		&argovueiov1.ServiceType{},
+		&argovueiov1.Service{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func (f *serviceTypeInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredServiceTypeInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *serviceInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredServiceInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *serviceTypeInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&argovueiov1.ServiceType{}, f.defaultInformer)
+func (f *serviceInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&argovueiov1.Service{}, f.defaultInformer)
 }
 
-func (f *serviceTypeInformer) Lister() v1.ServiceTypeLister {
-	return v1.NewServiceTypeLister(f.Informer().GetIndexer())
+func (f *serviceInformer) Lister() v1.ServiceLister {
+	return v1.NewServiceLister(f.Informer().GetIndexer())
 }

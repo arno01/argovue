@@ -6,7 +6,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // Service is a top-level type
-type ServiceType struct {
+type Service struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	Spec              ServiceSpec `json:"spec,omitempty"`
@@ -22,8 +22,8 @@ type ServiceSpec struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-type ServiceTypeList struct {
+type ServiceList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `son:"metadata,omitempty"`
-	Items           []ServiceType `json:"items"`
+	Items           []Service `json:"items"`
 }

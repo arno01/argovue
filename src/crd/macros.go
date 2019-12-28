@@ -33,7 +33,7 @@ func CatalogueInstance(name, instance string) *Crd {
 		SetLabelSelector(fmt.Sprintf("service.argovue.io/name=%s,service.argovue.io/instance=%s", name, instance))
 }
 
-func Typecast(thing interface{}) (*v1.ServiceType, error) {
+func Typecast(thing interface{}) (*v1.Service, error) {
 	if thing == nil {
 		return nil, fmt.Errorf("Service typecast nil input")
 	}
@@ -41,7 +41,7 @@ func Typecast(thing interface{}) (*v1.ServiceType, error) {
 	if err != nil {
 		return nil, err
 	}
-	svc := new(v1.ServiceType)
+	svc := new(v1.Service)
 	err = json.Unmarshal(buf, svc)
 	if err != nil {
 		return nil, err

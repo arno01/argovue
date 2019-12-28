@@ -18,10 +18,10 @@ limitations under the License.
 
 package v1
 
-// ServiceTypeListerExpansion allows custom methods to be added to
-// ServiceTypeLister.
-type ServiceTypeListerExpansion interface{}
+// ServiceListerExpansion allows custom methods to be added to
+// ServiceLister.
+type ServiceListerExpansion interface{}
 
-// ServiceTypeNamespaceListerExpansion allows custom methods to be added to
-// ServiceTypeNamespaceLister.
-type ServiceTypeNamespaceListerExpansion interface{}
+// ServiceNamespaceListerExpansion allows custom methods to be added to
+// ServiceNamespaceLister.
+type ServiceNamespaceListerExpansion interface{}

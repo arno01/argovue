@@ -6,5 +6,6 @@ metadata:
     oidc.argovue.io/group: authors
 spec:
   image: filebrowser/filebrowser:latest
-  args: ["--noauth", "--root", "/work", "--baseurl", "BASE_URL"]
+  args: ["--noauth", "--root", "/", "--baseurl", "BASE_URL"]
+  port: 80
   privateVolumeSize: 1M

@@ -28,8 +28,8 @@ type FakeArgovueV1 struct {
 	*testing.Fake
 }
 
-func (c *FakeArgovueV1) ServiceTypes(namespace string) v1.ServiceTypeInterface {
-	return &FakeServiceTypes{c, namespace}
+func (c *FakeArgovueV1) Services(namespace string) v1.ServiceInterface {
+	return &FakeServices{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate

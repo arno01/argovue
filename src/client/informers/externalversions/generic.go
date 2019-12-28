@@ -53,8 +53,8 @@ func (f *genericInformer) Lister() cache.GenericLister {
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
 	switch resource {
 	// Group=argovue.io, Version=v1
-	case v1.SchemeGroupVersion.WithResource("servicetypes"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Argovue().V1().ServiceTypes().Informer()}, nil
+	case v1.SchemeGroupVersion.WithResource("services"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Argovue().V1().Services().Informer()}, nil
 
 	}
 

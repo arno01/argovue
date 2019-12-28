@@ -135,6 +135,8 @@ func (a *App) commandWorkflow(w http.ResponseWriter, r *http.Request) {
 	case "terminate":
 		err = util.TerminateWorkflow(wfClient, name)
 	case "mount":
+		profile := session.Values["profile"].(map[string]interface{})
+		err = crd.DeployFilebrowser(wf, profile["sub"].(string))
 	default:
 		err = fmt.Errorf("unrecognized command %s", action)
 	}

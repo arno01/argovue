@@ -27,7 +27,7 @@ import (
 
 type ArgovueV1Interface interface {
 	RESTClient() rest.Interface
-	ServiceTypesGetter
+	ServicesGetter
 }
 
 // ArgovueV1Client is used to interact with features provided by the argovue.io group.
@@ -35,8 +35,8 @@ type ArgovueV1Client struct {
 	restClient rest.Interface
 }
 
-func (c *ArgovueV1Client) ServiceTypes(namespace string) ServiceTypeInterface {
-	return newServiceTypes(c, namespace)
+func (c *ArgovueV1Client) Services(namespace string) ServiceInterface {
+	return newServices(c, namespace)
 }
 
 // NewForConfig creates a new ArgovueV1Client for the given config.

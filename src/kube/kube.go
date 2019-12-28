@@ -5,6 +5,10 @@ import (
 	"os"
 	"path/filepath"
 
+	v1client "argovue/client/clientset/versioned"
+
+	argovuev1 "argovue/client/clientset/versioned/typed/argovue.io/v1"
+
 	versioned "github.com/argoproj/argo/pkg/client/clientset/versioned"
 	"github.com/argoproj/argo/pkg/client/clientset/versioned/typed/workflow/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
@@ -47,4 +51,13 @@ func GetWfClient(wfClientset *versioned.Clientset, namespace string) v1alpha1.Wo
 func GetWfClientset() (*versioned.Clientset, error) {
 	config, _ := GetConfig()
 	return versioned.NewForConfig(config)
+}
+
+func GetV1Client(v1Clientset *v1client.Clientset, namespace string) argovuev1.ServiceInterface {
+	return v1Clientset.ArgovueV1().Services(namespace)
+}
+
+func GetV1Clientset() (*v1client.Clientset, error) {
+	config, _ := GetConfig()
+	return v1client.NewForConfig(config)
 }
