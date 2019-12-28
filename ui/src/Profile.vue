@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <b-row class="mb-2"><b-col><h2>Profile</h2></b-col></b-row>
+    <b-row class="pt-3 pb-2 mb-3 border-bottom"><b-col><h1 class="h2">profile</h1></b-col></b-row>
     <b-row>
       <b-col cols=4>Issuing authority</b-col>
       <b-col>{{$api.profile.iss}}</b-col>
@@ -25,7 +25,7 @@
       <b-col cols=4>Groups</b-col>
       <b-col>{{$api.profile.groups}}</b-col>
     </b-row>
-    <b-row class="mt-2">
+    <b-row class="mt-2 pt-2 border-top">
       <b-col>
         <b-button size="sm" variant="primary" @click="$api.logout()">Logout</b-button>
       </b-col>
