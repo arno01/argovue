@@ -2,6 +2,7 @@
 
 * Add graph representation for workflows
 * Mount workflow volume and display associated service
+* Add shared volumes to services
 * Display user profile as we get it from OIDC
 
 * Keep URL option for proxy services
@@ -14,7 +15,7 @@
 * Delete brokers on zero connections after timeout
 * Better instance navigation (click to proxy)? Need ports
 * Stream logs line by line with SSE, the same way as all objects
-* Ingress objects for service
+* Ingress objects for services
 
 # FIX
 

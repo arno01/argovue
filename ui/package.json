@@ -18,6 +18,7 @@
     "moment-duration-format": "^2.3.2",
     "popper": "^1.0.1",
     "popper.js": "^1.16.0",
+    "vis-network": "^6.5.0",
     "vue": "^2.6.10",
     "vue-router": "^3.1.3"
   },

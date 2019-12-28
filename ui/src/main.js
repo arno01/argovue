@@ -12,6 +12,7 @@ import WorkflowObject from '@/Workflow/Object'
 import CatalogueObject from '@/Catalogue/Object'
 import CatalogueInstance from '@/Catalogue/Instance'
 import PodObject from '@/Workflow/Pod/Object'
+import Profile from '@/Profile'
 import API from '@/API'
 
 Vue.use(VueRouter)
@@ -27,6 +28,7 @@ function routeProps({params}) {
 const router = new VueRouter({
   routes: [
     { path: '/', component: Front },
+    { path: '/profile', component: Profile },
     { path: '/watch/:kind', component: Objects, props: routeProps },
     { path: '/workflows/:namespace/:name', component: WorkflowObject, props: routeProps },
     { path: '/workflow/:namespace/:name/pod/:pod', component: PodObject, props: routeProps },
