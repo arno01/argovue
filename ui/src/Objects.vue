@@ -28,9 +28,7 @@ export default {
   extends: SSE,
   data() {
     return {
-      cache: {},
-      es: undefined
-    };
+    }
   },
   methods: {
     formatTs(obj) {

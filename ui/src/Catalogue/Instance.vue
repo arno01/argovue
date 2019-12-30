@@ -37,7 +37,12 @@ export default {
   },
   data() {
     return {
-      kind: "services"
+      kind: "services",
+      object: {
+        spec: {
+          ports: [],
+        }
+      }
     }
   },
 }

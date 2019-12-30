@@ -1,7 +1,7 @@
 # TODO
 
-* Mount workflow volume and display associated service
-* Add shared volumes to services
+* Display workflow filebrowser service and allow to remove it
+* Display object ownership
 * Add graph representation for workflows
 * Better kube error/info handling on service create/delete
 
@@ -23,6 +23,8 @@
 
 # DONE
 
+* Mount workflow volume
+* Add shared volumes to services
 * Keep URL option for proxy services (it should be always on)
 * Display user profile as we get it from OIDC
 * Helm deployment and image build workflow

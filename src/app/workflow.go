@@ -62,6 +62,20 @@ func (a *App) watchWorkflowPods(w http.ResponseWriter, r *http.Request) {
 	log.Debugf("SSE: stop workflow/%s/%s/%s", namespace, name, pod)
 }
 
+func (a *App) watchWorkflowServices(w http.ResponseWriter, r *http.Request) {
+	session, _ := a.Store().Get(r, "auth-session")
+	v := mux.Vars(r)
+	name, namespace := v["name"], v["namespace"]
+	log.Debugf("SSE: start workflow/%s/%s services", namespace, name)
+	if !a.authWorkflow(session.ID, name, namespace, w) {
+		return
+	}
+	crd := crd.WorkflowServices(name)
+	cb := a.maybeNewSubsetBroker(session.ID, crd)
+	a.watchBroker(cb, w, r)
+	log.Debugf("SSE: stop workflow/%s/%s services", namespace, name)
+}
+
 func (a *App) watchWorkflowPodLogs(w http.ResponseWriter, r *http.Request) {
 	session, _ := a.Store().Get(r, "auth-session")
 	v := mux.Vars(r)

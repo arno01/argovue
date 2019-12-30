@@ -10,8 +10,8 @@
           <b-tab title="Nodes" active>
             <nodes :content="object"></nodes>
           </b-tab>
-          <b-tab title="Volumes">
-            <volumes :content="object"></volumes>
+          <b-tab title="Services">
+            <services :name="name" :namespace="namespace"></services>
           </b-tab>
           <b-tab title="Workflow">
             <jsoneditor :content="object"></jsoneditor>
@@ -26,7 +26,7 @@
 import SSE from '@/SSE/Object'
 import JsonEditor from '@/JsonEditor'
 import Nodes from '@/Workflow/Nodes'
-import Volumes from '@/Workflow/Volumes'
+import Services from '@/Workflow/Services'
 import Control from '@/Workflow/Control'
 
 export default {
@@ -36,7 +36,7 @@ export default {
     jsoneditor: JsonEditor,
     nodes: Nodes,
     control: Control,
-    volumes: Volumes,
+    services: Services,
   },
   data() {
     return {

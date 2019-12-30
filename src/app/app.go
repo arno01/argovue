@@ -130,6 +130,7 @@ func (a *App) Serve() {
 	r.HandleFunc("/catalogue/{namespace}/{name}/instance/{instance}/action/{action}", a.controlCatalogueInstance).Methods("POST")
 
 	r.HandleFunc("/workflow/{namespace}/{name}", a.watchWorkflow)
+	r.HandleFunc("/workflow/{namespace}/{name}/services", a.watchWorkflowServices)
 	r.HandleFunc("/workflow/{namespace}/{name}/pod/{pod}", a.watchWorkflowPods)
 	r.HandleFunc("/workflow/{namespace}/{name}/pod/{pod}/container/{container}/logs", a.watchWorkflowPodLogs)
 	r.HandleFunc("/workflow/{namespace}/{name}/action/{action}", a.commandWorkflow).Methods("POST")

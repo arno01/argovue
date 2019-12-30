@@ -198,8 +198,8 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, owner string) error {
 				Namespace: wf.GetNamespace(),
 				Name:      wf.GetName(),
 				Labels: map[string]string{
-					"oidc.argovue.io/id":        owner,
-					"workflow.argoproj.io/name": wf.GetName(),
+					"oidc.argovue.io/id":             owner,
+					"workflows.argoproj.io/workflow": wf.GetName(),
 				},
 			},
 			Spec: argovuev1.ServiceSpec{

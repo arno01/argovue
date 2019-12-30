@@ -13,6 +13,11 @@ func WorkflowPods(wfName, pod string) *Crd {
 		SetFieldSelector("metadata.name=" + pod)
 }
 
+func WorkflowServices(wfName string) *Crd {
+	return New("argovue.io", "v1", "services").
+		SetLabelSelector("workflows.argoproj.io/workflow=" + wfName)
+}
+
 func Workflow(wfName string) *Crd {
 	return New("argoproj.io", "v1alpha1", "workflows").
 		SetFieldSelector("metadata.name=" + wfName)
