@@ -7,7 +7,7 @@
       <control :object="object" :name="name" :namespace="namespace" style="margin-bottom: 20px"></control>
       <b-card no-body>
         <b-tabs card>
-          <b-tab title="Nodes" active lazy>
+          <b-tab title="Nodes" active>
             <nodes :content="object"></nodes>
           </b-tab>
           <b-tab title="Services" lazy>
@@ -16,7 +16,7 @@
           <b-tab title="Graph" lazy>
             <graph :content="object"></graph>
           </b-tab>
-          <b-tab title="Workflow" lazy>
+          <b-tab title="Workflow">
             <jsoneditor :content="object"></jsoneditor>
           </b-tab>
         </b-tabs>
