@@ -207,7 +207,7 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, owner string) error {
 		svc := argovuev1.Service{
 			ObjectMeta: metav1.ObjectMeta{
 				Namespace: wf.GetNamespace(),
-				Name:      wf.GetName(),
+				Name:      fmt.Sprintf("%s-%s", wf.GetName(), pvc.Name),
 				Labels: map[string]string{
 					"oidc.argovue.io/id":             owner,
 					"workflows.argoproj.io/workflow": wf.GetName(),
@@ -222,9 +222,17 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, owner string) error {
 		}
 		if obj, err := clientset.ArgovueV1().Services(wf.GetNamespace()).Create(&svc); err != nil {
 			log.Errorf("CRD: DeployFilebrowser error:%s", err)
+			return err
 		} else {
 			Deploy(obj, owner)
 		}
 	}
 	return nil
+}
+
+func GetWorkflowFilebrowserNames(wf *wfv1alpha1.Workflow) (re []string) {
+	for _, pvc := range wf.Status.PersistentVolumeClaims {
+		re = append(re, fmt.Sprintf("%s-%s", wf.GetName(), pvc.Name))
+	}
+	return
 }

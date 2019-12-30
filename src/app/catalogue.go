@@ -10,7 +10,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func (a *App) authCatalogue(sessionId, name, namespace string, w http.ResponseWriter) bool {
+func (a *App) ServiceExists(sessionId, name, namespace string) bool {
+	broker := a.getBroker(sessionId, "catalogue")
+	if broker == nil {
+		return false
+	}
+	wf := broker.Broker().Find(name, namespace)
+	if wf == nil {
+		return false
+	}
+	return true
+}
+
+func (a *App) checkServiceExists(sessionId, name, namespace string, w http.ResponseWriter) bool {
 	broker := a.getBroker(sessionId, "catalogue")
 	if broker == nil {
 		log.Debugf("authCatalogue: no catalogue broker")
@@ -31,7 +43,7 @@ func (a *App) watchCatalogue(w http.ResponseWriter, r *http.Request) {
 	v := mux.Vars(r)
 	name, namespace := v["name"], v["namespace"]
 	log.Debugf("SSE: start catalogue/%s/%s", namespace, name)
-	if !a.authCatalogue(session.ID, name, namespace, w) {
+	if !a.checkServiceExists(session.ID, name, namespace, w) {
 		return
 	}
 	crd := crd.Catalogue(name)
@@ -45,7 +57,7 @@ func (a *App) watchCatalogueInstances(w http.ResponseWriter, r *http.Request) {
 	v := mux.Vars(r)
 	name, namespace := v["name"], v["namespace"]
 	log.Debugf("SSE: start catalogue/%s/%s instances", namespace, name)
-	if !a.authCatalogue(session.ID, name, namespace, w) {
+	if !a.checkServiceExists(session.ID, name, namespace, w) {
 		return
 	}
 	crd := crd.CatalogueInstances(name)
@@ -59,7 +71,7 @@ func (a *App) watchCatalogueInstance(w http.ResponseWriter, r *http.Request) {
 	v := mux.Vars(r)
 	name, namespace, instance := v["name"], v["namespace"], v["instance"]
 	log.Debugf("SSE: start catalogue/%s/%s/%s", namespace, name, instance)
-	if !a.authCatalogue(session.ID, name, namespace, w) {
+	if !a.checkServiceExists(session.ID, name, namespace, w) {
 		return
 	}
 	crd := crd.CatalogueInstance(name, instance)
@@ -76,7 +88,7 @@ func (a *App) commandCatalogue(w http.ResponseWriter, r *http.Request) {
 	}
 	v := mux.Vars(r)
 	name, namespace, action := v["name"], v["namespace"], v["action"]
-	if !a.authCatalogue(session.ID, name, namespace, w) {
+	if !a.checkServiceExists(session.ID, name, namespace, w) {
 		return
 	}
 	// Access granted, perform action
@@ -104,7 +116,7 @@ func (a *App) controlCatalogueInstance(w http.ResponseWriter, r *http.Request) {
 	}
 	v := mux.Vars(r)
 	name, namespace, instance, action := v["name"], v["namespace"], v["instance"], v["action"]
-	if !a.authCatalogue(session.ID, name, namespace, w) {
+	if !a.checkServiceExists(session.ID, name, namespace, w) {
 		return
 	}
 	holderCrd := crd.CatalogueInstances(name)

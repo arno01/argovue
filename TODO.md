@@ -1,7 +1,6 @@
 # TODO
 
-* Display workflow filebrowser service and allow to remove it
-* Display object ownership
+* Display objects ownership (myself/group)
 * Add graph representation for workflows
 * Better kube error/info handling on service create/delete
 
@@ -23,6 +22,8 @@
 
 # DONE
 
+* Verify workflow file browser is mounted
+* Display workflow filebrowser service and allow to remove it
 * Mount workflow volume
 * Add shared volumes to services
 * Keep URL option for proxy services (it should be always on)
