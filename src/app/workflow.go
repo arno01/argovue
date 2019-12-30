@@ -76,6 +76,26 @@ func (a *App) watchWorkflowServices(w http.ResponseWriter, r *http.Request) {
 	log.Debugf("SSE: stop workflow/%s/%s services", namespace, name)
 }
 
+func (a *App) controlWorkflowService(w http.ResponseWriter, r *http.Request) {
+	v := mux.Vars(r)
+	name, namespace, service, action := v["name"], v["namespace"], v["service"], v["action"]
+	session, err := a.Store().Get(r, "auth-session")
+	if !a.authWorkflow(session.ID, name, namespace, w) {
+		return
+	}
+	switch action {
+	case "delete":
+		err = crd.DeleteService(namespace, service)
+	default:
+	}
+	if err != nil {
+		log.Errorf("Can't %s workflow %s/%s, error:%s", action, namespace, name, err)
+		sendError(w, action, err)
+	} else {
+		json.NewEncoder(w).Encode(map[string]string{"status": "ok", "action": action, "message": ""})
+	}
+}
+
 func (a *App) watchWorkflowPodLogs(w http.ResponseWriter, r *http.Request) {
 	session, _ := a.Store().Get(r, "auth-session")
 	v := mux.Vars(r)

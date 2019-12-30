@@ -70,6 +70,7 @@ func createService(s *argovuev1.Service, clientset *kubernetes.Clientset, instan
 				"service.argovue.io/instance": instance,
 				"oidc.argovue.io/id":          owner,
 			},
+			OwnerReferences: []metav1.OwnerReference{{APIVersion: "argovue.io/v1", Kind: "Service", Name: s.Name, UID: s.UID}},
 		},
 		Spec: apiv1.ServiceSpec{
 			Ports: []apiv1.ServicePort{{Port: 80, Protocol: apiv1.ProtocolTCP, TargetPort: intstr.IntOrString{Type: intstr.Int, IntVal: s.Spec.Port}}},
@@ -184,6 +185,16 @@ func Delete(s *argovuev1.Service, instance string) error {
 	clientset.CoreV1().Services(s.Namespace).Delete(instance, opts)
 	clientset.AppsV1().Deployments(s.Namespace).Delete(instance, opts)
 	return nil
+}
+
+func DeleteService(namespace, name string) error {
+	clientset, err := kube.GetV1Clientset()
+	if err != nil {
+		return err
+	}
+	deletePolicy := metav1.DeletePropagationForeground
+	opts := &metav1.DeleteOptions{PropagationPolicy: &deletePolicy}
+	return clientset.ArgovueV1().Services(namespace).Delete(name, opts)
 }
 
 func DeployFilebrowser(wf *wfv1alpha1.Workflow, owner string) error {

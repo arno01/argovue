@@ -11,7 +11,7 @@
         <b-col cols=2 v-if="obj.status">
           {{ obj.status.phase }}
         </b-col>
-        <b-col cols=4>
+        <b-col cols=3 class="text-right">
           {{ formatTs(obj) }}
         </b-col>
       </b-row>
