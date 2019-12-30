@@ -1,7 +1,7 @@
 # TODO
 
-* Display objects ownership (myself/group)
 * Add graph representation for workflows
+* Display objects ownership (myself/group)
 * Better kube error/info handling on service create/delete (with rollback?)
 
 * Add workflow templates and their actions?
