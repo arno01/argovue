@@ -1,6 +1,6 @@
 # TODO
 
-* Add graph representation for workflows
+* Proxy service must authorize user by checking service label (or generate unique id)
 * Display objects ownership (myself/group)
 * Better kube error/info handling on service create/delete (with rollback?)
 
@@ -10,7 +10,6 @@
 # FIX
 
 * On connection break give it some time (10-15 seconds) before clean up
-* Proxy service must authorize user by checking service label (or generate unique id)
 
 # MAYBE
 
@@ -22,6 +21,7 @@
 
 # DONE
 
+* Add graph representation for workflows
 * Verify workflow file browser is mounted
 * Display workflow filebrowser service and allow to remove it
 * Mount workflow volume
