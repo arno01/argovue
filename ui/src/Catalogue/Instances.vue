@@ -34,18 +34,8 @@ export default {
     formatTs(obj) {
       return moment(obj.metadata.creationTimestamp).format("YYYY-MM-DD HH:mm:ss")
     },
-    action: async function(instance, action) {
-      let re = await this.$api.post(`/catalogue/${this.namespace}/${this.name}/instance/${instance}/action/${action}`)
-      this.$bvToast.toast(`${re.data.action} ${re.data.status} ${re.data.message}`, {
-        title: re.data.action,
-        toaster: 'b-toaster-bottom-right',
-        autoHideDelay: 3000,
-        noCloseButton: true,
-        variant: re.data.status == 'ok'? 'info' : 'error'
-      })
-    },
     del(instance) {
-      this.action(instance, "delete")
+      this._action(`/catalogue/${this.namespace}/${this.name}/instance/${instance}/action/delete`)
     }
   },
 }

@@ -28,15 +28,17 @@ export default {
     status (status) {
       return this.object && this.object.status && this.object.status.phase == status
     },
-    action: async function(action) {
-      let re = await this.$api.post(`/workflow/${this.namespace}/${this.name}/action/${action}`)
+    _action: async function(uri) {
+      let re = await this.$api.post(uri)
       this.$bvToast.toast(`${re.data.action} ${re.data.status} ${re.data.message}`, {
         title: re.data.action,
         toaster: 'b-toaster-bottom-right',
-        autoHideDelay: 3000,
+        autoHideDelay: re.data.status == 'ok' ? 3000 : 6000,
         noCloseButton: true,
-        variant: re.data.status == 'ok'? 'info' : 'error'
-      })
+        variant: re.data.status == 'ok'? 'info' : 'danger'
+    })},
+    action: async function(action) {
+      this._action(`/workflow/${this.namespace}/${this.name}/action/${action}`)
     },
     cantRetry () {
       return ! (this.status('Failed') || this.status('Error'))

@@ -2,7 +2,7 @@
 
 * Display objects ownership (myself/group)
 * Add graph representation for workflows
-* Better kube error/info handling on service create/delete
+* Better kube error/info handling on service create/delete (with rollback?)
 
 * Add workflow templates and their actions?
 * OIDC values remapping: e.g. OIDC groups and ID to more readable?

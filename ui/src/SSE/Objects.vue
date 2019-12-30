@@ -39,6 +39,16 @@ export default {
       this.cache = {}
       this.es = undefined
     },
+    _action: async function(uri) {
+      let re = await this.$api.post(uri)
+      this.$bvToast.toast(`${re.data.action} ${re.data.status} ${re.data.message}`, {
+        title: re.data.action,
+        toaster: 'b-toaster-bottom-right',
+        autoHideDelay: re.data.status == 'ok' ? 3000 : 6000,
+        noCloseButton: true,
+        variant: re.data.status == 'ok'? 'info' : 'danger'
+      })
+    },
     setupStream() {
       this.es = this.$api.sse(this.uri(), (event) => {
         var msg = JSON.parse(event.data)

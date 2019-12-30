@@ -35,19 +35,9 @@ export default {
     formatTs(obj) {
       return moment(obj.metadata.creationTimestamp).format("YYYY-MM-DD HH:mm:ss")
     },
-    action: async function(instance, action) {
-      let re = await this.$api.post(`/workflow/${this.namespace}/${this.name}/service/${instance}/action/${action}`)
-      this.$bvToast.toast(`${re.data.action} ${re.data.status} ${re.data.message}`, {
-        title: re.data.action,
-        toaster: 'b-toaster-bottom-right',
-        autoHideDelay: 3000,
-        noCloseButton: true,
-        variant: re.data.status == 'ok'? 'info' : 'error'
-      })
+    del(instance) {
+      return this._action(`/workflow/${this.namespace}/${this.name}/service/${instance}/action/delete`)
     },
-    del(service) {
-      this.action(service, "delete")
-    }
   },
 }
 </script>
