@@ -7,13 +7,16 @@
       <control :object="object" :name="name" :namespace="namespace" style="margin-bottom: 20px"></control>
       <b-card no-body>
         <b-tabs card>
-          <b-tab title="Nodes" active>
+          <b-tab title="Nodes" active lazy>
             <nodes :content="object"></nodes>
           </b-tab>
-          <b-tab title="Services">
+          <b-tab title="Services" lazy>
             <services :name="name" :namespace="namespace"></services>
           </b-tab>
-          <b-tab title="Workflow">
+          <b-tab title="Graph" lazy>
+            <graph :content="object"></graph>
+          </b-tab>
+          <b-tab title="Workflow" lazy>
             <jsoneditor :content="object"></jsoneditor>
           </b-tab>
         </b-tabs>
@@ -28,6 +31,7 @@ import JsonEditor from '@/JsonEditor'
 import Nodes from '@/Workflow/Nodes'
 import Services from '@/Workflow/Services'
 import Control from '@/Workflow/Control'
+import Graph from '@/Workflow/Graph'
 
 export default {
   props: ['namespace', 'name'],
@@ -37,6 +41,7 @@ export default {
     nodes: Nodes,
     control: Control,
     services: Services,
+    graph: Graph,
   },
   data() {
     return {
