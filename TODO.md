@@ -21,6 +21,7 @@
 
 # DONE
 
+* Remove Retry nodes from Graph
 * Add graph representation for workflows
 * Verify workflow file browser is mounted
 * Display workflow filebrowser service and allow to remove it

@@ -1,5 +1,5 @@
 <template>
-<div class="w-100" style="height: 600px"></div>
+<div class="w-100" style="height: 400px"></div>
 </template>
 
 <script>
@@ -27,11 +27,21 @@ export default {
   methods: {
     update () {
       let wfNodes = this.content.status.nodes
+      let nodeAlias = {}
       Object.values(wfNodes).forEach( (node) => {
-        this.nodes.add([{ id: node.id, label: node.displayName }])
-        if (node.children) {
+        if (node.type == 'Retry') {
+          if (node.children) {
+            nodeAlias[node.id] = node.children[0]
+          }
+        } else {
+          nodeAlias[node.id] = node.id
+          this.nodes.add([{ id: node.id, label: node.displayName }])
+        }
+      })
+      Object.values(wfNodes).forEach( (node) => {
+        if (node.type != 'Retry' && node.children) {
           node.children.forEach( (child) => {
-            this.edges.add([{ from: node.id, to: child, arrows: "to" }])
+            this.edges.add([{ from: node.id, to: nodeAlias[child], arrows: "to" }])
           })
         }
       })
