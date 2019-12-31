@@ -10,7 +10,7 @@ spec:
   - metadata:
       name: work
     spec:
-      accessModes: [ "ReadWriteOnce" ]
+      accessModes: [ "ReadWriteMany" ]
       resources:
         requests:
           storage: 1Mi  
