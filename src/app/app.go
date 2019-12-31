@@ -48,7 +48,7 @@ func (a *App) Store() *sessions.FilesystemStore {
 func New() *App {
 	a := new(App)
 	a.args = args.New().LogLevel()
-	a.store = sessions.NewFilesystemStore("/tmp", []byte("session-secret"))
+	a.store = sessions.NewFilesystemStore("/tmp", []byte(a.Args().SessionKey()))
 	a.brokers = make(BrokerMap)
 	a.subset = make(BrokerMap)
 	a.events = make(chan *Event)

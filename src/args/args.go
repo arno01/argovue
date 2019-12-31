@@ -25,6 +25,7 @@ type Args struct {
 	uiRootDomain     string
 	k8sNamespace     string
 	dexServiceName   string
+	sessionKey       string
 }
 
 // New type
@@ -53,6 +54,7 @@ func (a *Args) Parse() *Args {
 	flag.StringVar(&a.uiRootURL, "ui-root-url", getEnvOrDefault("UI_ROOT_URL", "http://localhost:8080/ui/#/"), "UI root url for redirects")
 	flag.StringVar(&a.k8sNamespace, "k8s-namespace", getEnvOrDefault("K8S_NAMESPACE", "default"), "Kubernetes objects namespace")
 	flag.StringVar(&a.dexServiceName, "dex-service-name", getEnvOrDefault("DEX_SERVICE_NAME", "dex"), "Dex service name")
+	flag.StringVar(&a.sessionKey, "session-key", getEnvOrDefault("SESSION_KEY", "not-very-secure"), "HTTP Session encryption key")
 
 	url, _ := url.Parse(a.uiRootURL)
 	a.uiRootDomain = fmt.Sprintf("%s://%s", url.Scheme, url.Host)
@@ -84,6 +86,10 @@ func (a *Args) UIRootURL() string {
 
 func (a *Args) UIRootDomain() string {
 	return a.uiRootDomain
+}
+
+func (a *Args) SessionKey() string {
+	return a.sessionKey
 }
 
 // OIDC returns OIDC parameters
