@@ -48,7 +48,7 @@ func (a *App) Store() *sessions.FilesystemStore {
 func New() *App {
 	a := new(App)
 	a.args = args.New().LogLevel()
-	a.store = sessions.NewFilesystemStore("", []byte("session-secret"))
+	a.store = sessions.NewFilesystemStore("/tmp", []byte("session-secret"))
 	a.brokers = make(BrokerMap)
 	a.subset = make(BrokerMap)
 	a.events = make(chan *Event)
@@ -86,6 +86,7 @@ func (a *App) checkAuth(w http.ResponseWriter, r *http.Request) map[string]inter
 func (a *App) authMiddleWare(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "*")
 		for _, re := range bypassAuth {
 			if re.MatchString(r.RequestURI) {
 				log.Debugf("HTTP: no-auth from:%s %v", r.RemoteAddr, r.RequestURI)

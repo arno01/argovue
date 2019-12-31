@@ -23,7 +23,7 @@ spec:
         - name: OIDC_SCOPES
           value: email groups
         - name: UI_ROOT_URL
-          value: /ui/#/
+          value: http://localhost:8081/ui/#/
         - name: K8S_NAMESPACE
           value: default
       ports:

@@ -7,12 +7,32 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"path/filepath"
 	"strings"
+	"sync"
 
 	"github.com/coreos/go-oidc"
+	"github.com/gorilla/securecookie"
 	log "github.com/sirupsen/logrus"
 )
+
+var fileMutex sync.RWMutex
+
+func loadSession(sessionID, name, path string, codec securecookie.Codec, values *map[interface{}]interface{}) error {
+	filename := filepath.Join(path, "session_"+sessionID)
+	fileMutex.RLock()
+	defer fileMutex.RUnlock()
+	fdata, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return err
+	}
+	if err = securecookie.DecodeMulti(name, string(fdata), values, codec); err != nil {
+		return err
+	}
+	return nil
+}
 
 func (a *App) onLogout(sessionId string) {
 	sessionData, ok := a.brokers[sessionId]
@@ -58,6 +78,18 @@ func (a *App) Profile(w http.ResponseWriter, r *http.Request) {
 		profile = new(map[string]interface{})
 	} else {
 		profile = session.Values["profile"]
+	}
+	decoder := json.NewDecoder(r.Body)
+	var Data struct {
+		Cookie string
+	}
+	err = decoder.Decode(&Data)
+	if err == nil {
+		sessionID := ""
+		err = a.Store().Codecs[0].Decode("auth-session", Data.Cookie, &sessionID)
+		values := make(map[interface{}]interface{})
+		err = loadSession(sessionID, "auth-session", "/tmp", a.Store().Codecs[0], &values) // this is extremely hacky
+		log.Debugf("values:%s error:%s", values, err)
 	}
 	obj, err := json.Marshal(profile)
 	w.Write([]byte(obj))
