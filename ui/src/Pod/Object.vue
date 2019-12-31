@@ -9,7 +9,7 @@
           <b-tab title="Pod" active>
             <jsoneditor :content="object"></jsoneditor>
           </b-tab>
-          <b-tab v-for="container in object.spec.containers" v-bind:key="container.name" :title="container.name" lazy>
+          <b-tab v-for="container in containers" v-bind:key="container.name" :title="container.name" lazy>
             <logs :name="name" :namespace="namespace" :pod="pod" :container="container.name"></logs>
           </b-tab>
         </b-tabs>
@@ -32,12 +32,18 @@ export default {
   },
   data() {
     return {
-      kind: "pods"
+      kind: "pods",
+      containers: [],
     }
   },
   methods: {
     uri() {
       return `/k8s/pod/${this.namespace}/${this.name}`
+    }
+  },
+  watch: {
+    object (c) {
+      this.containers = c.spec.containers
     }
   }
 }

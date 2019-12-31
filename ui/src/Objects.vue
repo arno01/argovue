@@ -8,11 +8,11 @@
         <b-col>
           <b-link :to="`/${kind}/${obj.metadata.namespace}/${obj.metadata.name}`">{{obj.metadata.namespace}}/{{ obj.metadata.name }}</b-link>
         </b-col>
-        <b-col cols=2 v-if="obj.status">
-          {{ obj.status.phase }}
-        </b-col>
         <b-col cols=2 v-if="isGroup(obj)">
           {{ obj.metadata.labels['oidc.argovue.io/group'] }}
+        </b-col>
+        <b-col cols=2 v-if="obj.status">
+          {{ obj.status.phase }}
         </b-col>
         <b-col cols=2 class="text-right">
           {{ formatTs(obj) }}

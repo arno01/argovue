@@ -1,5 +1,5 @@
 <template>
-<term :content="logs" :title="Logs"></term>
+<term :content="logs"></term>
 </template>
 
 <script>

@@ -1,11 +1,12 @@
 # TODO
 
-* Clickable graph nodes
 * Better kube error/info handling on service create/delete (with rollback?)
 
 * OIDC values remapping: e.g. OIDC groups and ID to more readable?
 * On connection break give it some time (10-15 seconds) before clean up
-* Generate session key as part of deployment/start up
+* Generate global session key as part of deployment/start up
+* Keep tabs on navigation
+* Different node colors for states
 
 # MAYBE
 
@@ -19,6 +20,7 @@
 
 # DONE
 
+* Clickable graph nodes (double click)
 * Standalone UI
 * Proxy service must authorize user by checking service label (or generate unique id)
 * Display objects ownership (myself?/group)
