@@ -1,3 +1,5 @@
+<template><div></div></template>
+
 <script>
 export default {
   data() {
@@ -26,7 +28,7 @@ export default {
       this.es = undefined
     },
     setupStream() {
-      this.es = new EventSource("/events")
+      this.es = new EventSource(this.$api.baseURL + "/events", { withCredentials: true })
       this.es.onerror = (err) => {
         this.$log("events error:", err)
         this.$api.logout()

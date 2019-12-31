@@ -9,7 +9,6 @@ export default {
   data() {
     return {
       cache: {},
-      kind: undefined,
       es: undefined
     };
   },

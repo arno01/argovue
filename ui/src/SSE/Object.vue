@@ -3,9 +3,6 @@ export default {
   data() {
     return {
       object: {},
-      name: undefined,
-      kind: undefined,
-      namespace: undefined,
       es: undefined
     };
   },

@@ -1,12 +1,6 @@
 <script>
 import axios from "axios"
 
-function getCookie(name) {
-  var value = "; " + document.cookie
-  var parts = value.split("; " + name + "=")
-  if (parts.length == 2) return parts.pop().split(";").shift()
-}
-
 export default {
   data() {
     return {
@@ -23,7 +17,7 @@ export default {
     } else {
       this.baseURL = ''
     }
-    this.$axios = axios.create({ baseURL: this.baseURL })
+    this.$axios = axios.create({ baseURL: this.baseURL, withCredentials: true})
   },
   methods: {
     redirect(url) {
@@ -36,7 +30,7 @@ export default {
       return this.$axios.post(url)
     },
     sse(url, onMessage) {
-      let es = new EventSource(this.baseURL+url)
+      let es = new EventSource(this.baseURL+url, { withCredentials: true })
       es.onerror = (err) => this.$log("SSE", err)
       es.onmessage = onMessage
       return es
@@ -48,9 +42,7 @@ export default {
       return this.auth == "false"
     },
     verifyAuth: async function() {
-      let cookie = getCookie("auth-session")
-      let ev = await this.$axios.post("/profile", { Cookie: cookie }, { headers: { 'Content-Type': 'application/json' } })
-      window.console.log(ev)
+      let ev = await this.$axios.get("/profile")
       if (ev.data && ev.data.name) {
         this.auth = "true"
         this.username = ev.data.name
