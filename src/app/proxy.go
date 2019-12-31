@@ -1,6 +1,7 @@
 package app
 
 import (
+	"argovue/kube"
 	"fmt"
 	"net/http"
 	"net/http/httputil"
@@ -20,6 +21,18 @@ func (a *App) proxyDex(w http.ResponseWriter, r *http.Request) {
 func (a *App) proxyService(w http.ResponseWriter, r *http.Request) {
 	v := mux.Vars(r)
 	name, namespace, port, rest := v["name"], v["namespace"], v["port"], v["rest"]
+
+	if name != "dex" {
+		svc, err := kube.GetService(name, namespace)
+		if err != nil {
+			log.Errorf("Proxy: no service %s/%s, access denied", namespace, name)
+			http.Error(w, "Access denied", http.StatusForbidden)
+		}
+		if !authHTTP(svc, a.Store(), r) {
+			log.Errorf("Proxy: %s/%s, no auth, access denied", namespace, name)
+			http.Error(w, "Access denied", http.StatusForbidden)
+		}
+	}
 
 	schema := "http"
 	if port == "443" {

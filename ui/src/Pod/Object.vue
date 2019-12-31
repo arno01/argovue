@@ -21,10 +21,10 @@
 <script>
 import SSE from '@/SSE/Object'
 import JsonEditor from '@/JsonEditor'
-import Logs from '@/Workflow/Pod/Logs'
+import Logs from '@/Pod/Logs'
 
 export default {
-  props: ["namespace", "name", "pod"],
+  props: ["namespace", "name"],
   extends: SSE,
   components: {
     jsoneditor: JsonEditor,
@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     uri() {
-      return `/workflow/${this.namespace}/${this.name}/pod/${this.pod}`
+      return `/k8s/pod/${this.namespace}/${this.name}`
     }
   }
 }

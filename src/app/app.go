@@ -123,6 +123,8 @@ func (a *App) Serve() {
 	r.HandleFunc("/proxy/{namespace}/{name}/{port}", a.proxyService)
 	r.HandleFunc("/dex/{rest:.*}", a.proxyDex)
 
+	r.HandleFunc("/k8s/{kind}/{namespace}/{name}", a.watchObject)
+
 	r.HandleFunc("/catalogue/{namespace}/{name}", a.watchCatalogue)
 	r.HandleFunc("/catalogue/{namespace}/{name}/instances", a.watchCatalogueInstances)
 	r.HandleFunc("/catalogue/{namespace}/{name}/instance/{instance}", a.watchCatalogueInstance)

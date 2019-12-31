@@ -1,6 +1,7 @@
 # TODO
 
-* Proxy service must authorize user by checking service label (or generate unique id)
+* Clickable graph nodes
+* Standalone UI
 * Better kube error/info handling on service create/delete (with rollback?)
 
 * OIDC values remapping: e.g. OIDC groups and ID to more readable?
@@ -17,6 +18,7 @@
 
 # DONE
 
+* Proxy service must authorize user by checking service label (or generate unique id)
 * Display objects ownership (myself?/group)
 * Remove Retry nodes from Graph
 * Add graph representation for workflows

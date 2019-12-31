@@ -7,6 +7,24 @@ import (
 	v1 "argovue/apis/argovue.io/v1"
 )
 
+func GetByKind(kind, namespace, name string) (crd *Crd, err error) {
+	err = nil
+	switch kind {
+	case "pod":
+		crd = New("", "v1", "pods")
+	case "service":
+		crd = New("", "v1", "services")
+	case "workflow":
+		crd = New("argoproj.io", "v1alpha1", "workflows")
+	case "catalogue":
+		crd = New("argovue.io", "v1", "services")
+	default:
+		return nil, fmt.Errorf("Can't create crd by kind:%s", kind)
+	}
+	crd.SetFieldSelector(fmt.Sprintf("metadata.name=%s,metadata.namespace=%s", name, namespace))
+	return
+}
+
 func WorkflowPods(wfName, pod string) *Crd {
 	return New("", "v1", "pods").
 		SetLabelSelector("workflows.argoproj.io/workflow=" + wfName).
