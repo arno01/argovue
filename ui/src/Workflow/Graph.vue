@@ -69,9 +69,3 @@ export default {
   }
 }
 </script>
-
-<style>
-div {
-outline: none !important;
-}
-</style>

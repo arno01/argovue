@@ -36,3 +36,9 @@ export default {
   },
 }
 </script>
+
+<style>
+div, ul {
+  outline: none !important;
+}
+</style>

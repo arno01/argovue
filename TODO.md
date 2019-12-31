@@ -6,7 +6,6 @@
 * On connection break give it some time (10-15 seconds) before clean up
 * Generate global session key as part of deployment/start up
 * Keep tabs on navigation
-* Different node colors for states
 
 # MAYBE
 
@@ -20,6 +19,7 @@
 
 # DONE
 
+* Different node colors for states
 * Clickable graph nodes (double click)
 * Standalone UI
 * Proxy service must authorize user by checking service label (or generate unique id)
