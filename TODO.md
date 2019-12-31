@@ -1,14 +1,9 @@
 # TODO
 
 * Proxy service must authorize user by checking service label (or generate unique id)
-* Display objects ownership (myself?/group)
 * Better kube error/info handling on service create/delete (with rollback?)
 
-* Add workflow templates and their actions?
 * OIDC values remapping: e.g. OIDC groups and ID to more readable?
-
-# FIX
-
 * On connection break give it some time (10-15 seconds) before clean up
 
 # MAYBE
@@ -18,9 +13,11 @@
 * Stream logs line by line with SSE, the same way as all objects
 * Ingress objects for services
 * Use helm operator to install services?
+* Add workflow templates and their actions?
 
 # DONE
 
+* Display objects ownership (myself?/group)
 * Remove Retry nodes from Graph
 * Add graph representation for workflows
 * Verify workflow file browser is mounted

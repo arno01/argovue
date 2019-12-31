@@ -11,7 +11,10 @@
         <b-col cols=2 v-if="obj.status">
           {{ obj.status.phase }}
         </b-col>
-        <b-col cols=3 class="text-right">
+        <b-col cols=2 v-if="isGroup(obj)">
+          {{ obj.metadata.labels['oidc.argovue.io/group'] }}
+        </b-col>
+        <b-col cols=2 class="text-right">
           {{ formatTs(obj) }}
         </b-col>
       </b-row>
@@ -30,6 +33,9 @@ export default {
     }
   },
   methods: {
+    isGroup (obj) {
+      return obj.metadata && obj.metadata.labels && obj.metadata.labels['oidc.argovue.io/group']
+    }
   },
 };
 </script>
