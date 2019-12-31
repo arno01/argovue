@@ -7,8 +7,8 @@
       <b-card no-body>
         <b-tabs card>
           <b-tab title="Proxy" active>
-            <a v-for="port in object.spec.ports" :key="port.port" target="_blank" :href="`/proxy/${namespace}/${instance}/${port.port}`">
-              {{ instance }}:{{port.port}}
+            <a v-for="port in object.spec.ports" :key="port.port" target="_blank" :href="proxy_uri(port.port)">
+              {{ instance }}:{{ port.port }}
             </a>
           </b-tab>
           <b-tab title="Service">
@@ -31,6 +31,9 @@ export default {
     jsoneditor: JsonEditor,
   },
   methods: {
+    proxy_uri(port) {
+      return this.$api.uri(`/proxy/${this.namespace}/${this.instance}/${port}`)
+    },
     uri() {
       return `/catalogue/${this.namespace}/${this.name}/instance/${this.instance}`
     },

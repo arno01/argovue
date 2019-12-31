@@ -6,14 +6,14 @@
     <div>
       <control :object="object" :name="name" :namespace="namespace" style="margin-bottom: 20px"></control>
       <b-card no-body>
-        <b-tabs card>
+        <b-tabs card no-key-nav>
           <b-tab title="Nodes" active>
             <nodes :content="object"></nodes>
           </b-tab>
           <b-tab title="Services" lazy>
             <services :name="name" :namespace="namespace"></services>
           </b-tab>
-          <b-tab title="Graph" lazy>
+          <b-tab title="Graph" lazy no-key-nav>
             <graph :content="object"></graph>
           </b-tab>
           <b-tab title="Workflow">

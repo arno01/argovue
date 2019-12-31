@@ -5,7 +5,7 @@
     </div>
     <div>
       <b-card no-body>
-        <b-tabs card>
+        <b-tabs card no-key-nav>
           <b-tab title="Pod" active>
             <jsoneditor :content="object"></jsoneditor>
           </b-tab>

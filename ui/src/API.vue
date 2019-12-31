@@ -20,6 +20,9 @@ export default {
     this.$axios = axios.create({ baseURL: this.baseURL, withCredentials: true})
   },
   methods: {
+    uri(uri) {
+      return this.baseURL + uri
+    },
     redirect(url) {
       window.location.href = this.baseURL+url
     },

@@ -6,7 +6,7 @@
     <div>
       <control :object="object" :name="name" :namespace="namespace" style="margin-bottom: 20px"></control>
       <b-card no-body>
-        <b-tabs card>
+        <b-tabs card no-key-nav>
           <b-tab title="Instances" active>
             <instances :name="name" :namespace="namespace" :kind="kind"></instances>
           </b-tab>

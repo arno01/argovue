@@ -1,11 +1,11 @@
 # TODO
 
 * Clickable graph nodes
-* Standalone UI
 * Better kube error/info handling on service create/delete (with rollback?)
 
 * OIDC values remapping: e.g. OIDC groups and ID to more readable?
 * On connection break give it some time (10-15 seconds) before clean up
+* Generate session key as part of deployment/start up
 
 # MAYBE
 
@@ -15,9 +15,11 @@
 * Ingress objects for services
 * Use helm operator to install services?
 * Add workflow templates and their actions?
+* Switch to redis (or any other distributed kv) to store sessions
 
 # DONE
 
+* Standalone UI
 * Proxy service must authorize user by checking service label (or generate unique id)
 * Display objects ownership (myself?/group)
 * Remove Retry nodes from Graph

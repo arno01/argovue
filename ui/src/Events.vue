@@ -28,12 +28,11 @@ export default {
       this.es = undefined
     },
     setupStream() {
-      this.es = new EventSource(this.$api.baseURL + "/events", { withCredentials: true })
+      this.es = this.$api.sse("/events", (event) => this.$log("event:", event))
       this.es.onerror = (err) => {
         this.$log("events error:", err)
         this.$api.logout()
       }
-      this.es.onmessage = (event) => this.$log("event:", event)
     }
   }
 };
