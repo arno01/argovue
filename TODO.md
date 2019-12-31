@@ -4,7 +4,6 @@
 
 * OIDC values remapping: e.g. OIDC groups and ID to more readable?
 * On connection break give it some time (10-15 seconds) before clean up
-* Generate global session key as part of deployment/start up
 * Keep tabs on navigation
 
 # MAYBE
@@ -19,7 +18,8 @@
 
 # DONE
 
-* Different node colors for states
+* Generate global session key as part of deployment/start up
+* Different node colors for statesz
 * Clickable graph nodes (double click)
 * Standalone UI
 * Proxy service must authorize user by checking service label (or generate unique id)
