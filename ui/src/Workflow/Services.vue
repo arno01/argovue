@@ -18,7 +18,6 @@
 
 <script>
 import SSE from '@/SSE/Objects.vue'
-import moment from 'moment'
 
 export default {
   extends: SSE,
@@ -31,9 +30,6 @@ export default {
   methods: {
     uri() {
       return `/workflow/${this.namespace}/${this.name}/services`
-    },
-    formatTs(obj) {
-      return moment(obj.metadata.creationTimestamp).format("YYYY-MM-DD HH:mm:ss")
     },
     del(instance) {
       return this._action(`/workflow/${this.namespace}/${this.name}/service/${instance}/action/delete`)

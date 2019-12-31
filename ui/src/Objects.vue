@@ -21,7 +21,6 @@
 
 <script>
 import SSE from '@/SSE/Objects.vue'
-import moment from 'moment'
 
 export default {
   props: ["kind"],
@@ -31,9 +30,6 @@ export default {
     }
   },
   methods: {
-    formatTs(obj) {
-      return moment(obj.metadata.creationTimestamp).format("YYYY-MM-DD HH:mm:ss")
-    }
   },
 };
 </script>

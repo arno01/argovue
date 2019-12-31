@@ -1,4 +1,6 @@
 <script>
+import moment from 'moment'
+
 function objKey(obj) {
   return obj.metadata.creationTimestamp
 }
@@ -48,6 +50,9 @@ export default {
         noCloseButton: true,
         variant: re.data.status == 'ok'? 'info' : 'danger'
       })
+    },
+    formatTs(obj) {
+      return moment(obj.metadata.creationTimestamp).format("YYYY-MM-DD HH:mm:ss")
     },
     setupStream() {
       this.es = this.$api.sse(this.uri(), (event) => {

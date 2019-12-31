@@ -18,7 +18,6 @@
 
 <script>
 import SSE from '@/SSE/Objects.vue'
-import moment from 'moment'
 
 export default {
   props: ['name', 'kind', 'namespace'],
@@ -30,9 +29,6 @@ export default {
   methods: {
     uri() {
       return `/catalogue/${this.namespace}/${this.name}/instances`
-    },
-    formatTs(obj) {
-      return moment(obj.metadata.creationTimestamp).format("YYYY-MM-DD HH:mm:ss")
     },
     del(instance) {
       this._action(`/catalogue/${this.namespace}/${this.name}/instance/${instance}/action/delete`)

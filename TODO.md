@@ -1,7 +1,7 @@
 # TODO
 
 * Proxy service must authorize user by checking service label (or generate unique id)
-* Display objects ownership (myself/group)
+* Display objects ownership (myself?/group)
 * Better kube error/info handling on service create/delete (with rollback?)
 
 * Add workflow templates and their actions?
