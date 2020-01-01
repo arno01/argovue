@@ -1,6 +1,5 @@
 # TODO
 
-* UI configurator: make env variables accessible?
 * Stream logs line by line with SSE, the same way as all objects
 * Better pod/service presentation (display significant fields on main page)
 * Add all deployment objects on service instance tab, with their statuses
@@ -8,8 +7,6 @@
 * On connection break give it some time (10-15 seconds) before clean up
 * Better kube error/info handling on service create/delete (with rollback?)
 * OIDC values remapping: e.g. OIDC groups and ID to more readable?
-* Fix dex proxy (service should be on even if oidc fails)
-* Send keep-alive events
 
 # MAYBE
 
@@ -19,9 +16,12 @@
 * Use helm operator to install services?
 * Add workflow templates and their actions?
 * Switch to redis (or any other distributed kv) to store sessions
+* Fix dex proxy (service should be on even if oidc fails)
 
 # DONE
 
+* UI configurator: make env variables accessible?
+* Send keep-alive events
 * Keep tabs on navigation
 * Generate global session key as part of deployment/start up
 * Different node colors for statesz
