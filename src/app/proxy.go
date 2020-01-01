@@ -22,7 +22,7 @@ func (a *App) proxyService(w http.ResponseWriter, r *http.Request) {
 	v := mux.Vars(r)
 	name, namespace, port, rest := v["name"], v["namespace"], v["port"], v["rest"]
 
-	if name != "dex" {
+	if name != a.Args().DexServiceName() {
 		svc, err := kube.GetService(name, namespace)
 		if err != nil {
 			log.Errorf("Proxy: no service %s/%s, access denied", namespace, name)
