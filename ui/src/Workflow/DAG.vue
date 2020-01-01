@@ -29,9 +29,9 @@ export default {
   },
   created () {
     this.graph = new Dagre.graphlib.Graph()
-  },
-  mounted () {
-    this.update()
+    if (this.content.status) {
+      this.update()
+    }
   },
   methods: {
     update () {
@@ -113,6 +113,7 @@ export default {
   },
   watch: {
     content () {
+      this.update()
     }
   }
 }

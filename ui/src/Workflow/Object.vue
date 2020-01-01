@@ -6,7 +6,7 @@
     <div>
       <control :object="object" :name="name" :namespace="namespace" style="margin-bottom: 20px"></control>
       <b-card no-body>
-        <b-tabs card no-key-nav>
+        <b-tabs card no-key-nav v-model="tab" @input="onTab">
           <b-tab title="Nodes">
             <nodes :content="object"></nodes>
           </b-tab>
@@ -48,12 +48,27 @@ export default {
     graph: Graph,
     dag: DAG,
   },
+  created () {
+    this.tab = parseInt(this.get('tab') || 0)
+  },
   data() {
     return {
+      tab: 0,
       kind: 'workflows'
     }
   },
   methods: {
+    onTab (id) {
+      this.set('tab', id)
+    },
+    set(lkey, value) {
+      let key = `${this.uri()}/${lkey}`
+      localStorage.setItem(key, value)
+    },
+    get(lkey) {
+      let key = `${this.uri()}/${lkey}`
+      return localStorage.getItem(key)
+    },
     uri() {
       return `/workflow/${this.namespace}/${this.name}`
     },

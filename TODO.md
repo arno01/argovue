@@ -13,10 +13,10 @@
 * Use helm operator to install services?
 * Add workflow templates and their actions?
 * Switch to redis (or any other distributed kv) to store sessions
-* Keep tabs on navigation
 
 # DONE
 
+* Keep tabs on navigation
 * Generate global session key as part of deployment/start up
 * Different node colors for statesz
 * Clickable graph nodes (double click)

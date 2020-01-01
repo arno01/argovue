@@ -35,24 +35,17 @@ export default {
       network: undefined,
     }
   },
-  created () {
-    this.nodes = new Vis.DataSet([])
-    this.edges = new Vis.DataSet([])
-  },
   mounted () {
-    this.update()
-    this.network = new Vis.Network(this.$el, { nodes: this.nodes, edges: this.edges }, this.options)
-    this.network.fit()
-    this.network.on("doubleClick", (ev) => {
-      let node = this.nodes.get(ev.nodes[0])
-      if (node && node.type == "Pod") {
-        this.$router.push(`/workflow/${this.namespace}/${this.name}/pod/${ev.nodes[0]}`)
-      }
-    })
+    if (this.content.status) {
+      this.update()
+    }
   },
   methods: {
     update () {
       let wfNodes = this.content.status.nodes
+      this.nodes = new Vis.DataSet([])
+      this.edges = new Vis.DataSet([])
+      this.$log("do update", wfNodes)
       Object.values(wfNodes).forEach( (node) => {
         this.nodes.add([{ id: node.id, label: node.displayName, shape: shape(node), color: color(node), type: node.type }])
       })
@@ -61,10 +54,18 @@ export default {
           this.edges.add([{ from: node.id, to: child, arrows: "to" }])
         })
       })
+      this.network = new Vis.Network(this.$el, { nodes: this.nodes, edges: this.edges }, this.options)
+      this.network.on("doubleClick", (ev) => {
+        let node = this.nodes.get(ev.nodes[0])
+        if (node && node.type == "Pod") {
+          this.$router.push(`/workflow/${this.namespace}/${this.name}/pod/${ev.nodes[0]}`)
+        }
+      })
     }
   },
   watch: {
     content () {
+      this.update()
     }
   }
 }
