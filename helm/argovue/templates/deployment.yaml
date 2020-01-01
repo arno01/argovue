@@ -43,7 +43,7 @@ spec:
             - name: OIDC_SCOPE
               value: {{ .Values.argovue.oidcScope }}
             - name: UI_ROOT_URL
-              value: {{ .Values.argovue.rootUrl }}
+              value: {{ .Values.argovue.uiRootUrl }}
             - name: K8S_NAMESPACE
               value: {{ .Release.Namespace }}
             - name: DEX_SERVICE_NAME

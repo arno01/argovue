@@ -28,14 +28,16 @@ spec:
 {{- end }}
   rules:
   {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
+    - host: {{ . | quote }}
       http:
         paths:
-        {{- range .paths }}
-          - path: {{ . }}
+          - path: /dex
+            backend:
+              serviceName: {{ $fullName }}-dex
+              servicePort: 5556
+          - path: /
             backend:
               serviceName: {{ $fullName }}
               servicePort: {{ $svcPort }}
-        {{- end }}
   {{- end }}
 {{- end }}
