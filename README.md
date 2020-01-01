@@ -11,6 +11,14 @@ and expose services uniformly with authenticating reverse proxy.
 
 Provide per project (namespace) UI to run and manage argo workflows and expose pre-defined services with uniform access management.
 
+## Usage
+
+Make workflow visible for group `authors`:
+
+```sh
+kubectl -n label workflow/NAME oidc.argovue.io/group=authors
+```
+
 ## Architecture
 
 ArgoVue uses custom resource definitions to configure what objects and services to expose.
