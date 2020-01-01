@@ -1,10 +1,8 @@
 # TODO
 
-* Better kube error/info handling on service create/delete (with rollback?)
-
-* OIDC values remapping: e.g. OIDC groups and ID to more readable?
 * On connection break give it some time (10-15 seconds) before clean up
-* Keep tabs on navigation
+* Better kube error/info handling on service create/delete (with rollback?)
+* OIDC values remapping: e.g. OIDC groups and ID to more readable?
 
 # MAYBE
 
@@ -15,6 +13,7 @@
 * Use helm operator to install services?
 * Add workflow templates and their actions?
 * Switch to redis (or any other distributed kv) to store sessions
+* Keep tabs on navigation
 
 # DONE
 

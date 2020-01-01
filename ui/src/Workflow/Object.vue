@@ -16,6 +16,9 @@
           <b-tab title="Graph" lazy no-key-nav>
             <graph :content="object" :name="name" :namespace="namespace"></graph>
           </b-tab>
+          <b-tab title="DAG" lazy no-key-nav>
+            <dag :content="object" :name="name" :namespace="namespace"></dag>
+          </b-tab>
           <b-tab title="Workflow">
             <jsoneditor :content="object"></jsoneditor>
           </b-tab>
@@ -32,6 +35,7 @@ import Nodes from '@/Workflow/Nodes'
 import Services from '@/Workflow/Services'
 import Control from '@/Workflow/Control'
 import Graph from '@/Workflow/Graph'
+import DAG from '@/Workflow/DAG'
 
 export default {
   props: ['namespace', 'name'],
@@ -42,6 +46,7 @@ export default {
     control: Control,
     services: Services,
     graph: Graph,
+    dag: DAG,
   },
   data() {
     return {
