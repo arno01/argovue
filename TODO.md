@@ -1,6 +1,8 @@
 # TODO
 
 * Stream logs line by line with SSE, the same way as all objects
+* Better pod/service presentation (display significant fields on main page)
+* Add all deployment objects on service instance tab, with their statuses
 
 * On connection break give it some time (10-15 seconds) before clean up
 * Better kube error/info handling on service create/delete (with rollback?)
