@@ -20,6 +20,11 @@ import API from '@/API'
 Vue.use(VueRouter)
 Vue.use(BootstrapVue)
 
+if (window.argovue && process.env.VUE_APP_API_BASE_URL) {
+  window.console.log("Setting up environment")
+  window.argovue.api_base_url = process.env.VUE_APP_API_BASE_URL
+}
+
 Vue.prototype.$api = new Vue(API)
 Vue.prototype.$log = window.console.log.bind(console)
 
