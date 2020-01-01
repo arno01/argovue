@@ -1,6 +1,6 @@
 <template>
 <div class="dag mx-auto" :style="`width: ${this.size.width}px; height: ${this.size.height}px`">
-  <node v-for="id in nodes" v-bind:key="id" :node="getnode(id)"></node>
+  <node v-for="id in nodes" v-bind:key="id" :node="getnode(id)" :name="name" :namespace="namespace"></node>
   <edge v-for="edge in edges" v-bind:key="edgekey(edge)" :edge="edge"></edge>
 </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-<div class="node" :style="this.style()">
+<div class="node" :style="this.style()" @click="click()">
   <div
     :class="`fas node-status node-status-${node.phase.toLocaleLowerCase()}`"
     :style="`lineHeight: ${node.height}px`">
@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  props: ['node'],
+  props: ['node', 'name', 'namespace'],
   data () {
     return {
     }
@@ -18,6 +18,11 @@ export default {
   created () {
   },
   methods: {
+    click() {
+      if (this.node.type == "Pod") {
+        this.$router.push(`/workflow/${this.namespace}/${this.name}/pod/${this.node.id}`)
+      }
+    },
     left() {
       return this.node.x - this.node.width / 2
     },
