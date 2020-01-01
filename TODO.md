@@ -1,5 +1,7 @@
 # TODO
 
+* Stream logs line by line with SSE, the same way as all objects
+
 * On connection break give it some time (10-15 seconds) before clean up
 * Better kube error/info handling on service create/delete (with rollback?)
 * OIDC values remapping: e.g. OIDC groups and ID to more readable?
@@ -8,7 +10,6 @@
 
 * Delete brokers on zero connections after timeout
 * Better instance navigation (click to proxy)? Need ports
-* Stream logs line by line with SSE, the same way as all objects
 * Ingress objects for services
 * Use helm operator to install services?
 * Add workflow templates and their actions?
