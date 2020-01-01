@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  argovue:
+  - apiVersion: v2
+    appVersion: 0.2.8
+    created: "2020-01-01T23:06:50.329763+01:00"
+    description: ArgoVue Helm Chart
+    digest: fa515fdbd62d54948ad2da7978a751d39ea2a948c9cc282fb75fc79fcdefbeb1
+    name: argovue
+    type: application
+    urls:
+    - https://jamhed.github.io/argovue/argovue-0.2.1.tgz
+    version: 0.2.1
+generated: "2020-01-01T23:06:50.329053+01:00"
