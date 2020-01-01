@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -18,6 +19,11 @@ func sendMsg(w http.ResponseWriter, flusher http.Flusher, m *Event) {
 		return
 	}
 	w.Write([]byte(fmt.Sprintf("data: %s\n\n", jsonMsg)))
+	flusher.Flush()
+}
+
+func sendText(w http.ResponseWriter, flusher http.Flusher, text string) {
+	w.Write([]byte(fmt.Sprintf("%s\n\n", text)))
 	flusher.Flush()
 }
 
@@ -44,11 +50,18 @@ func (a *App) handleEvents(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
+	pingTicker := time.NewTicker(5 * time.Second)
+
+loop:
 	for {
-		m, open := <-a.events
-		if !open {
-			break
+		select {
+		case <-pingTicker.C:
+			sendText(w, flusher, "data: ping")
+		case m, open := <-a.events:
+			if !open {
+				break loop
+			}
+			sendMsg(w, flusher, m)
 		}
-		sendMsg(w, flusher, m)
 	}
 }
