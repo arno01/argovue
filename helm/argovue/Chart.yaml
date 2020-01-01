@@ -3,4 +3,4 @@ name: argovue
 description: ArgoVue Helm Chart
 type: application
 version: 0.2.1
-appVersion: 0.2.5
+appVersion: 0.2.6

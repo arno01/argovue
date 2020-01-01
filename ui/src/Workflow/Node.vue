@@ -6,9 +6,9 @@
   <b-col v-else>
     {{content.displayName}}
   </b-col>
-  <b-col cols=2>{{content.type}}</b-col>
-  <b-col cols=2>{{content.phase}}</b-col>
-  <b-col cols=1>{{duration}}s</b-col>
+  <b-col cols=1>{{content.type}}</b-col>
+  <b-col cols=1>{{content.phase}}</b-col>
+  <b-col cols=2>{{duration}}s</b-col>
 </b-row>
 </template>
 
