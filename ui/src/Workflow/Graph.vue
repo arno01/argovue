@@ -45,7 +45,6 @@ export default {
       let wfNodes = this.content.status.nodes
       this.nodes = new Vis.DataSet([])
       this.edges = new Vis.DataSet([])
-      this.$log("do update", wfNodes)
       Object.values(wfNodes).forEach( (node) => {
         this.nodes.add([{ id: node.id, label: node.displayName, shape: shape(node), color: color(node), type: node.type }])
       })
