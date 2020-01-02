@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	argovuev1 "argovue/apis/argovue.io/v1"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/gorilla/mux"
@@ -96,9 +97,16 @@ func (a *App) commandCatalogue(w http.ResponseWriter, r *http.Request) {
 	case "deploy":
 		profile := session.Values["profile"].(map[string]interface{})
 		svc, err := crd.Typecast(a.getBroker(session.ID, "catalogue").Broker().Find(name, namespace))
-		if err == nil {
-			crd.Deploy(svc, profile["sub"].(string))
+		if err != nil {
+			break
 		}
+		input := make([]argovuev1.InputValue, 0)
+		err = json.NewDecoder(r.Body).Decode(&input)
+		if err != nil {
+			log.Errorf("Can't unmarshal input:%s", r.Body)
+			break
+		}
+		err = crd.Deploy(svc, profile["sub"].(string), input)
 	}
 	if err != nil {
 		log.Errorf("Can't %s catalogue %s/%s, error:%s", action, namespace, name, err)

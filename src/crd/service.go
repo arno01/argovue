@@ -84,8 +84,12 @@ func createService(s *argovuev1.Service, clientset *kubernetes.Clientset, instan
 	return clientset.CoreV1().Services(s.Namespace).Create(svc)
 }
 
-func createDeployment(s *argovuev1.Service, clientset *kubernetes.Clientset, instance, owner, baseUrl string, volumes []apiv1.Volume) (*appsv1.Deployment, error) {
+func createDeployment(s *argovuev1.Service, clientset *kubernetes.Clientset, instance, owner, baseUrl string, volumes []apiv1.Volume, input []argovuev1.InputValue) (*appsv1.Deployment, error) {
 	log.Debugf("Kube: create deployment %s/%s, owner:%s", s.Namespace, instance, owner)
+	env := []apiv1.EnvVar{{Name: "BASE_URL", Value: baseUrl}}
+	for _, in := range input {
+		env = append(env, apiv1.EnvVar{Name: in.Name, Value: in.Value})
+	}
 	deployment := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      instance,
@@ -117,7 +121,7 @@ func createDeployment(s *argovuev1.Service, clientset *kubernetes.Clientset, ins
 							Image:        s.Spec.Image,
 							Args:         s.Spec.Args,
 							VolumeMounts: makeVolumeMounts(volumes),
-							Env:          []apiv1.EnvVar{{Name: "BASE_URL", Value: baseUrl}},
+							Env:          env,
 							Ports:        []apiv1.ContainerPort{{Name: "http", Protocol: apiv1.ProtocolTCP, ContainerPort: s.Spec.Port}},
 						},
 					},
@@ -129,7 +133,7 @@ func createDeployment(s *argovuev1.Service, clientset *kubernetes.Clientset, ins
 	return clientset.AppsV1().Deployments(s.Namespace).Create(deployment)
 }
 
-func Deploy(s *argovuev1.Service, owner string) error {
+func Deploy(s *argovuev1.Service, owner string, input []argovuev1.InputValue) error {
 	clientset, err := kube.GetClient()
 	if err != nil {
 		return err
@@ -166,7 +170,7 @@ func Deploy(s *argovuev1.Service, owner string) error {
 		log.Errorf("Kube: can't create service, error:%s", err)
 		return err
 	}
-	_, err = createDeployment(s, clientset, instance, owner, baseUrl, volumes)
+	_, err = createDeployment(s, clientset, instance, owner, baseUrl, volumes, input)
 	if err != nil {
 		log.Errorf("Kube: can't create deployment, error:%s", err)
 		return err
@@ -224,7 +228,7 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, owner string) error {
 			log.Errorf("CRD: DeployFilebrowser error:%s", err)
 			return err
 		} else {
-			Deploy(obj, owner)
+			Deploy(obj, owner, []argovuev1.InputValue{})
 		}
 	}
 	return nil

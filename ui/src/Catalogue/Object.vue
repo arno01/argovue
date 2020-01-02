@@ -4,10 +4,12 @@
       <h1 class="h2">{{namespace}}/{{kind}}/{{name}}</h1>
     </div>
     <div>
-      <control :object="object" :name="name" :namespace="namespace" style="margin-bottom: 20px"></control>
       <b-card no-body>
         <b-tabs card no-key-nav>
-          <b-tab title="Instances" active>
+          <b-tab title="Deploy" active>
+            <deploy :object="object" :name="name" :namespace="namespace"></deploy>
+          </b-tab>
+          <b-tab title="Instances">
             <instances :name="name" :namespace="namespace" :kind="kind"></instances>
           </b-tab>
           <b-tab title="Service">
@@ -22,7 +24,7 @@
 <script>
 import SSE from '@/SSE/Object'
 import JsonEditor from '@/JsonEditor'
-import Control from '@/Catalogue/Control'
+import Deploy from '@/Catalogue/Deploy'
 import Instances from '@/Catalogue/Instances'
 
 export default {
@@ -30,7 +32,7 @@ export default {
   extends: SSE,
   components: {
     jsoneditor: JsonEditor,
-    control: Control,
+    deploy: Deploy,
     instances: Instances,
   },
   data() {

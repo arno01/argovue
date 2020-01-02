@@ -27,7 +27,12 @@ spec:
             input:
               type: array
               items:
-                type: string
+                type: object
+                properties:
+                  name:
+                    type: string
+                  title:
+                    type: string
             args:
               type: array
               items:

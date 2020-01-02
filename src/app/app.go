@@ -87,7 +87,12 @@ func (a *App) authMiddleWare(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", a.Args().UIRootDomain())
 		w.Header().Set("Access-Control-Allow-Credentials", "true")
-		w.Header().Set("Access-Control-Allow-Headers", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		w.Header().Set("Access-Control-Allow-Methods", "*")
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
 		for _, re := range bypassAuth {
 			if re.MatchString(r.RequestURI) {
 				log.Debugf("HTTP: no-auth from:%s %v", r.RemoteAddr, r.RequestURI)
@@ -130,15 +135,15 @@ func (a *App) Serve() {
 	r.HandleFunc("/catalogue/{namespace}/{name}", a.watchCatalogue)
 	r.HandleFunc("/catalogue/{namespace}/{name}/instances", a.watchCatalogueInstances)
 	r.HandleFunc("/catalogue/{namespace}/{name}/instance/{instance}", a.watchCatalogueInstance)
-	r.HandleFunc("/catalogue/{namespace}/{name}/{action}", a.commandCatalogue).Methods("POST")
-	r.HandleFunc("/catalogue/{namespace}/{name}/instance/{instance}/action/{action}", a.controlCatalogueInstance).Methods("POST")
+	r.HandleFunc("/catalogue/{namespace}/{name}/{action}", a.commandCatalogue).Methods("POST", "OPTIONS")
+	r.HandleFunc("/catalogue/{namespace}/{name}/instance/{instance}/action/{action}", a.controlCatalogueInstance).Methods("POST", "OPTIONS")
 
 	r.HandleFunc("/workflow/{namespace}/{name}", a.watchWorkflow)
 	r.HandleFunc("/workflow/{namespace}/{name}/services", a.watchWorkflowServices)
-	r.HandleFunc("/workflow/{namespace}/{name}/service/{service}/action/{action}", a.controlWorkflowService).Methods("POST")
+	r.HandleFunc("/workflow/{namespace}/{name}/service/{service}/action/{action}", a.controlWorkflowService).Methods("POST", "OPTIONS")
 	r.HandleFunc("/workflow/{namespace}/{name}/pod/{pod}", a.watchWorkflowPods)
 	r.HandleFunc("/workflow/{namespace}/{name}/pod/{pod}/container/{container}/logs", a.watchWorkflowPodLogs)
-	r.HandleFunc("/workflow/{namespace}/{name}/action/{action}", a.commandWorkflow).Methods("POST")
+	r.HandleFunc("/workflow/{namespace}/{name}/action/{action}", a.commandWorkflow).Methods("POST", "OPTIONS")
 
 	r.Use(a.authMiddleWare)
 	srv := &http.Server{

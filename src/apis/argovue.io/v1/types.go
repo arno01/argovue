@@ -12,13 +12,23 @@ type Service struct {
 	Spec              ServiceSpec `json:"spec,omitempty"`
 }
 
+type InputItem struct {
+	Name    string `json:"name"`
+	Caption string `json:"caption"`
+}
+
+type InputValue struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
+}
+
 type ServiceSpec struct {
-	Image             string   `json:"image,omitempty"`
-	Port              int32    `json:"port,omitempty`
-	SharedVolume      string   `json:"sharedVolume,omitempty"`
-	PrivateVolumeSize string   `json:"privateVolumeSize,omitempty"`
-	Args              []string `json:"args,omitempty"`
-	Input             []string `json:"input,omitempty"`
+	Image             string      `json:"image,omitempty"`
+	Port              int32       `json:"port,omitempty`
+	SharedVolume      string      `json:"sharedVolume,omitempty"`
+	PrivateVolumeSize string      `json:"privateVolumeSize,omitempty"`
+	Args              []string    `json:"args,omitempty"`
+	Input             []InputItem `json:"input,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -32,6 +32,14 @@ export default {
     post(url) {
       return this.$axios.post(url)
     },
+    post2(url, data) {
+      return this.$axios.request({
+        url: url,
+        method:'post',
+        withCredentials: true,
+        data: data,
+      })
+    },
     sse(url, onMessage) {
       let es = new EventSource(this.baseURL+url, { withCredentials: true })
       es.onerror = (err) => this.$log("SSE", err)
