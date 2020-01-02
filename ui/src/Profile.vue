@@ -24,13 +24,13 @@
     <b-row>
       <b-col cols=4>Groups</b-col>
       <b-col>
-        <div v-for="group in $api.profile.groups.sort()" :key="group">{{group}}</div>
+        <div v-for="group in groups()" :key="group">{{group}}</div>
       </b-col>
     </b-row>
     <b-row>
       <b-col cols=4>Effective Groups</b-col>
       <b-col>
-        <div v-for="group in $api.profile.effective_groups.sort()" :key="group">{{group}}</div>
+        <div v-for="group in effective_groups()" :key="group">{{group}}</div>
       </b-col>
     </b-row>
     <b-row class="mt-2 pt-2 border-top">
@@ -47,5 +47,13 @@ export default {
     return {
     };
   },
+  methods: {
+    groups () {
+      return (this.$api.profile.groups || []).sort()
+    },
+    effective_groups () {
+      return (this.$api.profile.effective_groups || []).sort()
+    },
+  }
 };
 </script>
