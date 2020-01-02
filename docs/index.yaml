@@ -3,7 +3,17 @@ entries:
   argovue:
   - apiVersion: v2
     appVersion: 0.2.10
-    created: "2020-01-02T10:55:29.023137+01:00"
+    created: "2020-01-02T11:19:34.476324+01:00"
+    description: ArgoVue Helm Chart
+    digest: e73849477d6d5d09f55c71a2cfcd288d88c42346d8550a84a5350b4999617637
+    name: argovue
+    type: application
+    urls:
+    - https://jamhed.github.io/argovue/argovue-0.2.2.tgz
+    version: 0.2.2
+  - apiVersion: v2
+    appVersion: 0.2.10
+    created: "2020-01-02T11:19:34.475376+01:00"
     description: ArgoVue Helm Chart
     digest: 29b72958903f9754818abb8608fde865841f0ee7b58aaad2d42c011f45a300b2
     name: argovue
@@ -11,4 +21,4 @@ entries:
     urls:
     - https://jamhed.github.io/argovue/argovue-0.2.1.tgz
     version: 0.2.1
-generated: "2020-01-02T10:55:29.017673+01:00"
+generated: "2020-01-02T11:19:34.472567+01:00"
