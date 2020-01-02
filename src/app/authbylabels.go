@@ -1,32 +1,13 @@
 package app
 
 import (
+	"argovue/util"
 	"net/http"
 
 	"github.com/gorilla/sessions"
 	log "github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
-
-func i2s(i interface{}) (re string) {
-	if s, ok := i.(string); ok {
-		re = s
-	}
-	return
-}
-
-func li2s(li interface{}) (re []string) {
-	lii, ok := li.([]interface{})
-	if !ok {
-		return
-	}
-	for _, l := range lii {
-		if s, ok := l.(string); ok {
-			re = append(re, s)
-		}
-	}
-	return
-}
 
 func authorizeByGroup(groupLabel string, groups []string) bool {
 	if len(groupLabel) == 0 {
@@ -51,7 +32,7 @@ func authorize(labels map[string]string, profile map[string]interface{}) bool {
 	var auth bool
 	if groupLabel, ok := labels["oidc.argovue.io/group"]; ok {
 		if groups, ok := profile["groups"]; ok {
-			auth = authorizeByGroup(groupLabel, li2s(groups))
+			auth = authorizeByGroup(groupLabel, util.Li2s(groups))
 			if auth {
 				log.Debugf("authorize by group:%s", groupLabel)
 			}
@@ -62,7 +43,7 @@ func authorize(labels map[string]string, profile map[string]interface{}) bool {
 	}
 	if idLabel, ok := labels["oidc.argovue.io/id"]; ok {
 		if id, ok := profile["sub"]; ok {
-			auth = authorizeById(idLabel, i2s(id))
+			auth = authorizeById(idLabel, util.I2s(id))
 			if auth {
 				log.Debugf("authorize by id:%s", id)
 			}

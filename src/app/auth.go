@@ -2,6 +2,7 @@ package app
 
 import (
 	"argovue/crd"
+	"argovue/util"
 	"context"
 	"crypto/rand"
 	"encoding/base64"
@@ -29,17 +30,11 @@ func (a *App) onLogout(sessionId string) {
 }
 
 func (a *App) onLogin(sessionId string, profile map[string]interface{}) {
-	groups := profile["groups"].([]interface{})
+	groups := util.Li2s(profile["groups"])
 	wfBroker := a.newBroker(sessionId, "workflows")
 	catBroker := a.newBroker(sessionId, "catalogue")
 	if len(groups) > 0 {
-		strGroups := []string{}
-		for _, group := range groups {
-			if strGroup, ok := group.(string); ok {
-				strGroups = append(strGroups, strGroup)
-			}
-		}
-		selector := fmt.Sprintf("oidc.argovue.io/group in (%s)", strings.Join(strGroups, ","))
+		selector := fmt.Sprintf("oidc.argovue.io/group in (%s)", strings.Join(groups, ","))
 		wfBroker.AddCrd(crd.New("argoproj.io", "v1alpha1", "workflows").SetLabelSelector(selector))
 		catBroker.AddCrd(crd.New("argovue.io", "v1", "services").SetLabelSelector(selector))
 	}
@@ -137,7 +132,8 @@ func (a *App) AuthCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Debugf("OIDC: auth name:%v", profile["name"])
+	log.Debugf("OIDC: auth name:%s, id:%s", profile["name"], profile["sub"])
+	log.Debugf("OIDC: reply %s", profile)
 	session.Values["profile"] = profile
 	a.onLogin(session.ID, profile)
 
