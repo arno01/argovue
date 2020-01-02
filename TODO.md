@@ -1,12 +1,11 @@
 # TODO
 
+* Add resources per service
 * Stream logs line by line with SSE, the same way as all objects
 * Better pod/service presentation (display significant fields on main page)
-* Add all deployment objects on service instance tab, with their statuses
 
 * On connection break give it some time (10-15 seconds) before clean up
 * Better kube error/info handling on service create/delete (with rollback?)
-* OIDC values remapping: e.g. OIDC groups and ID to more readable?
 
 # MAYBE
 
@@ -20,6 +19,8 @@
 
 # DONE
 
+* OIDC values remapping: e.g. OIDC groups and ID to more readable?
+* Add all deployment objects on service instance tab, with their statuses
 * UI configurator: make env variables accessible?
 * Send keep-alive events
 * Keep tabs on navigation
