@@ -24,13 +24,13 @@
     <b-row>
       <b-col cols=4>Groups</b-col>
       <b-col>
-        <div v-for="group in $api.profile.groups" :key="group">{{group}}</div>
+        <div v-for="group in $api.profile.groups.sort()" :key="group">{{group}}</div>
       </b-col>
     </b-row>
     <b-row>
       <b-col cols=4>Effective Groups</b-col>
       <b-col>
-        <div v-for="group in $api.profile.effective_groups" :key="group">{{group}}</div>
+        <div v-for="group in $api.profile.effective_groups.sort()" :key="group">{{group}}</div>
       </b-col>
     </b-row>
     <b-row class="mt-2 pt-2 border-top">
