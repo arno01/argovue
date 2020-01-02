@@ -27,6 +27,16 @@ argovue:
   oidcScope: groups
   uiRootUrl: ~
 
+#volumes:
+#- name: ca-certificates
+#  configMap:
+#    name: ca-certificates
+
+#mounts:
+#- name: ca-certificates
+#  mountPath: /etc/ssl/certs
+#  readOnly: true
+
 dex:
   enabled: true
   logger:
