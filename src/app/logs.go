@@ -9,22 +9,16 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (a *App) streamLogs(w http.ResponseWriter, r *http.Request) {
-	v := mux.Vars(r)
-	// name := v["name"]
-	namespace := v["namespace"]
-	pod := v["pod"]
-	container := v["container"]
-
+func (a *App) streamPodLogs(w http.ResponseWriter, r *http.Request, name, namespace, container string) {
 	flusher, ok := w.(http.Flusher)
 	if !ok {
 		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
 		return
 	}
 
-	stream, err := kube.GetPodLogs(pod, namespace, container)
+	stream, err := kube.GetPodLogs(name, namespace, container)
 	if err != nil {
-		log.Errorf("Error getting pod logs %s/%s/%s, error:%s", namespace, pod, container, err)
+		log.Errorf("Error getting pod logs %s/%s/%s, error:%s", namespace, name, container, err)
 		http.Error(w, "Error getting logs", http.StatusInternalServerError)
 		return
 	}
@@ -46,4 +40,12 @@ func (a *App) streamLogs(w http.ResponseWriter, r *http.Request) {
 		}
 		flusher.Flush()
 	}
+}
+
+func (a *App) streamLogs(w http.ResponseWriter, r *http.Request) {
+	v := mux.Vars(r)
+	namespace := v["namespace"]
+	pod := v["pod"]
+	container := v["container"]
+	a.streamPodLogs(w, r, pod, namespace, container)
 }

@@ -67,6 +67,20 @@ func (a *App) watchCatalogueInstances(w http.ResponseWriter, r *http.Request) {
 	log.Debugf("SSE: stop catalogue/%s/%s instances", namespace, name)
 }
 
+func (a *App) watchCatalogueResources(w http.ResponseWriter, r *http.Request) {
+	session, _ := a.Store().Get(r, "auth-session")
+	v := mux.Vars(r)
+	name, namespace := v["name"], v["namespace"]
+	log.Debugf("SSE: start catalogue/%s/%s resources", namespace, name)
+	if !a.checkServiceExists(session.ID, name, namespace, w) {
+		return
+	}
+	crd := crd.CatalogueResources(name)
+	cb := a.maybeNewSubsetBroker(session.ID, crd)
+	a.watchBroker(cb, w, r)
+	log.Debugf("SSE: stop catalogue/%s/%s resources", namespace, name)
+}
+
 func (a *App) watchCatalogueInstance(w http.ResponseWriter, r *http.Request) {
 	session, _ := a.Store().Get(r, "auth-session")
 	v := mux.Vars(r)

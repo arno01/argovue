@@ -51,6 +51,11 @@ func CatalogueInstances(name string) *Crd {
 		SetLabelSelector("service.argovue.io/name=" + name)
 }
 
+func CatalogueResources(name string) *Crd {
+	return New("", "v1", "pods").
+		SetLabelSelector("service.argovue.io/name=" + name)
+}
+
 func CatalogueInstance(name, instance string) *Crd {
 	return New("", "v1", "services").
 		SetLabelSelector(fmt.Sprintf("service.argovue.io/name=%s,service.argovue.io/instance=%s", name, instance))

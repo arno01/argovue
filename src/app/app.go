@@ -131,9 +131,11 @@ func (a *App) Serve() {
 	r.HandleFunc("/dex/{rest:.*}", a.proxyDex)
 
 	r.HandleFunc("/k8s/{kind}/{namespace}/{name}", a.watchObject)
+	r.HandleFunc("/k8s/pod/{namespace}/{name}/container/{container}/logs", a.watchPodLogs)
 
 	r.HandleFunc("/catalogue/{namespace}/{name}", a.watchCatalogue)
 	r.HandleFunc("/catalogue/{namespace}/{name}/instances", a.watchCatalogueInstances)
+	r.HandleFunc("/catalogue/{namespace}/{name}/resources", a.watchCatalogueResources)
 	r.HandleFunc("/catalogue/{namespace}/{name}/instance/{instance}", a.watchCatalogueInstance)
 	r.HandleFunc("/catalogue/{namespace}/{name}/{action}", a.commandCatalogue).Methods("POST", "OPTIONS")
 	r.HandleFunc("/catalogue/{namespace}/{name}/instance/{instance}/action/{action}", a.controlCatalogueInstance).Methods("POST", "OPTIONS")

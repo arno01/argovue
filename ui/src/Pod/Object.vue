@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-      <h1 class="h2">{{namespace}}/{{kind}}/{{name}}</h1>
+      <h1 class="h2">pod/{{namespace}}/{{name}}</h1>
     </div>
     <div>
       <b-card no-body>
@@ -10,7 +10,7 @@
             <jsoneditor :content="object"></jsoneditor>
           </b-tab>
           <b-tab v-for="container in containers" v-bind:key="container.name" :title="container.name" lazy>
-            <logs :name="name" :namespace="namespace" :pod="pod" :container="container.name"></logs>
+            <logs :name="name" :namespace="namespace" :container="container.name"></logs>
           </b-tab>
         </b-tabs>
       </b-card>
@@ -32,7 +32,6 @@ export default {
   },
   data() {
     return {
-      kind: "pods",
       containers: [],
     }
   },

@@ -6,7 +6,7 @@
 import Term from '@/Term'
 
 export default {
-  props: ["namespace", "name", "pod", "container"],
+  props: ["namespace", "name", "container"],
   components: {
     term: Term
   },
@@ -16,7 +16,7 @@ export default {
     }
   },
   created: async function() {
-    let re = await this.$api.get(`/workflow/${this.namespace}/${this.name}/pod/${this.pod}/container/${this.container}/logs`)
+    let re = await this.$api.get(`/k8s/pod/${this.namespace}/${this.name}/container/${this.container}/logs`)
     this.logs = re.data
   }
 }

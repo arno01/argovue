@@ -10,6 +10,25 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func (a *App) watchPodLogs(w http.ResponseWriter, r *http.Request) {
+	v := mux.Vars(r)
+	name, namespace, container, kind := v["name"], v["namespace"], v["container"], "pod"
+	log.Debugf("SSE: start pod/%s/%s/%s", namespace, name, container)
+	obj, err := kube.GetByKind(kind, name, namespace)
+	if err != nil {
+		log.Debugf("Can't find object %s/%s/%s", kind, namespace, name)
+		http.Error(w, "Not found", http.StatusNotFound)
+		return
+	}
+	if !authHTTP(obj, a.Store(), r) {
+		log.Debugf("Not authorized to access object %s/%s/%s", kind, namespace, name)
+		http.Error(w, "Not authorized", http.StatusForbidden)
+		return
+	}
+	a.streamPodLogs(w, r, name, namespace, container)
+	log.Debugf("SSE: stop pod/%s/%s/%s", namespace, name, container)
+}
+
 func (a *App) watchObject(w http.ResponseWriter, r *http.Request) {
 	v := mux.Vars(r)
 	kind, name, namespace := v["kind"], v["name"], v["namespace"]
