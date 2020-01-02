@@ -133,7 +133,9 @@ func (a *App) AuthCallback(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Debugf("OIDC: auth name:%s, id:%s", profile["name"], profile["sub"])
-	log.Debugf("OIDC: reply %s", profile)
+	userinfo, err := a.Auth().Provider.UserInfo(context.TODO(), a.Auth().Config.TokenSource(context.TODO(), token))
+
+	log.Debugf("OIDC: reply %s %s", userinfo, err)
 	session.Values["profile"] = profile
 	a.onLogin(session.ID, profile)
 
