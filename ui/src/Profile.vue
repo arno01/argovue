@@ -48,11 +48,14 @@ export default {
     };
   },
   methods: {
+    copy(ar) {
+      return JSON.parse(JSON.stringify(ar || []))
+    },
     groups () {
-      return (this.$api.profile.groups || []).sort()
+      return this.copy(this.$api.profile.groups).sort()
     },
     effective_groups () {
-      return (this.$api.profile.effective_groups || []).sort()
+      return this.copy(this.$api.profile.effective_groups).sort()
     },
   }
 };
