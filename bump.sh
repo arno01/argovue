@@ -9,4 +9,3 @@ git commit helm/argovue/Chart.yaml -m "Bump chart version to v$NEWVER"
 make helm
 git commit docs -m "Bump chart release to v$NEWVER"
 git push
-git push origin v$NEWVER
