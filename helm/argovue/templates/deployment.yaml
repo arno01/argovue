@@ -21,12 +21,20 @@ spec:
       serviceAccountName: {{ include "argovue.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+{{- if .Values.volumes }}
+{{ toYaml .Values.volumes | indent 6 }}
+{{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+{{- if .Values.mounts }}
+{{ toYaml .Values.mounts | indent 8 }}
+{{- end }}
           env:
             - name: VERBOSE
               value: {{ .Values.argovue.verbose }}
