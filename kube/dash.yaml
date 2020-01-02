@@ -8,3 +8,4 @@ spec:
   image: jamhed/dash:0.1.1
   port: 8000
   privateVolumeSize: 1M
+  input: [env1, env2, env3]

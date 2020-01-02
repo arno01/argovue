@@ -92,6 +92,11 @@ func (in *ServiceSpec) DeepCopyInto(out *ServiceSpec) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
+	if in.Input != nil {
+		in, out := &in.Input, &out.Input
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 

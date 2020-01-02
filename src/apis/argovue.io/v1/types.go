@@ -18,6 +18,7 @@ type ServiceSpec struct {
 	SharedVolume      string   `json:"sharedVolume,omitempty"`
 	PrivateVolumeSize string   `json:"privateVolumeSize,omitempty"`
 	Args              []string `json:"args,omitempty"`
+	Input             []string `json:"input,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

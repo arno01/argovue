@@ -24,6 +24,10 @@ spec:
               type: string
             port:
               type: integer
+            input:
+              type: array
+              items:
+                type: string
             args:
               type: array
               items:
