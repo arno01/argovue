@@ -28,7 +28,7 @@ export default {
       this.es = undefined
     },
     setupStream() {
-      this.es = this.$api.sse("/events", (event) => this.$log("event:", event))
+      this.es = this.$api.sse("/events", (event) => { return event })
       this.es.onerror = (err) => {
         this.$log("events error:", err)
         this.$api.logout()
