@@ -13,11 +13,11 @@ spec:
       args: ["./argovue -verbose=debug"]
       env:
         - name: OIDC_CLIENT_ID
-          value: argovue
+          value: 0oa1vyuc2iJ6vXbCG357
         - name: OIDC_CLIENT_SECRET
-          value: ZXhhbXBsZS1hcHAtc2VjcmV0
+          value: sqjJVsAIENpFWEEKBEjMZcvMe_p9-ADNM74avSJV
         - name: OIDC_PROVIDER
-          value: http://localhost:8080/dex
+          value: https://dev-787547.okta.com
         - name: OIDC_REDIRECT_URL
           value: http://localhost:8080/callback
         - name: OIDC_SCOPES

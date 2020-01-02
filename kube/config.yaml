@@ -1,0 +1,8 @@
+apiVersion: argovue.io/v1
+kind: AppConfig
+metadata:
+  name: argovue
+spec:
+  groups:
+  - oidc: authors
+    kubernetes: authors

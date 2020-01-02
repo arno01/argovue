@@ -76,3 +76,19 @@ func Typecast(thing interface{}) (*v1.Service, error) {
 	}
 	return svc, nil
 }
+
+func TypecastConfig(thing interface{}) (*v1.AppConfig, error) {
+	if thing == nil {
+		return nil, fmt.Errorf("Service typecast nil input")
+	}
+	buf, err := json.Marshal(thing)
+	if err != nil {
+		return nil, err
+	}
+	cfg := new(v1.AppConfig)
+	err = json.Unmarshal(buf, cfg)
+	if err != nil {
+		return nil, err
+	}
+	return cfg, nil
+}

@@ -31,10 +31,9 @@ func (a *App) onLogout(sessionId string) {
 }
 
 func (a *App) onLogin(sessionId string, profile map[string]interface{}) {
-	groups := util.Li2s(profile["groups"])
 	wfBroker := a.newBroker(sessionId, "workflows")
 	catBroker := a.newBroker(sessionId, "catalogue")
-	if len(groups) > 0 {
+	if groups, ok := profile["effective_groups"].([]string); ok && len(groups) > 0 {
 		selector := fmt.Sprintf("oidc.argovue.io/group in (%s)", strings.Join(groups, ","))
 		wfBroker.AddCrd(crd.New("argoproj.io", "v1alpha1", "workflows").SetLabelSelector(selector))
 		catBroker.AddCrd(crd.New("argovue.io", "v1", "services").SetLabelSelector(selector))
@@ -140,6 +139,14 @@ func (a *App) AuthCallback(w http.ResponseWriter, r *http.Request) {
 			profile = claims
 		}
 	}
+	effGroups := []string{}
+	for _, group := range util.Li2s(profile["groups"]) {
+		if k8sGroup, ok := a.groups[group]; ok {
+			effGroups = append(effGroups, k8sGroup)
+		}
+	}
+	profile["effective_groups"] = effGroups
+	log.Debugf("OIDC: effective groups:%s", effGroups)
 
 	session.Values["profile"] = profile
 	a.onLogin(session.ID, profile)
