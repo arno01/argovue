@@ -16,22 +16,22 @@ ingress:
   annotations:
     certmanager.k8s.io/cluster-issuer: tpp-venafi-issuer
   hosts:
-  - argovue.prod.nv.ak8s.mckinsey.com
+  - ~
 
 argovue:
   verbose: debug
   oidcClientId: argovue
   oidcClientSecret: ZXhhbXBsZS1hcHAtc2VjcmV0
-  oidcProvider: http://argovue.prod.nv.ak8s.mckinsey.com/dex
-  oidcRedirectUrl: http://argovue.prod.nv.ak8s.mckinsey.com/callback
+  oidcProvider: ~
+  oidcRedirectUrl: ~
   oidcScope: groups
-  uiRootUrl: http://argovue.prod.nv.ak8s.mckinsey.com/ui/#/
+  uiRootUrl: ~
 
 dex:
   enabled: true
   logger:
     level: debug
-  issuer: http://argovue.prod.nv.ak8s.mckinsey.com/dex
+  issuer: ~
   connectors:
   - type: mockCallback
     id: mock
@@ -41,7 +41,7 @@ dex:
   staticClients:
   - id: argovue
     redirectURIs:
-    - http://argovue.prod.nv.ak8s.mckinsey.com/callback
+    - ~
     name: 'ArgoVue'
     secret: ZXhhbXBsZS1hcHAtc2VjcmV0
   enablePasswordDB: true
