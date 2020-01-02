@@ -13,6 +13,7 @@ import (
 
 	"github.com/coreos/go-oidc"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/oauth2"
 )
 
 func (a *App) onLogout(sessionId string) {
@@ -133,9 +134,13 @@ func (a *App) AuthCallback(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Debugf("OIDC: auth name:%s, id:%s", profile["name"], profile["sub"])
-	userinfo, err := a.Auth().Provider.UserInfo(context.TODO(), a.Auth().Config.TokenSource(context.TODO(), token))
+	if _, ok := profile["groups"]; !ok {
+		if claims, err := a.userInfo(token); err == nil {
+			log.Debugf("OIDC: user profile: %s", claims)
+			profile = claims
+		}
+	}
 
-	log.Debugf("OIDC: reply %s %s", userinfo, err)
 	session.Values["profile"] = profile
 	a.onLogin(session.ID, profile)
 
@@ -146,4 +151,19 @@ func (a *App) AuthCallback(w http.ResponseWriter, r *http.Request) {
 	// this is to set cookie for the api domain
 	redirect := `<html><head><script type="text/javascript">window.location.href="%s"</script></head><body></body></html>`
 	fmt.Fprintf(w, redirect, a.Args().UIRootURL())
+}
+
+func (a *App) userInfo(token *oauth2.Token) (map[string]interface{}, error) {
+	var claims map[string]interface{}
+	userinfo, err := a.Auth().Provider.UserInfo(context.TODO(), a.Auth().Config.TokenSource(context.TODO(), token))
+	if err != nil {
+		log.Errorf("Can't request user info, error:%s", err)
+		return nil, err
+	}
+	err = userinfo.Claims(&claims)
+	if err != nil {
+		log.Errorf("Can't decode claims, error:%s", err)
+		return nil, err
+	}
+	return claims, nil
 }

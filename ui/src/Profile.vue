@@ -2,14 +2,6 @@
   <b-container>
     <b-row class="pt-3 pb-2 mb-3 border-bottom"><b-col><h1 class="h2">profile</h1></b-col></b-row>
     <b-row>
-      <b-col cols=4>Issuing authority</b-col>
-      <b-col>{{$api.profile.iss}}</b-col>
-    </b-row>
-    <b-row>
-      <b-col cols=4>Audience</b-col>
-      <b-col>{{$api.profile.aud}}</b-col>
-    </b-row>
-    <b-row>
       <b-col cols=4>Subject</b-col>
       <b-col>{{$api.profile.sub}}</b-col>
     </b-row>
@@ -18,8 +10,16 @@
       <b-col>{{$api.profile.name}}</b-col>
     </b-row>
     <b-row>
+      <b-col cols=4>Preferred username</b-col>
+      <b-col>{{$api.profile.preferred_username}}</b-col>
+    </b-row>
+    <b-row>
       <b-col cols=4>Email</b-col>
       <b-col>{{$api.profile.email}}</b-col>
+    </b-row>
+    <b-row>
+      <b-col cols=4>Time Zone</b-col>
+      <b-col>{{$api.profile.zoneinfo}}</b-col>
     </b-row>
     <b-row>
       <b-col cols=4>Groups</b-col>

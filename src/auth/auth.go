@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"strings"
 
 	"github.com/coreos/go-oidc"
 	log "github.com/sirupsen/logrus"
@@ -26,7 +27,7 @@ func New(oidcProvider, oidcClientID, oidcClientSecret, oidcRedirectURL, oidcScop
 		return nil
 	}
 
-	scopes := []string{oidc.ScopeOpenID, "profile", "groups"} // append(strings.Split(oidcScopes, " "), "profile", oidc.ScopeOpenID)
+	scopes := append(strings.Split(oidcScopes, " "), "profile", oidc.ScopeOpenID)
 
 	conf := oauth2.Config{
 		ClientID:     oidcClientID,
