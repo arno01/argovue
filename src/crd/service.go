@@ -2,13 +2,13 @@ package crd
 
 import (
 	"fmt"
+	"strconv"
 
 	"argovue/kube"
 
 	argovuev1 "argovue/apis/argovue.io/v1"
 
 	wfv1alpha1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
-	"github.com/rs/xid"
 	log "github.com/sirupsen/logrus"
 	appsv1 "k8s.io/api/apps/v1"
 	apiv1 "k8s.io/api/core/v1"
@@ -138,7 +138,7 @@ func Deploy(s *argovuev1.Service, owner string, input []argovuev1.InputValue) er
 	if err != nil {
 		return err
 	}
-	instance := fmt.Sprintf("%s-%s", s.Name, xid.New().String())
+	instance := fmt.Sprintf("%s-%s", s.Name, getInstanceId(s))
 	baseUrl := fmt.Sprintf("/proxy/%s/%s/%d", s.Namespace, instance, 80)
 	log.Debugf("Kube: create service %s/%s owner:%s instance:%s args:%s", s.Namespace, s.Name, owner, instance, s.Spec.Args)
 	for i, arg := range s.Spec.Args {
@@ -239,4 +239,33 @@ func GetWorkflowFilebrowserNames(wf *wfv1alpha1.Workflow) (re []string) {
 		re = append(re, fmt.Sprintf("%s-%s", wf.GetName(), pvc.Name))
 	}
 	return
+}
+
+func getInstanceId(s *argovuev1.Service) string {
+	clientset, err := kube.GetV1Clientset()
+	if err != nil {
+		log.Errorf("Can't get clientset, error:%s", err)
+		return "0"
+	}
+	freshCopy, err := clientset.ArgovueV1().Services(s.Namespace).Get(s.Name, metav1.GetOptions{})
+	if err != nil {
+		log.Errorf("Can't get object, error:%s", err)
+		return "0"
+	}
+	id, ok := freshCopy.GetAnnotations()["instance.argovue.io/id"]
+	if !ok {
+		id = "1"
+	} else {
+		idI, err := strconv.Atoi(id)
+		if err != nil {
+			idI = 1
+		}
+		id = strconv.Itoa(idI + 1)
+	}
+	freshCopy.GetAnnotations()["instance.argovue.io/id"] = id
+	_, err = clientset.ArgovueV1().Services(s.Namespace).Update(freshCopy)
+	if err != nil {
+		log.Errorf("Can't update object, error:%s", err)
+	}
+	return id
 }
