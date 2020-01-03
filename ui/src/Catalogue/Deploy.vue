@@ -20,6 +20,9 @@ export default {
     }
   },
   methods: {
+    input () {
+      return this.object && this.object.spec && this.object.spec.input? this.object.spec.input : []
+    },
     onSubmit: async function(ev) {
       ev.preventDefault()
       let re = await this.$api.post2(`/catalogue/${this.namespace}/${this.name}/deploy`, serialize(this.data))

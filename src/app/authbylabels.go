@@ -42,8 +42,8 @@ func authorize(labels map[string]string, profile map[string]interface{}) bool {
 		return auth
 	}
 	if idLabel, ok := labels["oidc.argovue.io/id"]; ok {
-		if id, ok := profile["sub"]; ok {
-			auth = authorizeById(idLabel, util.I2s(id))
+		if id, ok := profile["effective_id"]; ok {
+			auth = authorizeById(idLabel, util.EncodeLabel(util.I2s(id)))
 			if auth {
 				log.Debugf("authorize by id:%s", id)
 			}
