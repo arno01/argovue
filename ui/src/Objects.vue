@@ -26,9 +26,13 @@
 import SSE from '@/SSE/Objects.vue'
 
 function hex2a(hex) {
-  var str = '';
-  for (var i = 0; i < hex.length; i += 2) str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-  return str;
+  var str = ''
+  if (hex && hex.length > 0) {
+    for (var i = 0; i < hex.length; i += 2) {
+      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16))
+    }
+  }
+  return str
 }
 
 export default {
