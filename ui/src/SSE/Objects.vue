@@ -57,6 +57,9 @@ export default {
     owner (obj) {
       return util.owner(obj)
     },
+    phase (obj) {
+      return util.phase(obj.status.phase)
+    },
     setupStream() {
       this.es = this.$api.sse(this.uri(), (event) => {
         var msg = JSON.parse(event.data)

@@ -4,16 +4,12 @@
     <b-col>
       <b-link :to="`/${kind}/${obj.metadata.namespace}/${obj.metadata.name}`">{{obj.metadata.namespace}}/{{ obj.metadata.name }}</b-link>
     </b-col>
-    <b-col cols=1>
-      <b-dropdown variant="link" text="Control" toggle-class="p-0">
+    <b-col md=auto class="text-right">{{ owner(obj) }}</b-col>
+    <b-col md=auto class="text-right">{{ formatTs(obj) }}</b-col>
+    <b-col md=auto>
+      <b-dropdown variant="link" toggle-class="p-0">
         <b-dropdown-item-button @click="del(obj.metadata.name)">Delete</b-dropdown-item-button>
       </b-dropdown>
-    </b-col>
-    <b-col cols=4 class="text-right">
-      {{ owner(obj) }}
-    </b-col>
-    <b-col cols=3 class="text-right">
-      {{ formatTs(obj) }}
     </b-col>
   </b-row>
 </b-container>

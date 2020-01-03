@@ -8,15 +8,9 @@
         <b-col>
           <b-link :to="`/${kind}/${obj.metadata.namespace}/${obj.metadata.name}`">{{obj.metadata.namespace}}/{{ obj.metadata.name }}</b-link>
         </b-col>
-        <b-col cols=3 class="text-right">
-          {{ owner(obj) }}
-        </b-col>
-        <b-col cols=2 v-if="obj.status" class="text-right">
-          {{ obj.status.phase }}
-        </b-col>
-        <b-col cols=3 class="text-right">
-          {{ formatTs(obj) }}
-        </b-col>
+        <b-col md="auto" class="text-right">{{ owner(obj) }}</b-col>
+        <b-col md="auto" v-if="obj.status" class="text-right">{{ phase(obj) }}</b-col>
+        <b-col md="auto" class="text-right">{{ formatTs(obj) }}</b-col>
       </b-row>
     </b-container>
   </div>

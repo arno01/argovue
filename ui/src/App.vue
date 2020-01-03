@@ -1,5 +1,5 @@
 <template>
-<div style="height: 100%">
+<div style="height: 100%" class="text-nowrap">
   <div v-if="$api.isAuth()">
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#/">ArgoVue</a>

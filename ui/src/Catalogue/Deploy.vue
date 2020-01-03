@@ -3,7 +3,7 @@
   <b-form-group v-for="input in input()" :key="input.name" :label="input.caption" :label-for="input.name">
     <b-form-input :id="input.name" v-model="data[input.name]" type="text" placeholder=""></b-form-input>
   </b-form-group>
-  <b-button type="submit" variant="primary">Deploy</b-button>
+  <b-button type="submit" size="sm" variant="primary">Deploy</b-button>
 </b-form>
 </template>
 

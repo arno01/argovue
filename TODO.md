@@ -1,10 +1,11 @@
 # TODO
 
+* Faster access to workflow data
 * Add resources tab per service
 * Allow to share resources to groups user belongs
-* Faster access to workflow data
 * Document the system with workflows
 * Add confirmation dialogs for workflow actions
+* Extend parent view for DAG if size is greater
 
 * Stream logs line by line with SSE, the same way as all objects
 * Better pod/service presentation (display significant fields on main page)

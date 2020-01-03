@@ -34,6 +34,22 @@ export default {
   deepCopy (thing) {
     return JSON.parse(JSON.stringify(thing))
   },
+  phase (phase) {
+    switch (phase) {
+      case "Running":
+        return "R"
+      case "Pending":
+        return "P"
+      case "Succeeded":
+        return "S"
+      case "Failed":
+        return "F"
+      case "Unknown":
+        return "U"
+      default:
+        return phase
+    }
+  },
   owner(obj) {
     if (obj && obj.metadata) {
       if (obj.metadata.labels['oidc.argovue.io/id']) {
