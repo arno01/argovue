@@ -1,7 +1,15 @@
 # TODO
 
-* Switch from sub to email, display/skip owned resources?
-* Add resources per service
+* Fix access denied messages (content)
+* Provide ownership in UI for started services
+* Allow to share resources to groups user belongs
+* Faster access to workflow data
+* Better instance names (by number, keep last one in annotation)
+* Document the system with workflows
+* Combine DAG retry node with pod nodes for DAG/Graph display
+* For graph display indicate start node (of type DAG) by shape color
+
+* Add resources tab per service
 * Stream logs line by line with SSE, the same way as all objects
 * Better pod/service presentation (display significant fields on main page)
 
@@ -20,6 +28,7 @@
 
 # DONE
 
+* Switch from sub to email, display/skip owned resources?
 * OIDC values remapping: e.g. OIDC groups and ID to more readable?
 * Add all deployment objects on service instance tab, with their statuses
 * UI configurator: make env variables accessible?
