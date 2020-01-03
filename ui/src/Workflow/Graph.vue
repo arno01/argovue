@@ -7,6 +7,9 @@ import Vis from 'vis-network'
 import util from '@/util.js'
 
 function color(node) {
+  if (node.type == "DAG") {
+    return "#8EFFAB"
+  }
   switch(node.phase) {
     case "Failed":
       return "#FB7E81"
@@ -17,10 +20,6 @@ function color(node) {
 
 function shape(node) {
   switch(node.type) {
-    case "Pod":
-      return "box"
-    case "DAG":
-      return "ellipse"
     default:
       return "box"
   }

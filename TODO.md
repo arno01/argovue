@@ -1,12 +1,11 @@
 # TODO
 
-* Fix access denied messages (content)
+* Add resources tab per service
 * Allow to share resources to groups user belongs
 * Faster access to workflow data
 * Document the system with workflows
-* For graph display indicate start node (of type DAG) by shape color
+* Add confirmation dialogs for workflow actions
 
-* Add resources tab per service
 * Stream logs line by line with SSE, the same way as all objects
 * Better pod/service presentation (display significant fields on main page)
 
@@ -25,6 +24,8 @@
 
 # DONE
 
+* For graph display indicate start node (of type DAG) by shape color
+* Fix access denied messages (content)
 * Provide ownership in UI for started services
 * Better instance names (by number, keep last one in annotation)
 * Combine DAG retry node with pod nodes for DAG/Graph display

@@ -27,10 +27,12 @@ func (a *App) proxyService(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Errorf("Proxy: no service %s/%s, access denied", namespace, name)
 			http.Error(w, "Access denied", http.StatusForbidden)
+			return
 		}
 		if !authHTTP(svc, a.Store(), r) {
 			log.Errorf("Proxy: %s/%s, no auth, access denied", namespace, name)
 			http.Error(w, "Access denied", http.StatusForbidden)
+			return
 		}
 	}
 

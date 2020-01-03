@@ -252,7 +252,11 @@ func getInstanceId(s *argovuev1.Service) string {
 		log.Errorf("Can't get object, error:%s", err)
 		return "0"
 	}
-	id, ok := freshCopy.GetAnnotations()["instance.argovue.io/id"]
+	ann := freshCopy.GetAnnotations()
+	if ann == nil {
+		ann = make(map[string]string)
+	}
+	id, ok := ann["instance.argovue.io/id"]
 	if !ok {
 		id = "1"
 	} else {
@@ -262,7 +266,8 @@ func getInstanceId(s *argovuev1.Service) string {
 		}
 		id = strconv.Itoa(idI + 1)
 	}
-	freshCopy.GetAnnotations()["instance.argovue.io/id"] = id
+	ann["instance.argovue.io/id"] = id
+	freshCopy.SetAnnotations(ann)
 	_, err = clientset.ArgovueV1().Services(s.Namespace).Update(freshCopy)
 	if err != nil {
 		log.Errorf("Can't update object, error:%s", err)
