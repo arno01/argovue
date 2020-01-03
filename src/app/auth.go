@@ -38,8 +38,8 @@ func (a *App) onLogin(sessionId string, profile map[string]interface{}) {
 		wfBroker.AddCrd(crd.New("argoproj.io", "v1alpha1", "workflows").SetLabelSelector(selector))
 		catBroker.AddCrd(crd.New("argovue.io", "v1", "services").SetLabelSelector(selector))
 	}
-	if sub, ok := profile["sub"].(string); ok {
-		selector := fmt.Sprintf("oidc.argovue.io/id in (%s)", sub)
+	if userId, ok := profile["effective_id"]; ok {
+		selector := fmt.Sprintf("oidc.argovue.io/id in (%s)", userId)
 		wfBroker.AddCrd(crd.New("argoproj.io", "v1alpha1", "workflows").SetLabelSelector(selector))
 		catBroker.AddCrd(crd.New("argovue.io", "v1", "services").SetLabelSelector(selector))
 	}
@@ -69,8 +69,7 @@ func (a *App) Logout(w http.ResponseWriter, r *http.Request) {
 	delete(session.Values, "profile")
 	session.Options.MaxAge = -1
 	if err = session.Save(r, w); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		log.Errorf("Can't delete session, error:%s", err)
 	}
 	http.Redirect(w, r, a.Args().UIRootURL(), http.StatusFound)
 }
@@ -126,19 +125,27 @@ func (a *App) AuthCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var profile map[string]interface{}
-	if err := idToken.Claims(&profile); err != nil {
+	var idTokenClaims map[string]interface{}
+	if err := idToken.Claims(&idTokenClaims); err != nil {
+		log.Errorf("Can't decode id_token claims, error:%s", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	log.Debugf("OIDC: auth name:%s, id:%s", profile["name"], profile["sub"])
-	if _, ok := profile["groups"]; !ok {
-		if claims, err := a.userInfo(token); err == nil {
-			log.Debugf("OIDC: user profile: %s", claims)
-			profile = claims
+	log.Debugf("OIDC: id token claims: %s", idTokenClaims)
+	profile := idTokenClaims
+	log.Debugf("OIDC: auth name:%s", idTokenClaims["name"])
+	if _, ok := idTokenClaims["groups"]; !ok {
+		if userInfoclaims, err := a.userInfo(token); err == nil {
+			log.Debugf("OIDC: user info claims: %s", userInfoclaims)
+			profile = userInfoclaims
 		}
 	}
+
+	if email, ok := idTokenClaims["email"]; ok {
+		profile["email"] = email
+	}
+
 	effGroups := []string{}
 	for _, group := range util.Li2s(profile["groups"]) {
 		if k8sGroup, ok := a.groups[group]; ok {
@@ -147,6 +154,14 @@ func (a *App) AuthCallback(w http.ResponseWriter, r *http.Request) {
 	}
 	profile["effective_groups"] = effGroups
 	log.Debugf("OIDC: effective groups:%s", effGroups)
+
+	userIdKey := a.Args().OidcUserId()
+	if userId, ok := profile[userIdKey]; ok {
+		profile["effective_id"] = userId
+	} else {
+		profile["effective_id"] = profile["sub"]
+		log.Warnf("OIDC: can't find map effective user id by name:%s, using sub value:%s", userIdKey, profile["sub"])
+	}
 
 	session.Values["profile"] = profile
 	a.onLogin(session.ID, profile)

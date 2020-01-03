@@ -4,7 +4,6 @@ import (
 	"argovue/args"
 	"argovue/auth"
 	"argovue/crd"
-	"argovue/msg"
 	"encoding/gob"
 	"fmt"
 	"regexp"
@@ -64,44 +63,6 @@ func New() *App {
 		Watch()
 	go a.ListenForConfig()
 	return a
-}
-
-func (a *App) ListenForConfig() {
-	for {
-		select {
-		case msg, ok := <-a.config.Notifier():
-			if !ok {
-				log.Debugf("Config stop")
-				return
-			}
-			a.updateConfig(msg)
-		}
-	}
-}
-
-func (a *App) updateConfig(msg *msg.Msg) {
-	a.groups = make(map[string]string)
-	switch msg.Action {
-	case "update":
-		cfg, err := crd.TypecastConfig(msg.Content)
-		if err != nil {
-			return
-		}
-		for _, i := range cfg.Spec.Groups {
-			a.groups[i.Oidc] = i.Kubernetes
-		}
-	case "add":
-		cfg, err := crd.TypecastConfig(msg.Content)
-		if err != nil {
-			return
-		}
-		a.groups = make(map[string]string)
-		for _, i := range cfg.Spec.Groups {
-			a.groups[i.Oidc] = i.Kubernetes
-		}
-	default:
-	}
-	log.Debugf("App: configured groups %s", a.groups)
 }
 
 var bypassAuth []*regexp.Regexp = []*regexp.Regexp{

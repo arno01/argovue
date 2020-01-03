@@ -1,5 +1,6 @@
 # TODO
 
+* Switch from sub to email, display/skip owned resources?
 * Add resources per service
 * Stream logs line by line with SSE, the same way as all objects
 * Better pod/service presentation (display significant fields on main page)

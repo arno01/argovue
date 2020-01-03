@@ -21,6 +21,7 @@ type Args struct {
 	oidcClientSecret string
 	oidcRedirectURL  string
 	oidcScopes       string
+	oidcUserId       string
 	uiRootURL        string
 	uiRootDomain     string
 	k8sNamespace     string
@@ -51,6 +52,7 @@ func (a *Args) Parse() *Args {
 	flag.StringVar(&a.oidcClientSecret, "oidc-client-secret", os.Getenv("OIDC_CLIENT_SECRET"), "OIDC client secret")
 	flag.StringVar(&a.oidcRedirectURL, "oidc-redirect-url", os.Getenv("OIDC_REDIRECT_URL"), "OIDC redirect url")
 	flag.StringVar(&a.oidcScopes, "oidc-scopes", getEnvOrDefault("OIDC_SCOPES", "groups"), "OIDC scopes")
+	flag.StringVar(&a.oidcUserId, "oidc-user-id", getEnvOrDefault("OIDC_USER_ID", "preferred_username"), "OIDC user id field")
 	flag.StringVar(&a.uiRootURL, "ui-root-url", getEnvOrDefault("UI_ROOT_URL", "http://localhost:8080/ui/#/"), "UI root url for redirects")
 	flag.StringVar(&a.k8sNamespace, "k8s-namespace", getEnvOrDefault("K8S_NAMESPACE", "default"), "Kubernetes objects namespace")
 	flag.StringVar(&a.dexServiceName, "dex-service-name", getEnvOrDefault("DEX_SERVICE_NAME", "dex"), "Dex service name")
@@ -92,9 +94,12 @@ func (a *Args) SessionKey() string {
 	return a.sessionKey
 }
 
-// OIDC returns OIDC parameters
 func (a *Args) OIDC() (string, string, string, string, string) {
 	return a.oidcProvider, a.oidcClientID, a.oidcClientSecret, a.oidcRedirectURL, a.oidcScopes
+}
+
+func (a *Args) OidcUserId() string {
+	return a.oidcUserId
 }
 
 // Namespace returns the namespace to keep our config objects

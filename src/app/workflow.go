@@ -3,6 +3,7 @@ package app
 import (
 	"argovue/crd"
 	"argovue/kube"
+	u "argovue/util"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -170,7 +171,7 @@ func (a *App) commandWorkflow(w http.ResponseWriter, r *http.Request) {
 		err = util.TerminateWorkflow(wfClient, name)
 	case "mount":
 		profile := session.Values["profile"].(map[string]interface{})
-		err = crd.DeployFilebrowser(wf, profile["sub"].(string))
+		err = crd.DeployFilebrowser(wf, u.I2s(profile["effective_id"]))
 	default:
 		err = fmt.Errorf("unrecognized command %s", action)
 	}
