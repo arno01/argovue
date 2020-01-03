@@ -9,7 +9,7 @@
           <b-link :to="`/${kind}/${obj.metadata.namespace}/${obj.metadata.name}`">{{obj.metadata.namespace}}/{{ obj.metadata.name }}</b-link>
         </b-col>
         <b-col cols=2 v-if="isGroup(obj)" class="text-right">
-          {{ obj.metadata.labels['oidc.argovue.io/group'] }}
+          {{ owner(obj) }}
         </b-col>
         <b-col cols=2 v-if="obj.status" class="text-right">
           {{ obj.status.phase }}
@@ -33,6 +33,11 @@ export default {
     }
   },
   methods: {
+    owner(obj) {
+      if (obj.metadata) {
+        return obj.metadata.labels['oidc.argovue.io/id'] || obj.metadata.labels['oidc.argovue.io/group'] || "unknown"
+      }
+    },
     isGroup (obj) {
       return obj.metadata && obj.metadata.labels && obj.metadata.labels['oidc.argovue.io/group']
     }
