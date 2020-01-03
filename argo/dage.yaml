@@ -17,7 +17,7 @@ spec:
   templates:
   - name: alpine
     retryStrategy:
-      limit: 1
+      limit: 2
     inputs:
       parameters:
       - name: script

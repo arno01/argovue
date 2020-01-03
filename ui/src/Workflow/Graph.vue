@@ -4,6 +4,7 @@
 
 <script>
 import Vis from 'vis-network'
+import util from '@/util.js'
 
 function color(node) {
   switch(node.phase) {
@@ -42,7 +43,7 @@ export default {
   },
   methods: {
     update () {
-      let wfNodes = this.content.status.nodes
+      let wfNodes = util.removeRetryNodes(util.deepCopy(this.content.status.nodes))
       this.nodes = new Vis.DataSet([])
       this.edges = new Vis.DataSet([])
       Object.values(wfNodes).forEach( (node) => {

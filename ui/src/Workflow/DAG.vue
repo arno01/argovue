@@ -9,34 +9,10 @@
 import Dagre from 'dagre'
 import Edge from '@/Workflow/DAG/Edge'
 import Node from '@/Workflow/DAG/Node'
+import util from '@/util.js'
 
 const W = 152
 const H = 42
-
-function removeRetryNodes(nodes) {
-  var toReplace = {}
-  var toRemove = {}
-  Object.values(nodes).forEach( (node) => {
-    if (node.type == 'Retry' && node.children && node.children.length > 0) {
-      var last = node.children.length-1
-      toRemove[node.id] = true
-      node.children.forEach( (nodeId, i) => i != last? toRemove[nodeId] = true : '')
-      toReplace[node.id] = node.children[last]
-    }
-  })
-  var re = {}
-  Object.values(nodes).forEach( (node) => {
-    if (!toRemove[node.id]) {
-      if (node.children) {
-        var children = node.children.
-          map( (nodeId) => toReplace[nodeId]? toReplace[nodeId] : nodeId )
-        node.children = children
-      }
-      re[node.id] = node
-    }
-  })
-  return re
-}
 
 export default {
   props: ['content', 'namespace', 'name'],
@@ -60,7 +36,7 @@ export default {
   },
   methods: {
     update () {
-      let wfNodes = removeRetryNodes(JSON.parse(JSON.stringify(this.content.status.nodes)))
+      let wfNodes = util.removeRetryNodes(util.deepCopy(this.content.status.nodes))
       this.graph.setGraph({})
       this.graph.setDefaultEdgeLabel(() => ({}))
       Object.values(wfNodes).forEach(
