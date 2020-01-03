@@ -1,5 +1,6 @@
 <script>
 import moment from 'moment'
+import util from '@/util.js'
 
 function objKey(obj) {
   return obj.metadata.creationTimestamp
@@ -52,6 +53,9 @@ export default {
     },
     formatTs(obj) {
       return moment(obj.metadata.creationTimestamp).format("YYYY-MM-DD HH:mm:ss")
+    },
+    owner (obj) {
+      return util.owner(obj)
     },
     setupStream() {
       this.es = this.$api.sse(this.uri(), (event) => {

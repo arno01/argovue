@@ -1,10 +1,8 @@
 # TODO
 
 * Fix access denied messages (content)
-* Provide ownership in UI for started services
 * Allow to share resources to groups user belongs
 * Faster access to workflow data
-* Better instance names (by number, keep last one in annotation)
 * Document the system with workflows
 * For graph display indicate start node (of type DAG) by shape color
 
@@ -27,6 +25,8 @@
 
 # DONE
 
+* Provide ownership in UI for started services
+* Better instance names (by number, keep last one in annotation)
 * Combine DAG retry node with pod nodes for DAG/Graph display
 * Switch from sub to email, display/skip owned resources?
 * OIDC values remapping: e.g. OIDC groups and ID to more readable?

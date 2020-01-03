@@ -6,7 +6,10 @@
           {{ obj.kind.toLowerCase() }}/{{ obj.metadata.namespace }}/{{ obj.metadata.name }}
         </b-link>
       </b-col>
-      <b-col cols=2 v-if="obj.status" class="text-right">
+      <b-col cols=4 class="text-right">
+        {{ owner(obj) }}
+      </b-col>
+      <b-col cols=1 v-if="obj.status" class="text-right">
         {{ obj.status.phase }}
       </b-col>
       <b-col cols=3 class="text-right">

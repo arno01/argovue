@@ -23,15 +23,7 @@
 </template>
 
 <script>
-import SSE from '@/SSE/Objects.vue'
-
-function hex2a(hex) {
-  var str = ''
-  for (var i = 0; i < hex.length; i += 2) {
-    str += String.fromCharCode(parseInt(hex.substr(i, 2), 16))
-  }
-  return str
-}
+import SSE from '@/SSE/Objects'
 
 export default {
   props: ["kind"],
@@ -41,21 +33,6 @@ export default {
     }
   },
   methods: {
-    owner(obj) {
-      this.$log("labels", obj.metadata.labels)
-      if (obj.metadata) {
-        if (obj.metadata.labels['oidc.argovue.io/id']) {
-          return hex2a(obj.metadata.labels['oidc.argovue.io/id'])
-        } else if (obj.metadata.labels['oidc.argovue.io/group']) {
-          return obj.metadata.labels['oidc.argovue.io/group']
-        } else {
-          return "unknown"
-        }
-      }
-    },
-    isGroup (obj) {
-      return obj.metadata && obj.metadata.labels && obj.metadata.labels['oidc.argovue.io/group']
-    }
   },
 };
 </script>

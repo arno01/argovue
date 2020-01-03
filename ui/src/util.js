@@ -1,3 +1,11 @@
+function hex2a(hex) {
+  var str = ''
+  for (var i = 0; i < hex.length; i += 2) {
+    str += String.fromCharCode(parseInt(hex.substr(i, 2), 16))
+  }
+  return str
+}
+
 export default {
   removeRetryNodes (nodes) {
   var toReplace = {}
@@ -25,5 +33,18 @@ export default {
   },
   deepCopy (thing) {
     return JSON.parse(JSON.stringify(thing))
-  }
+  },
+  owner(obj) {
+    if (obj && obj.metadata) {
+      if (obj.metadata.labels['oidc.argovue.io/id']) {
+        return hex2a(obj.metadata.labels['oidc.argovue.io/id'])
+      } else if (obj.metadata.labels['oidc.argovue.io/group']) {
+        return obj.metadata.labels['oidc.argovue.io/group']
+      } else {
+        return "unknown"
+      }
+    } else {
+      return "undefined"
+    }
+  },
 }
