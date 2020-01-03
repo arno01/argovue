@@ -39,7 +39,9 @@ func (a *App) onLogin(sessionId string, profile map[string]interface{}) {
 		catBroker.AddCrd(crd.New("argovue.io", "v1", "services").SetLabelSelector(selector))
 	}
 	if userId, ok := profile["effective_id"]; ok {
-		selector := fmt.Sprintf("oidc.argovue.io/id in (%s)", userId)
+		label := util.EncodeLabel(util.I2s(userId))
+		log.Debugf("App: using user label:%s", label)
+		selector := fmt.Sprintf("oidc.argovue.io/id in (%s)", label)
 		wfBroker.AddCrd(crd.New("argoproj.io", "v1alpha1", "workflows").SetLabelSelector(selector))
 		catBroker.AddCrd(crd.New("argovue.io", "v1", "services").SetLabelSelector(selector))
 	}

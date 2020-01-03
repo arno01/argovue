@@ -25,6 +25,12 @@
 <script>
 import SSE from '@/SSE/Objects.vue'
 
+function hex2a(hex) {
+  var str = '';
+  for (var i = 0; i < hex.length; i += 2) str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+  return str;
+}
+
 export default {
   props: ["kind"],
   extends: SSE,
@@ -35,7 +41,7 @@ export default {
   methods: {
     owner(obj) {
       if (obj.metadata) {
-        return obj.metadata.labels['oidc.argovue.io/id'] || obj.metadata.labels['oidc.argovue.io/group'] || "unknown"
+        return hex2a(obj.metadata.labels['oidc.argovue.io/id']) || obj.metadata.labels['oidc.argovue.io/group'] || "unknown"
       }
     },
     isGroup (obj) {

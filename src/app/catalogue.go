@@ -121,7 +121,7 @@ func (a *App) commandCatalogue(w http.ResponseWriter, r *http.Request) {
 			log.Errorf("Can't unmarshal input:%s", r.Body)
 			break
 		}
-		err = crd.Deploy(svc, util.I2s(profile["effective_id"]), input)
+		err = crd.Deploy(svc, util.EncodeLabel(util.I2s(profile["effective_id"])), input)
 	}
 	if err != nil {
 		log.Errorf("Can't %s catalogue %s/%s, error:%s", action, namespace, name, err)

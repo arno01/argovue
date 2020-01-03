@@ -1,5 +1,11 @@
 package util
 
+import "encoding/hex"
+
+func EncodeLabel(label string) string {
+	return hex.EncodeToString([]byte(label))
+}
+
 func I2s(i interface{}) (re string) {
 	if i == nil {
 		return
