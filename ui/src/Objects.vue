@@ -8,7 +8,7 @@
         <b-col>
           <b-link :to="`/${kind}/${obj.metadata.namespace}/${obj.metadata.name}`">{{obj.metadata.namespace}}/{{ obj.metadata.name }}</b-link>
         </b-col>
-        <b-col cols=2 v-if="isGroup(obj)" class="text-right">
+        <b-col cols=3 class="text-right">
           {{ owner(obj) }}
         </b-col>
         <b-col cols=2 v-if="obj.status" class="text-right">
@@ -42,6 +42,7 @@ export default {
   },
   methods: {
     owner(obj) {
+      this.$log("labels", obj.metadata.labels)
       if (obj.metadata) {
         if (obj.metadata.labels['oidc.argovue.io/id']) {
           return hex2a(obj.metadata.labels['oidc.argovue.io/id'])

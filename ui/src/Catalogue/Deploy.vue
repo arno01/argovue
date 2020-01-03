@@ -1,6 +1,6 @@
 <template>
 <b-form @submit="onSubmit">
-  <b-form-group v-for="input in object.spec.input" :key="input.name" :label="input.caption" :label-for="input.name">
+  <b-form-group v-for="input in input()" :key="input.name" :label="input.caption" :label-for="input.name">
     <b-form-input :id="input.name" v-model="data[input.name]" type="text" placeholder=""></b-form-input>
   </b-form-group>
   <b-button type="submit" variant="primary">Deploy</b-button>
