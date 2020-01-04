@@ -1,6 +1,7 @@
 # TODO
 
 * Stream logs line by line with SSE, the same way as all objects
+* Multiple workflow volume mounts
 * Add confirmation dialogs for workflow actions
 * Allow to share resources to groups user belongs
 * Document the system with workflows

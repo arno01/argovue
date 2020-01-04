@@ -6,7 +6,7 @@
   <b-container>
     <b-row>
       <b-col cols=3>App</b-col>
-      <b-col>{{version.version}}</b-col>
+      <b-col md=auto>{{version.version}}</b-col>
       <b-col md=auto>{{version.builddate}}</b-col>
       <b-col md=auto>{{version.commit}}</b-col>
     </b-row>
