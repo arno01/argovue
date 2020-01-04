@@ -17,7 +17,7 @@
 * Ingress objects for services
 * Use helm operator to install services?
 * Add workflow templates and their actions?
-* Switch to redis (or any other distributed kv) to store sessions
+* Switch to redis (or any other distributed kv) to store sessions and add redundancy (replicas=2)
 * Fix dex proxy (service should be on even if oidc fails)
 
 # DONE
