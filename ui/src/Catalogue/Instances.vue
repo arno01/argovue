@@ -21,6 +21,8 @@ import SSE from '@/SSE/Objects.vue'
 export default {
   props: ['name', 'kind', 'namespace'],
   extends: SSE,
+  compnents: {
+  },
   data () {
     return {
     }

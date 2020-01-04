@@ -47,17 +47,21 @@ func (a *App) getSubsetBroker(sessionId, id string) *CrdBroker {
 }
 
 func (a *App) maybeNewSubsetBroker(sessionId string, crd *crd.Crd) *CrdBroker {
+	return a.maybeNewIdSubsetBroker(sessionId, crd.Id()).AddCrd(crd)
+}
+
+func (a *App) maybeNewIdSubsetBroker(sessionId string, id string) *CrdBroker {
 	m, ok := a.subset[sessionId]
 	if !ok {
 		m = make(map[string]*CrdBroker)
 		a.subset[sessionId] = m
 	}
-	cb, ok := m[crd.Id()]
+	cb, ok := m[id]
 	if ok {
 		return cb
 	}
-	cb = NewCrdBroker(crd.Id()).AddCrd(crd)
-	m[crd.Id()] = cb
+	cb = NewCrdBroker(id)
+	m[id] = cb
 	return cb
 }
 

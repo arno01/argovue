@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
 	"github.com/argoproj/argo/workflow/util"
 	log "github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -61,6 +62,29 @@ func (a *App) watchWorkflowPods(w http.ResponseWriter, r *http.Request) {
 	cb := a.maybeNewSubsetBroker(session.ID, crd)
 	a.watchBroker(cb, w, r)
 	log.Debugf("SSE: stop workflow/%s/%s/%s", namespace, name, pod)
+}
+
+func (a *App) watchWorkflowMounts(w http.ResponseWriter, r *http.Request) {
+	session, _ := a.Store().Get(r, "auth-session")
+	v := mux.Vars(r)
+	name, namespace := v["name"], v["namespace"]
+	log.Debugf("SSE: start workflow/%s/%s mounts", namespace, name)
+	if !a.authWorkflow(session.ID, name, namespace, w) {
+		return
+	}
+	wf, err := getWorkflow(name, namespace)
+	if err != nil {
+		log.Errorf("Can't get workflow, error:%s", err)
+		http.Error(w, "Can't get workflow", http.StatusInternalServerError)
+		return
+	}
+	id := fmt.Sprintf("%s-%s-mounts", namespace, name)
+	cb := a.maybeNewIdSubsetBroker(session.ID, id)
+	for _, pvc := range wf.Status.PersistentVolumeClaims {
+		cb.AddCrd(crd.WorkflowMounts(fmt.Sprintf("%s-%s", wf.GetName(), pvc.Name)))
+	}
+	a.watchBroker(cb, w, r)
+	log.Debugf("SSE: stop workflow/%s/%s mounts", namespace, name)
 }
 
 func (a *App) watchWorkflowServices(w http.ResponseWriter, r *http.Request) {
@@ -130,9 +154,8 @@ func (a *App) watchWorkflowPodLogs(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) commandWorkflow(w http.ResponseWriter, r *http.Request) {
-	name := mux.Vars(r)["name"]
-	namespace := mux.Vars(r)["namespace"]
-	action := mux.Vars(r)["action"]
+	v := mux.Vars(r)
+	name, namespace, action := v["name"], v["namespace"], v["action"]
 
 	session, _ := a.Store().Get(r, "auth-session")
 	if !a.authWorkflow(session.ID, name, namespace, w) {
@@ -152,6 +175,7 @@ func (a *App) commandWorkflow(w http.ResponseWriter, r *http.Request) {
 		sendError(w, action, err)
 		return
 	}
+
 	kubeClient, _ := kube.GetClient()
 	switch action {
 	case "retry":
@@ -181,4 +205,19 @@ func (a *App) commandWorkflow(w http.ResponseWriter, r *http.Request) {
 	} else {
 		json.NewEncoder(w).Encode(map[string]string{"status": "ok", "action": action, "message": ""})
 	}
+}
+
+func getWorkflow(name, namespace string) (*v1alpha1.Workflow, error) {
+	wfClientset, err := kube.GetWfClientset()
+	if err != nil {
+		log.Errorf("Can't get argo clientset, error:%s", err)
+		return nil, err
+	}
+	wfClient := kube.GetWfClient(wfClientset, namespace)
+	wf, err := wfClient.Get(name, metav1.GetOptions{})
+	if err != nil {
+		log.Errorf("Can't get workflow %s/%s, error:%s", namespace, name, err)
+		return nil, err
+	}
+	return wf, nil
 }

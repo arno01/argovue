@@ -10,6 +10,9 @@
           <b-tab title="Nodes">
             <nodes :content="object"></nodes>
           </b-tab>
+          <b-tab title="Mounts" lazy>
+            <mounts :name="name" :namespace="namespace"></mounts>
+          </b-tab>
           <b-tab title="Services" lazy>
             <services :name="name" :namespace="namespace"></services>
           </b-tab>
@@ -33,6 +36,7 @@ import SSE from '@/SSE/Object'
 import JsonEditor from '@/JsonEditor'
 import Nodes from '@/Workflow/Nodes'
 import Services from '@/Workflow/Services'
+import Mounts from '@/Workflow/Mounts'
 import Control from '@/Workflow/Control'
 import Graph from '@/Workflow/Graph'
 import DAG from '@/Workflow/DAG'
@@ -45,6 +49,7 @@ export default {
     nodes: Nodes,
     control: Control,
     services: Services,
+    mounts: Mounts,
     graph: Graph,
     dag: DAG,
   },

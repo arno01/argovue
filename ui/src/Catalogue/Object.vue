@@ -9,9 +9,6 @@
           <b-tab title="Deploy" active>
             <deploy :object="object" :name="name" :namespace="namespace"></deploy>
           </b-tab>
-          <b-tab title="Resources">
-            <resources :name="name" :namespace="namespace" :kind="kind"></resources>
-          </b-tab>
           <b-tab title="Instances">
             <instances :name="name" :namespace="namespace" :kind="kind"></instances>
           </b-tab>
@@ -29,7 +26,6 @@ import SSE from '@/SSE/Object'
 import JsonEditor from '@/JsonEditor'
 import Deploy from '@/Catalogue/Deploy'
 import Instances from '@/Catalogue/Instances'
-import Resources from '@/Catalogue/Resources'
 
 export default {
   props: ['namespace', 'name'],
@@ -38,7 +34,6 @@ export default {
     jsoneditor: JsonEditor,
     deploy: Deploy,
     instances: Instances,
-    resources: Resources,
   },
   data() {
     return {

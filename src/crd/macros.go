@@ -36,6 +36,11 @@ func WorkflowServices(wfName string) *Crd {
 		SetLabelSelector("workflows.argoproj.io/workflow=" + wfName)
 }
 
+func WorkflowMounts(wfServiceName string) *Crd {
+	return New("", "v1", "services").
+		SetLabelSelector("service.argovue.io/name=" + wfServiceName)
+}
+
 func Workflow(wfName string) *Crd {
 	return New("argoproj.io", "v1alpha1", "workflows").
 		SetFieldSelector("metadata.name=" + wfName)

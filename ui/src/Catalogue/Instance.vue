@@ -5,13 +5,16 @@
     </div>
     <div>
       <b-card no-body>
-        <b-tabs card>
-          <b-tab title="Proxy" lazy>
+        <b-tabs card lazy>
+          <b-tab title="Proxy">
             <a v-for="port in object.spec.ports" :key="port.port" target="_blank" :href="proxy_uri(port.port)">
               {{ instance }}:{{ port.port }}
             </a>
           </b-tab>
-          <b-tab title="Service" lazy>
+          <b-tab title="Resources">
+            <resources :name="name" :namespace="namespace" :kind="kind"></resources>
+          </b-tab>
+          <b-tab title="Service">
             <jsoneditor :content="object"></jsoneditor>
           </b-tab>
         </b-tabs>
@@ -23,12 +26,14 @@
 <script>
 import SSE from '@/SSE/Object'
 import JsonEditor from '@/JsonEditor'
+import Resources from '@/Catalogue/Instance/Resources'
 
 export default {
   props: ['namespace', 'name', 'instance'],
   extends: SSE,
   components: {
     jsoneditor: JsonEditor,
+    resources: Resources,
   },
   methods: {
     proxy_uri(port) {
