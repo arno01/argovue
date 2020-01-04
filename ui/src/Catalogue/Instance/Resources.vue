@@ -8,7 +8,7 @@
       </b-col>
       <b-col md="auto" class="text-right">{{ owner(obj) }}</b-col>
       <b-col md="auto" class="text-right" v-if="obj.status">{{ phase(obj) }}</b-col>
-      <b-col md="auto" class="text-right">{{ formatTs(obj) }}</b-col>
+      <b-col cols=2 class="text-right">{{ formatTs(obj) }}</b-col>
     </b-row>
   </b-container>
 </template>

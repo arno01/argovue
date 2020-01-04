@@ -5,7 +5,7 @@
         <b-link :to="`/catalogue/${namespace}/${name}/instance/${obj.metadata.name}`">{{ obj.metadata.name }}</b-link>
       </b-col>
       <b-col md="auto" class="text-right">{{ owner(obj) }}</b-col>
-      <b-col md="auto" class="text-right">{{ formatTs(obj) }}</b-col>
+      <b-col cols=2 class="text-right">{{ formatTs(obj) }}</b-col>
       <b-col md="auto">
         <b-dropdown variant="link" toggle-class="p-0">
           <b-dropdown-item-button @click="del(obj.metadata.name)">Delete</b-dropdown-item-button>

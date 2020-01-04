@@ -1,6 +1,5 @@
 # TODO
 
-* Faster access to workflow data
 * Add resources tab per service
 * Allow to share resources to groups user belongs
 * Document the system with workflows
@@ -25,6 +24,7 @@
 
 # DONE
 
+* Faster access to workflow data
 * For graph display indicate start node (of type DAG) by shape color
 * Fix access denied messages (content)
 * Provide ownership in UI for started services

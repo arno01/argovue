@@ -10,7 +10,7 @@
         </b-col>
         <b-col md="auto" class="text-right">{{ owner(obj) }}</b-col>
         <b-col md="auto" v-if="obj.status" class="text-right">{{ phase(obj) }}</b-col>
-        <b-col md="auto" class="text-right">{{ formatTs(obj) }}</b-col>
+        <b-col cols=2 class="text-right">{{ formatTs(obj) }}</b-col>
       </b-row>
     </b-container>
   </div>
