@@ -13,15 +13,15 @@
 # MAYBE
 
 * Delete brokers on zero connections after timeout
-* Better instance navigation (click to proxy)? Need ports
 * Ingress objects for services
-* Use helm operator to install services?
+* Use helm operator/cli to install services?
 * Add workflow templates and their actions?
 * Switch to redis (or any other distributed kv) to store sessions and add redundancy (replicas=2)
 * Fix dex proxy (service should be on even if oidc fails)
 
 # DONE
 
+* Better instance navigation (click to proxy)? Need ports
 * Stream logs line by line with SSE, the same way as all objects
 * Add version information to main page
 * Add resources tab per service
