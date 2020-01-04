@@ -1,6 +1,5 @@
 # TODO
 
-* Stream logs line by line with SSE, the same way as all objects
 * Multiple workflow volume mounts
 * Add confirmation dialogs for workflow actions
 * Allow to share resources to groups user belongs
@@ -23,6 +22,7 @@
 
 # DONE
 
+* Stream logs line by line with SSE, the same way as all objects
 * Add version information to main page
 * Add resources tab per service
 * Faster access to workflow data

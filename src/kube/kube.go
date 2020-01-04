@@ -39,7 +39,7 @@ func GetPodLogs(name, namespace, container string) (io.ReadCloser, error) {
 	if err != nil {
 		return nil, err
 	}
-	podLogOpts := corev1.PodLogOptions{Container: container, Follow: false}
+	podLogOpts := corev1.PodLogOptions{Container: container, Follow: true}
 	req := clientset.CoreV1().Pods(namespace).GetLogs(name, &podLogOpts)
 	return req.Stream()
 }

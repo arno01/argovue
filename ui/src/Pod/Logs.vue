@@ -1,5 +1,5 @@
 <template>
-<term :content="logs"></term>
+<term :lines="logs"></term>
 </template>
 
 <script>
@@ -12,12 +12,22 @@ export default {
   },
   data() {
     return {
-      logs: undefined
+      logs: [],
+      es: undefined,
     }
   },
   created: async function() {
-    let re = await this.$api.get(`/k8s/pod/${this.namespace}/${this.name}/container/${this.container}/logs`)
-    this.logs = re.data
-  }
+    this.es = this.$api.sse(`/k8s/pod/${this.namespace}/${this.name}/container/${this.container}/logs`,
+      (event) => {
+        this.logs.push(event.data)
+      }
+    )
+  },
+  destroyed () {
+    if (this.es) {
+      this.es.close()
+    }
+    this.es = undefined
+  },
 }
 </script>

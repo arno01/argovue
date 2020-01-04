@@ -2,7 +2,8 @@ package app
 
 import (
 	"argovue/kube"
-	"io"
+	"bufio"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -24,28 +25,34 @@ func (a *App) streamPodLogs(w http.ResponseWriter, r *http.Request, name, namesp
 	}
 
 	defer stream.Close()
-	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Transfer-Encoding", "identity")
+	w.Header().Set("Access-Control-Allow-Origin", a.Args().UIRootDomain())
 	w.Header().Set("Connection", "keep-alive")
 	w.WriteHeader(http.StatusOK)
 	flusher.Flush()
 
+	reader := bufio.NewReader(stream)
 	for {
-		n, err := io.CopyN(w, stream, 1024)
+		str, err := reader.ReadString('\n')
 		if err != nil {
-			log.Errorf("Log stream error:%s", err)
+			log.Errorf("Log stream read error:%s", err)
 			break
 		}
-		if n < 1024 {
+		_, err = w.Write([]byte(fmt.Sprintf("data: %s\n\n", str)))
+		if err != nil {
+			log.Errorf("Log stream write error:%s", err)
 			break
 		}
 		flusher.Flush()
 	}
+	<-w.(http.CloseNotifier).CloseNotify()
+	log.Debugf("Logs: close connection,")
 }
 
 func (a *App) streamLogs(w http.ResponseWriter, r *http.Request) {
 	v := mux.Vars(r)
-	namespace := v["namespace"]
-	pod := v["pod"]
-	container := v["container"]
+	namespace, pod, container := v["namespace"], v["pod"], v["container"]
 	a.streamPodLogs(w, r, pod, namespace, container)
 }
