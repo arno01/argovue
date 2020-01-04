@@ -23,7 +23,9 @@
 export default {
   data () {
     return {
-      version: {}
+      version: {
+        kubernetes: {}
+      }
     }
   },
   created: async function() {

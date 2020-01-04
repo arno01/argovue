@@ -1,6 +1,6 @@
 # TODO
 
-* Multiple workflow volume mounts
+* Multiple workflow volume mounts (atm name is unique and can be owned)
 * Add confirmation dialogs for workflow actions
 * Allow to share resources to groups user belongs
 * Document the system with workflows
