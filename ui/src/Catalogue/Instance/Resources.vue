@@ -17,7 +17,7 @@
 import SSE from '@/SSE/Objects.vue'
 
 export default {
-  props: ['name', 'kind', 'namespace'],
+  props: ['name', 'namespace', 'instance'],
   extends: SSE,
   data () {
     return {
@@ -25,7 +25,7 @@ export default {
   },
   methods: {
     uri() {
-      return `/catalogue/${this.namespace}/${this.name}/resources`
+      return `/catalogue/${this.namespace}/${this.name}/instance/${this.instance}/resources`
     },
   },
 }

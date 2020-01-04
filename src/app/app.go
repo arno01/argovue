@@ -144,6 +144,7 @@ func (a *App) Serve() {
 	r.HandleFunc("/catalogue/{namespace}/{name}/instances", a.watchCatalogueInstances)
 	r.HandleFunc("/catalogue/{namespace}/{name}/resources", a.watchCatalogueResources)
 	r.HandleFunc("/catalogue/{namespace}/{name}/instance/{instance}", a.watchCatalogueInstance)
+	r.HandleFunc("/catalogue/{namespace}/{name}/instance/{instance}/resources", a.watchCatalogueInstanceResources)
 	r.HandleFunc("/catalogue/{namespace}/{name}/{action}", a.commandCatalogue).Methods("POST", "OPTIONS")
 	r.HandleFunc("/catalogue/{namespace}/{name}/instance/{instance}/action/{action}", a.controlCatalogueInstance).Methods("POST", "OPTIONS")
 

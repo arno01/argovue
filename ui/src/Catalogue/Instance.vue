@@ -12,7 +12,7 @@
             </a>
           </b-tab>
           <b-tab title="Resources">
-            <resources :name="name" :namespace="namespace" :kind="kind"></resources>
+            <resources :name="name" :namespace="namespace" :instance="instance"></resources>
           </b-tab>
           <b-tab title="Service">
             <jsoneditor :content="object"></jsoneditor>
