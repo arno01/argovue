@@ -1,6 +1,5 @@
 # TODO
 
-* Multiple workflow volume mounts (atm name is unique and can be owned)
 * Add confirmation dialogs for workflow actions
 * Allow to share resources to groups user belongs
 * Document the system with workflows
@@ -21,6 +20,7 @@
 
 # DONE
 
+* Multiple workflow volume mounts (atm name is unique and can be owned)
 * Better instance navigation (click to proxy)? Need ports
 * Stream logs line by line with SSE, the same way as all objects
 * Add version information to main page
