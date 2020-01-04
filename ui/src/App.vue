@@ -12,7 +12,9 @@
     <b-container fluid>
       <b-row>
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-          <div class="sidebar-sticky"><objects /></div>
+          <div class="sidebar-sticky">
+            <objects />
+          </div>
         </nav>
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
           <router-view />

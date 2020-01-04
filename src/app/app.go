@@ -4,7 +4,9 @@ import (
 	"argovue/args"
 	"argovue/auth"
 	"argovue/crd"
+	"argovue/kube"
 	"encoding/gob"
+	"encoding/json"
 	"fmt"
 	"regexp"
 	"sync"
@@ -30,6 +32,7 @@ type App struct {
 	groups  map[string]string
 	subset  BrokerMap
 	events  chan *Event
+	ver     map[string]interface{}
 }
 
 // Args returns application argumnets
@@ -62,6 +65,19 @@ func New() *App {
 		SetFieldSelector("metadata.namespace=" + a.Args().Namespace()).
 		Watch()
 	go a.ListenForConfig()
+	a.ver = make(map[string]interface{})
+	return a
+}
+
+func (a *App) SetVersion(version, commit, builddate string) *App {
+	a.ver["version"] = version
+	a.ver["commit"] = commit
+	a.ver["builddate"] = builddate
+	if client, err := kube.GetClient(); err == nil {
+		if ver, err := client.ServerVersion(); err == nil {
+			a.ver["kubernetes"] = ver
+		}
+	}
 	return a
 }
 
@@ -117,6 +133,11 @@ func (a *App) authMiddleWare(next http.Handler) http.Handler {
 	})
 }
 
+func (a *App) version(w http.ResponseWriter, r *http.Request) {
+	obj, _ := json.Marshal(a.ver)
+	w.Write([]byte(obj))
+}
+
 // Serve ui and api endpoints
 func (a *App) Serve() {
 	a.wg.Add(1)
@@ -130,6 +151,7 @@ func (a *App) Serve() {
 	r.HandleFunc("/auth", a.AuthInitiate)
 	r.HandleFunc("/callback", a.AuthCallback)
 	r.HandleFunc("/profile", a.Profile)
+	r.HandleFunc("/version", a.version)
 	r.HandleFunc("/logout", a.Logout)
 	r.HandleFunc("/watch/{kind}", a.watchKind)
 

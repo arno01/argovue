@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"argovue/app"
+	"fmt"
 )
 
 var version = "devel"
@@ -11,5 +11,5 @@ var builddate string
 
 func main() {
 	fmt.Printf("Starting ArgoVue, version:%s, commit:%s, builddate:%s\n", version, commit, builddate)
-	app.New().Wait()
+	app.New().SetVersion(version, commit, builddate).Wait()
 }

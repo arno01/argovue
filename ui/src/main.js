@@ -8,6 +8,7 @@ import '@fortawesome/fontawesome-free/css/solid.css'
 
 
 import App from '@/App'
+import Version from '@/Version'
 import Front from '@/Front'
 import Objects from '@/Objects'
 import WorkflowObject from '@/Workflow/Object'
@@ -36,6 +37,7 @@ function routeProps({params}) {
 const router = new VueRouter({
   routes: [
     { path: '/', component: Front },
+    { path: '/version', component: Version },
     { path: '/profile', component: Profile },
     { path: '/watch/:kind', component: Objects, props: routeProps },
     { path: '/workflows/:namespace/:name', component: WorkflowObject, props: routeProps },

@@ -1,12 +1,11 @@
 # TODO
 
+* Stream logs line by line with SSE, the same way as all objects
+* Add confirmation dialogs for workflow actions
 * Allow to share resources to groups user belongs
 * Document the system with workflows
-* Add confirmation dialogs for workflow actions
 * Extend parent view for DAG if size is greater
 * Better pod/service presentation (display significant fields on main page)
-
-* Stream logs line by line with SSE, the same way as all objects
 
 * On connection break give it some time (10-15 seconds) before clean up
 * Better kube error/info handling on service create/delete (with rollback?)
@@ -23,6 +22,7 @@
 
 # DONE
 
+* Add version information to main page
 * Add resources tab per service
 * Faster access to workflow data
 * For graph display indicate start node (of type DAG) by shape color

@@ -1,6 +1,7 @@
 <template>
 <ul class="nav flex-column">
-  <b-nav-item v-for="obj in objects" v-bind:key="obj" :to="`/watch/${obj}`">{{obj}}</b-nav-item>
+  <b-nav-item v-for="obj in objects" :key="obj" :to="`/watch/${obj}`">{{obj}}</b-nav-item>
+  <b-nav-item :to="`/version`">version</b-nav-item>
 </ul>
 </template>
 
