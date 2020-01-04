@@ -211,9 +211,10 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, owner string) error {
 		svc := argovuev1.Service{
 			ObjectMeta: metav1.ObjectMeta{
 				Namespace: wf.GetNamespace(),
-				Name:      fmt.Sprintf("%s-%s", wf.GetName(), pvc.Name),
+				Name:      fmt.Sprintf("%s-%s-%s", wf.GetName(), pvc.Name, getFilebrowserInstanceId(wf)),
 				Labels: map[string]string{
 					"oidc.argovue.io/id":             owner,
+					"service.argovue.io/type":        "filebrowser",
 					"workflows.argoproj.io/workflow": wf.GetName(),
 				},
 			},
@@ -235,8 +236,20 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, owner string) error {
 }
 
 func GetWorkflowFilebrowserNames(wf *wfv1alpha1.Workflow) (re []string) {
-	for _, pvc := range wf.Status.PersistentVolumeClaims {
-		re = append(re, fmt.Sprintf("%s-%s", wf.GetName(), pvc.Name))
+	clientset, err := kube.GetV1Clientset()
+	if err != nil {
+		log.Errorf("Can't get clientset, error:%s", err)
+		return
+	}
+	iface := clientset.ArgovueV1().Services(wf.Namespace)
+
+	list, err := iface.List(metav1.ListOptions{
+		LabelSelector: fmt.Sprintf("workflows.argoproj.io/workflow=%s,service.argovue.io/type=%s", wf.Name, "filebrowser")})
+	if err != nil {
+		return
+	}
+	for _, svc := range list.Items {
+		re = append(re, svc.GetName())
 	}
 	return
 }
@@ -269,6 +282,41 @@ func getInstanceId(s *argovuev1.Service) string {
 	ann["instance.argovue.io/id"] = id
 	freshCopy.SetAnnotations(ann)
 	_, err = clientset.ArgovueV1().Services(s.Namespace).Update(freshCopy)
+	if err != nil {
+		log.Errorf("Can't update object, error:%s", err)
+	}
+	return id
+}
+
+func getFilebrowserInstanceId(wf *wfv1alpha1.Workflow) string {
+	clientset, err := kube.GetWfClientset()
+	if err != nil {
+		log.Errorf("Can't get clientset, error:%s", err)
+		return "0"
+	}
+	iface := clientset.ArgoprojV1alpha1().Workflows(wf.Namespace)
+	freshCopy, err := iface.Get(wf.Name, metav1.GetOptions{})
+	if err != nil {
+		log.Errorf("Can't get object, error:%s", err)
+		return "0"
+	}
+	ann := freshCopy.GetAnnotations()
+	if ann == nil {
+		ann = make(map[string]string)
+	}
+	id, ok := ann["instance.argovue.io/id"]
+	if !ok {
+		id = "1"
+	} else {
+		idI, err := strconv.Atoi(id)
+		if err != nil {
+			idI = 1
+		}
+		id = strconv.Itoa(idI + 1)
+	}
+	ann["instance.argovue.io/id"] = id
+	freshCopy.SetAnnotations(ann)
+	_, err = iface.Update(freshCopy)
 	if err != nil {
 		log.Errorf("Can't update object, error:%s", err)
 	}

@@ -80,8 +80,8 @@ func (a *App) watchWorkflowMounts(w http.ResponseWriter, r *http.Request) {
 	}
 	id := fmt.Sprintf("%s-%s-mounts", namespace, name)
 	cb := a.maybeNewIdSubsetBroker(session.ID, id)
-	for _, pvc := range wf.Status.PersistentVolumeClaims {
-		cb.AddCrd(crd.WorkflowMounts(fmt.Sprintf("%s-%s", wf.GetName(), pvc.Name)))
+	for _, svc := range crd.GetWorkflowFilebrowserNames(wf) {
+		cb.AddCrd(crd.WorkflowMounts(svc))
 	}
 	a.watchBroker(cb, w, r)
 	log.Debugf("SSE: stop workflow/%s/%s mounts", namespace, name)
