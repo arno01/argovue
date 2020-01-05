@@ -38,7 +38,11 @@ export default {
         variant: re.data.status == 'ok'? 'info' : 'danger'
     })},
     action: async function(action) {
-      this._action(`/workflow/${this.namespace}/${this.name}/action/${action}`)
+      this.$bvModal.msgBoxConfirm(`Please confirm workflow action ${action}:`, { buttonSize: "sm" }).then(value => {
+          if (value) {
+            this._action(`/workflow/${this.namespace}/${this.name}/action/${action}`)
+          }
+        })
     },
     cantRetry () {
       return ! (this.status('Failed') || this.status('Error'))
