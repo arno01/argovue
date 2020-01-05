@@ -16,7 +16,7 @@ Provide per project (namespace) UI to run and manage argo workflows and expose p
 Make workflow visible for group `authors`:
 
 ```sh
-kubectl -n label workflow/NAME oidc.argovue.io/group=authors
+kubectl -n $NAMESPACE label workflow/$NAME oidc.argovue.io/group=authors
 ```
 
 ## Architecture
@@ -36,4 +36,4 @@ Deploy Kubernetes objects to configure `argovue` from `kube` folder, and:
 skaffold dev --port-forward
 ```
 
-After successful deployment point your browser to `http://localhost:8080/ui`.
+After successful deployment point your browser to `http://localhost:8080/ui/`.
