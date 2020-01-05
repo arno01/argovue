@@ -1,6 +1,5 @@
 # TODO
 
-* Add confirmation dialogs for workflow actions
 * Allow to share resources to groups user belongs
 * Document the system with workflows
 * Extend parent view for DAG if size is greater
@@ -20,6 +19,7 @@
 
 # DONE
 
+* Add confirmation dialogs for workflow actions
 * List Service PVC as resources
 * Multiple workflow volume mounts (atm name is unique and can be owned)
 * Better instance navigation (click to proxy)? Need ports
