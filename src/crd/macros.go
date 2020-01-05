@@ -12,6 +12,8 @@ func GetByKind(kind, namespace, name string) (crd *Crd, err error) {
 	switch kind {
 	case "pod":
 		crd = New("", "v1", "pods")
+	case "pvc":
+		crd = New("", "v1", "persistentvolumeclaims")
 	case "service":
 		crd = New("", "v1", "services")
 	case "workflow":
@@ -61,8 +63,13 @@ func CatalogueResources(name string) *Crd {
 		SetLabelSelector("service.argovue.io/name=" + name)
 }
 
-func CatalogueInstanceResources(name string) *Crd {
+func CatalogueInstancePods(name string) *Crd {
 	return New("", "v1", "pods").
+		SetLabelSelector("service.argovue.io/instance=" + name)
+}
+
+func CatalogueInstancePvcs(name string) *Crd {
+	return New("", "v1", "persistentvolumeclaims").
 		SetLabelSelector("service.argovue.io/instance=" + name)
 }
 

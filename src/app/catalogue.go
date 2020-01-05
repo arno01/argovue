@@ -4,6 +4,7 @@ import (
 	"argovue/crd"
 	"argovue/util"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	argovuev1 "argovue/apis/argovue.io/v1"
@@ -90,8 +91,10 @@ func (a *App) watchCatalogueInstanceResources(w http.ResponseWriter, r *http.Req
 	if !a.checkServiceExists(session.ID, name, namespace, w) {
 		return
 	}
-	crd := crd.CatalogueInstanceResources(instance)
-	cb := a.maybeNewSubsetBroker(session.ID, crd)
+	id := fmt.Sprintf("%s-%s-%s-resources", namespace, name, instance)
+	cb := a.maybeNewIdSubsetBroker(session.ID, id)
+	cb.AddCrd(crd.CatalogueInstancePods(instance))
+	cb.AddCrd(crd.CatalogueInstancePvcs(instance))
 	a.watchBroker(cb, w, r)
 	log.Debugf("SSE: stop catalogue/%s/%s/%s resources", namespace, name, instance)
 }

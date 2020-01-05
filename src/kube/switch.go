@@ -16,6 +16,8 @@ func GetByKind(kind, name, namespace string) (metav1.Object, error) {
 		return GetService(name, namespace)
 	case "pod":
 		return GetPod(name, namespace)
+	case "pvc":
+		return GetPvc(name, namespace)
 	case "deployment":
 		return GetDeployment(name, namespace)
 	case "workflow":
@@ -57,6 +59,14 @@ func GetPod(name, namespace string) (*corev1.Pod, error) {
 		return nil, err
 	}
 	return clientset.CoreV1().Pods(namespace).Get(name, metav1.GetOptions{})
+}
+
+func GetPvc(name, namespace string) (*corev1.PersistentVolumeClaim, error) {
+	clientset, err := GetClient()
+	if err != nil {
+		return nil, err
+	}
+	return clientset.CoreV1().PersistentVolumeClaims(namespace).Get(name, metav1.GetOptions{})
 }
 
 func GetDeployment(name, namespace string) (*appsv1.Deployment, error) {

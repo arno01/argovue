@@ -20,6 +20,7 @@
 
 # DONE
 
+* List Service PVC as resources
 * Multiple workflow volume mounts (atm name is unique and can be owned)
 * Better instance navigation (click to proxy)? Need ports
 * Stream logs line by line with SSE, the same way as all objects
