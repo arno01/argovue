@@ -6,6 +6,9 @@ metadata:
     {{- include "filebrowser.labels" . | nindent 4 }}
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      {{- include "argovue.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
