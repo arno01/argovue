@@ -1,5 +1,5 @@
 <template>
-<b-row>
+<b-row class="hover">
   <b-col v-if="isPod()">
     <b-link :to="`/workflow/${namespace}/${name}/pod/${content.id}`">{{content.displayName}}</b-link>
   </b-col>

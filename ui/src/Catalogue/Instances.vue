@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <b-row v-for="obj in orderedCache" v-bind:key="obj.metadata.uid">
+    <b-row class="hover" v-for="obj in orderedCache" v-bind:key="obj.metadata.uid">
       <b-col>
         <b-link :to="`/catalogue/${namespace}/${name}/instance/${obj.metadata.name}`">{{ obj.metadata.name }}</b-link>
       </b-col>

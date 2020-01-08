@@ -1,6 +1,6 @@
 <template>
 <b-container fluid>
-  <b-row v-for="obj in orderedCache" v-bind:key="obj.metadata.uid">
+  <b-row class="hover" v-for="obj in orderedCache" v-bind:key="obj.metadata.uid">
     <b-col>
       <b-link :to="`/${kind}/${obj.metadata.namespace}/${obj.metadata.name}`">{{obj.metadata.namespace}}/{{ obj.metadata.name }}</b-link>
     </b-col>

@@ -1,6 +1,6 @@
 <template>
   <b-container>
-    <b-row v-for="obj in orderedCache" v-bind:key="obj.metadata.uid">
+    <b-row class="hover" v-for="obj in orderedCache" v-bind:key="obj.metadata.uid">
       <b-col>
         <b-link :to="`/k8s/${obj.kind.toLowerCase()}/${obj.metadata.namespace}/${obj.metadata.name}`">
           {{ obj.kind.toLowerCase() }}/{{ obj.metadata.namespace }}/{{ obj.metadata.name }}

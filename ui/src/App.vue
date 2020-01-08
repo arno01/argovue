@@ -45,7 +45,11 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+.hover:hover {
+  background: #f0f0f0;
+}
+
 .feather {
   width: 16px;
   height: 16px;

@@ -1,6 +1,6 @@
 <template>
 <b-container fluid>
-  <b-row v-for="obj in orderedCache" v-bind:key="obj.metadata.uid">
+  <b-row class="hover" v-for="obj in orderedCache" v-bind:key="obj.metadata.uid">
     <b-col>
       <b-link v-for="port in obj.spec.ports" :key="port.port" target="_blank" :href="proxy_uri(obj, port.port)">
         {{ obj.metadata.name }}:{{ port.port }}
