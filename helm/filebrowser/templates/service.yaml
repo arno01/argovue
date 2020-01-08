@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "filebrowser.fullname" . }}
+  labels:
+    oidc.argovue.io/id: {{ .Values.argovue.owner }}
+    {{- include "filebrowser.labels" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "filebrowser.selectorLabels" . | nindent 4 }}

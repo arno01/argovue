@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "filebrowser.fullname" . }}
+  labels:
+    {{- include "filebrowser.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        oidc.argovue.io/id: {{ .Values.argovue.owner }}
+        {{- include "filebrowser.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: filebrowser/filebrowser
+        args: ["--noauth", "--root", "/mnt", "--baseurl", "{{ .Values.argovue.baseurl }}"]
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        volumeMounts:
+        {{- range $i, $volume := .Values.volumes }}
+        - mountPath: /mnt/{{ $volume }}
+          name: {{ $volume }}
+        {{- end }}
+      volumes:
+      {{- range $i, $volume := .Values.volumes }}
+      - name: {{ $volume }}
+        persistentVolumeClaum:
+          claimName: {{ $volume }}
+      {{- end }}
