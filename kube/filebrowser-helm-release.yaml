@@ -4,7 +4,7 @@ metadata:
   name: dash-1-filebrowser
   namespace: default
 spec:
-  releaseName: filebrowser
+  releaseName: dash-1-filebrowser
   chart:
     git: https://github.com/jamhed/argovue.git
     path: helm/filebrowser

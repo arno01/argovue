@@ -1,6 +1,9 @@
 package v1
 
-import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+import (
+	fluxv1 "github.com/fluxcd/helm-operator/pkg/apis/helm.fluxcd.io/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
 
 // +genclient
 
@@ -42,12 +45,7 @@ type GroupItem struct {
 }
 
 type ServiceSpec struct {
-	Image             string      `json:"image,omitempty"`
-	Port              int32       `json:"port,omitempty`
-	SharedVolume      string      `json:"sharedVolume,omitempty"`
-	PrivateVolumeSize string      `json:"privateVolumeSize,omitempty"`
-	Args              []string    `json:"args,omitempty"`
-	Input             []InputItem `json:"input,omitempty"`
+	HelmRelease fluxv1.HelmRelease `json:"helmRelease"`
 }
 
 type InputItem struct {
