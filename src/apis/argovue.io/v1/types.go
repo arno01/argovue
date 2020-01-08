@@ -45,7 +45,7 @@ type GroupItem struct {
 }
 
 type ServiceSpec struct {
-	HelmRelease fluxv1.HelmRelease `json:"helmRelease"`
+	HelmRelease fluxv1.HelmReleaseSpec `json:"helmRelease"`
 }
 
 type InputItem struct {
