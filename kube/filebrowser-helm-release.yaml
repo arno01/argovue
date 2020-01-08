@@ -1,0 +1,13 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: dash-1-filebrowser
+  namespace: default
+spec:
+  releaseName: filebrowser
+  chart:
+    git: https://github.com/jamhed/argovue.git
+    path: helm/filebrowser
+  values:
+    volumes: ["dash-1"]
+    baseurl: "/"

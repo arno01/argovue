@@ -28,6 +28,6 @@ spec:
       volumes:
       {{- range $i, $volume := .Values.volumes }}
       - name: {{ $volume }}
-        persistentVolumeClaum:
+        persistentVolumeClaim:
           claimName: {{ $volume }}
       {{- end }}
