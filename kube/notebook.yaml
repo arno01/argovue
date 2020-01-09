@@ -16,7 +16,6 @@ spec:
       git: https://github.com/jamhed/argovue.git
       path: helm/simple
     values:
-      image: jamhed/notebook:0.1.1
+      image: jamhed/notebook:0.1.2
       port: 8888
-      command: ["jupyter", "notebook", "--notebook-dir", "/mnt/private"]
       privateVolumeSize: 1M
