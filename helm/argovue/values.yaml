@@ -26,6 +26,9 @@ argovue:
   oidcRedirectUrl: ~
   oidcScope: groups
   uiRootUrl: ~
+  groups:
+  - oidc: authors
+    kubernetes: authors
 
 #volumes:
 #- name: ca-certificates

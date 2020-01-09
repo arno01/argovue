@@ -52,6 +52,8 @@ spec:
               value: {{ .Values.argovue.uiRootUrl }}
             - name: K8S_NAMESPACE
               value: {{ .Release.Namespace }}
+            - name: K8S_RELEASE_NAME
+              value: {{ include "argovue.fullname" . }}
             - name: DEX_SERVICE_NAME
               value: {{ include "argovue.fullname" . }}-dex
           ports:

@@ -2,8 +2,6 @@ apiVersion: argovue.io/v1
 kind: Service
 metadata:
   name: filebrowser
-  labels:
-    oidc.argovue.io/group: authors
 spec:
   input: []
   helmRelease:

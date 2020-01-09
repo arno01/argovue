@@ -1,8 +1,10 @@
 apiVersion: argovue.io/v1
 kind: AppConfig
 metadata:
-  name: argovue
+  name: {{ include "argovue.fullname" . }}
 spec:
   groups:
-  - oidc: authors
-    kubernetes: authors
+  {{- range .Values.argovue.groups }}
+  - oidc: {{ .oidc }}
+    kubernetes: {{ .kubernetes }}
+  {{- end }}
