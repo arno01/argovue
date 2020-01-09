@@ -63,9 +63,9 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, owner string) error {
 		return err
 	}
 	release := makeRelease(filebrowser, owner)
-	volumes := []string{}
+	volumes := []map[string]string{}
 	for _, pvc := range wf.Status.PersistentVolumeClaims {
-		volumes = append(volumes, pvc.PersistentVolumeClaim.ClaimName)
+		volumes = append(volumes, map[string]string{"name": pvc.Name, "claim": pvc.PersistentVolumeClaim.ClaimName})
 	}
 	release.ObjectMeta.Labels["workflows.argoproj.io/workflow"] = wf.Name
 	release.Spec.Values["volumes"] = volumes
