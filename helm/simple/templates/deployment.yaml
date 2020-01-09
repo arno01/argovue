@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "simple.fullname" . }}
+  name: {{ include "chart.fullname" . }}
   labels:
-    {{- include "simple.labels" . | nindent 4 }}
+    {{- include "chart.labels" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "simple.selectorLabels" . | nindent 6 }}
+      {{- include "chart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
         oidc.argovue.io/id: {{ .Values.argovue.owner }}
-        {{- include "simple.selectorLabels" . | nindent 8 }}
+        {{- include "chart.selectorLabels" . | nindent 8 }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
@@ -34,5 +34,5 @@ spec:
       {{- if .Values.privateVolumeSize }}
       - name: private
         persistentVolumeClaim:
-          claimName: {{ template "simple.fullname" . }}
+          claimName: {{ template "chart.fullname" . }}
       {{- end }}

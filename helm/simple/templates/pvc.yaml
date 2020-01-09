@@ -2,10 +2,10 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "simple.fullname" . }}
+  name: {{ template "chart.fullname" . }}
   labels:
     oidc.argovue.io/id: {{ .Values.argovue.owner }}
-    {{- include "simple.labels" . | nindent 4 }}
+    {{- include "chart.labels" . | nindent 4 }}
 spec:
   accessModes:
     - {{ .Values.accessMode | default "ReadWriteOnce" | quote }}

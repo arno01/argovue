@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "filebrowser.fullname" . }}
+  name: {{ include "chart.fullname" . }}
   labels:
     workflows.argoproj.io/workflow: {{ .Values.argovue.workflow }}
-    {{- include "filebrowser.labels" . | nindent 4 }}
+    {{- include "chart.labels" . | nindent 4 }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "filebrowser.selectorLabels" . | nindent 6 }}
+      {{- include "chart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
         oidc.argovue.io/id: {{ .Values.argovue.owner }}
         workflows.argoproj.io/workflow: {{ .Values.argovue.workflow }}
-        {{- include "filebrowser.selectorLabels" . | nindent 8 }}
+        {{- include "chart.selectorLabels" . | nindent 8 }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
-        image: filebrowser/filebrowser
+        image: chart/chart
         args: ["--noauth", "--root", "/mnt", "--baseurl", "{{ .Values.argovue.baseurl }}"]
         ports:
         - name: http

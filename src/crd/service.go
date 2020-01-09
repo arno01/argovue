@@ -30,8 +30,7 @@ func makeRelease(s *argovuev1.Service, owner string) *fluxv1.HelmRelease {
 		},
 		Spec: s.Spec.HelmRelease,
 	}
-	// rely helm naming schema: instance-chartname
-	baseUrl := fmt.Sprintf("/proxy/%s/%s/%d", s.Namespace, fmt.Sprintf("%s-%s", releaseName, s.Spec.ChartName), 80)
+	baseUrl := fmt.Sprintf("/proxy/%s/%s/%d", s.Namespace, releaseName, 80)
 	release.Spec.ReleaseName = releaseName
 	if release.Spec.Values == nil {
 		release.Spec.Values = make(map[string]interface{})
