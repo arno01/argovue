@@ -5,6 +5,7 @@ metadata:
   labels:
     oidc.argovue.io/group: authors
 spec:
+  input: []
   helmRelease:
     chart:
       git: https://github.com/jamhed/argovue.git

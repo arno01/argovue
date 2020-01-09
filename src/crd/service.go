@@ -44,7 +44,7 @@ func deployRelease(s *argovuev1.Service, release *fluxv1.HelmRelease, owner stri
 	if err != nil {
 		return err
 	}
-	_, err = clientset.HelmV1().HelmReleases(s.GetNamespace()).Create(release)
+	_, err = clientset.HelmV1().HelmReleases(release.GetNamespace()).Create(release)
 	return err
 }
 
