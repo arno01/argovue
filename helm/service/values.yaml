@@ -1,0 +1,5 @@
+image: ~
+port: ~
+argovue:
+  owner: owner
+  baseurl: baseurl

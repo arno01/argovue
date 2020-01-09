@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "simple.fullname" . }}
+  labels:
+    {{- include "simple.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "simple.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        oidc.argovue.io/id: {{ .Values.argovue.owner }}
+        {{- include "simple.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: {{ .Values.image }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.port }}
+          protocol: TCP
+        volumeMounts:
+        {{- range $i, $volume := .Values.volumes }}
+        - mountPath: /mnt/{{ $volume }}
+          name: {{ $volume }}
+        {{- end }}
+      volumes:
+      {{- range $i, $volume := .Values.volumes }}
+      - name: {{ $volume }}
+        persistentVolumeClaim:
+          claimName: {{ $volume }}
+      {{- end }}
