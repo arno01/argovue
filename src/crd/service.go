@@ -40,8 +40,14 @@ func Deploy(s *argovuev1.Service, owner string, input []argovuev1.InputValue) er
 	return err
 }
 
-func Delete(s *argovuev1.Service, instance string) error {
-	return nil
+func Delete(s *argovuev1.Service, name string) error {
+	clientset, err := kube.GetFluxV1Clientset()
+	if err != nil {
+		return err
+	}
+	deletePolicy := metav1.DeletePropagationForeground
+	opts := &metav1.DeleteOptions{PropagationPolicy: &deletePolicy}
+	return clientset.HelmV1().HelmReleases(s.GetNamespace()).Delete(name, opts)
 }
 
 func DeleteService(namespace, name string) error {

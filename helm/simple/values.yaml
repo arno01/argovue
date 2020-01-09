@@ -1,5 +1,6 @@
 image: ~
 port: ~
+privateVolumeSize: 1M
 argovue:
   owner: owner
   baseurl: baseurl

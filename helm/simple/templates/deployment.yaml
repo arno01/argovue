@@ -23,13 +23,13 @@ spec:
           containerPort: {{ .Values.port }}
           protocol: TCP
         volumeMounts:
-        {{- range $i, $volume := .Values.volumes }}
-        - mountPath: /mnt/{{ $volume }}
-          name: {{ $volume }}
+        {{- if .Values.privateVolumeSize }}
+        - mountPath: /mnt/private
+          name: private
         {{- end }}
       volumes:
-      {{- range $i, $volume := .Values.volumes }}
-      - name: {{ $volume }}
+      {{- if .Values.privateVolumeSize }}
+      - name: private
         persistentVolumeClaim:
-          claimName: {{ $volume }}
+          claimName: {{ template "simple.fullname" . }}
       {{- end }}

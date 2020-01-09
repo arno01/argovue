@@ -1,0 +1,22 @@
+{{- if .Values.privateVolumeSize }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "simple.fullname" . }}
+  labels:
+    oidc.argovue.io/id: {{ .Values.argovue.owner }}
+    {{- include "simple.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - {{ .Values.accessMode | default "RWO" | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.privateVolumeSize | quote }}
+{{- if .Values.storageClass }}
+{{- if (eq "-" .Values.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end }}
