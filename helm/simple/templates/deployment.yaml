@@ -19,7 +19,10 @@ spec:
       - name: {{ .Chart.Name }}
         image: {{ .Values.image }}
         {{- if .Values.command }}
-        command: {{ .Values.command }}
+        command:
+        {{- range $i, $cmd := .Values.command }}
+        - {{ $cmd }}
+        {{- end }}
         {{- end }}
         ports:
         - name: http
