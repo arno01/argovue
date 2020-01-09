@@ -28,7 +28,7 @@ spec:
           name: private
         {{- end }}
         env:
-        - name: BASEURL
+        - name: BASE_URL
           value: {{ .Values.argovue.baseurl }}
       volumes:
       {{- if .Values.privateVolumeSize }}
