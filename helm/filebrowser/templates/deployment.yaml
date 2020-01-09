@@ -14,6 +14,7 @@ spec:
     metadata:
       labels:
         oidc.argovue.io/id: {{ .Values.argovue.owner }}
+        workflows.argoproj.io/workflow: {{ .Values.argovue.workflow }}
         {{- include "filebrowser.selectorLabels" . | nindent 8 }}
     spec:
       containers:

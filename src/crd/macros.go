@@ -34,13 +34,13 @@ func WorkflowPods(wfName, pod string) *Crd {
 }
 
 func WorkflowServices(wfName string) *Crd {
-	return New("argovue.io", "v1", "services").
+	return New("helm.fluxcd.io", "v1", "helmreleases").
 		SetLabelSelector("workflows.argoproj.io/workflow=" + wfName)
 }
 
-func WorkflowMounts(wfServiceName string) *Crd {
+func WorkflowMounts(wfName string) *Crd {
 	return New("", "v1", "services").
-		SetLabelSelector("service.argovue.io/name=" + wfServiceName)
+		SetLabelSelector("workflows.argoproj.io/workflow=" + wfName)
 }
 
 func Workflow(wfName string) *Crd {

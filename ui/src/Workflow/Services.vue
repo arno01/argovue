@@ -2,7 +2,9 @@
 <b-container fluid>
   <b-row class="hover" v-for="obj in orderedCache" v-bind:key="obj.metadata.uid">
     <b-col>
-      <b-link :to="`/${kind}/${obj.metadata.namespace}/${obj.metadata.name}`">{{obj.metadata.namespace}}/{{ obj.metadata.name }}</b-link>
+      <b-link :to="`/${kind}/${obj.metadata.namespace}/${obj.metadata.labels['service.argovue.io/name']}/instance/${obj.metadata.name}`">
+        {{obj.metadata.namespace}}/{{ obj.metadata.name }}
+      </b-link>
     </b-col>
     <b-col md=auto class="text-right">{{ owner(obj) }}</b-col>
     <b-col cols=2 class="text-right">{{ formatTs(obj) }}</b-col>

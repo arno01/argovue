@@ -72,17 +72,9 @@ func (a *App) watchWorkflowMounts(w http.ResponseWriter, r *http.Request) {
 	if !a.authWorkflow(session.ID, name, namespace, w) {
 		return
 	}
-	wf, err := getWorkflow(name, namespace)
-	if err != nil {
-		log.Errorf("Can't get workflow, error:%s", err)
-		http.Error(w, "Can't get workflow", http.StatusInternalServerError)
-		return
-	}
 	id := fmt.Sprintf("%s-%s-mounts", namespace, name)
 	cb := a.maybeNewIdSubsetBroker(session.ID, id)
-	for _, svc := range crd.GetWorkflowFilebrowserNames(wf) {
-		cb.AddCrd(crd.WorkflowMounts(svc))
-	}
+	cb.AddCrd(crd.WorkflowMounts(name))
 	a.watchBroker(cb, w, r)
 	log.Debugf("SSE: stop workflow/%s/%s mounts", namespace, name)
 }

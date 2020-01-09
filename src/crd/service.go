@@ -18,7 +18,7 @@ func int32Ptr(i int32) *int32 { return &i }
 
 func makeRelease(s *argovuev1.Service, owner string) *fluxv1.HelmRelease {
 	releaseName := fmt.Sprintf("%s-%s", s.Name, getInstanceId(s))
-	return &fluxv1.HelmRelease{
+	release := &fluxv1.HelmRelease{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      releaseName,
 			Namespace: s.Namespace,
@@ -30,6 +30,14 @@ func makeRelease(s *argovuev1.Service, owner string) *fluxv1.HelmRelease {
 		},
 		Spec: s.Spec.HelmRelease,
 	}
+	// rely helm naming schema: instance-chartname
+	baseUrl := fmt.Sprintf("/proxy/%s/%s/%d", s.Namespace, fmt.Sprintf("%s-%s", releaseName, s.Spec.ChartName), 80)
+	release.Spec.ReleaseName = releaseName
+	if release.Spec.Values == nil {
+		release.Spec.Values = make(map[string]interface{})
+	}
+	release.Spec.Values["argovue"] = map[string]string{"owner": owner, "baseurl": baseUrl}
+	return release
 }
 
 func deployRelease(s *argovuev1.Service, release *fluxv1.HelmRelease, owner string) error {
@@ -37,11 +45,6 @@ func deployRelease(s *argovuev1.Service, release *fluxv1.HelmRelease, owner stri
 	if err != nil {
 		return err
 	}
-	releaseName := fmt.Sprintf("%s-%s", s.Name, getInstanceId(s))
-	// rely helm naming schema: instance-chartname
-	baseUrl := fmt.Sprintf("/proxy/%s/%s/%d", s.Namespace, fmt.Sprintf("%s-%s", releaseName, s.Spec.ChartName), 80)
-	release.Spec.ReleaseName = releaseName
-	release.Spec.Values["argovue"] = map[string]string{"owner": owner, "baseurl": baseUrl}
 	_, err = clientset.HelmV1().HelmReleases(s.GetNamespace()).Create(release)
 	return err
 }
@@ -63,8 +66,9 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, owner string) error {
 	release := makeRelease(filebrowser, owner)
 	volumes := []string{}
 	for _, pvc := range wf.Status.PersistentVolumeClaims {
-		volumes = append(volumes, pvc.Name)
+		volumes = append(volumes, pvc.PersistentVolumeClaim.ClaimName)
 	}
+	release.ObjectMeta.Labels["workflows.argoproj.io/workflow"] = wf.Name
 	release.Spec.Values["volumes"] = volumes
 	if av, ok := release.Spec.Values["argovue"].(map[string]string); ok {
 		av["workflow"] = wf.Name

@@ -25,7 +25,7 @@ func (a *App) proxyService(w http.ResponseWriter, r *http.Request) {
 	if name != a.Args().DexServiceName() {
 		svc, err := kube.GetService(name, namespace)
 		if err != nil {
-			log.Errorf("Proxy: no service %s/%s, access denied", namespace, name)
+			log.Errorf("Proxy: no service %s/%s, access denied, error:%s", namespace, name, err)
 			http.Error(w, "Access denied", http.StatusForbidden)
 			return
 		}
