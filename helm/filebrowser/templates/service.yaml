@@ -4,6 +4,7 @@ metadata:
   name: {{ include "filebrowser.fullname" . }}
   labels:
     oidc.argovue.io/id: {{ .Values.argovue.owner }}
+    workflows.argoproj.io/workflow: {{ .Values.argovue.workflow }}
     {{- include "filebrowser.labels" . | nindent 4 }}
 spec:
   type: ClusterIP

@@ -195,7 +195,7 @@ func (a *App) commandWorkflow(w http.ResponseWriter, r *http.Request) {
 		err = util.TerminateWorkflow(wfClient, name)
 	case "mount":
 		profile := session.Values["profile"].(map[string]interface{})
-		err = crd.DeployFilebrowser(wf, u.EncodeLabel(u.I2s(profile["effective_id"])))
+		err = crd.DeployFilebrowser(wf, a.Args().Namespace(), u.EncodeLabel(u.I2s(profile["effective_id"])))
 	default:
 		err = fmt.Errorf("unrecognized command %s", action)
 	}

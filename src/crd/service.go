@@ -16,13 +16,9 @@ import (
 
 func int32Ptr(i int32) *int32 { return &i }
 
-func Deploy(s *argovuev1.Service, owner string, input []argovuev1.InputValue) error {
-	clientset, err := kube.GetFluxV1Clientset()
-	if err != nil {
-		return err
-	}
+func makeRelease(s *argovuev1.Service, owner string) *fluxv1.HelmRelease {
 	releaseName := fmt.Sprintf("%s-%s", s.Name, getInstanceId(s))
-	release := &fluxv1.HelmRelease{
+	return &fluxv1.HelmRelease{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      releaseName,
 			Namespace: s.Namespace,
@@ -34,12 +30,46 @@ func Deploy(s *argovuev1.Service, owner string, input []argovuev1.InputValue) er
 		},
 		Spec: s.Spec.HelmRelease,
 	}
+}
+
+func deployRelease(s *argovuev1.Service, release *fluxv1.HelmRelease, owner string) error {
+	clientset, err := kube.GetFluxV1Clientset()
+	if err != nil {
+		return err
+	}
+	releaseName := fmt.Sprintf("%s-%s", s.Name, getInstanceId(s))
 	// rely helm naming schema: instance-chartname
 	baseUrl := fmt.Sprintf("/proxy/%s/%s/%d", s.Namespace, fmt.Sprintf("%s-%s", releaseName, s.Spec.ChartName), 80)
 	release.Spec.ReleaseName = releaseName
 	release.Spec.Values["argovue"] = map[string]string{"owner": owner, "baseurl": baseUrl}
 	_, err = clientset.HelmV1().HelmReleases(s.GetNamespace()).Create(release)
 	return err
+}
+
+func Deploy(s *argovuev1.Service, owner string, input []argovuev1.InputValue) error {
+	release := makeRelease(s, owner)
+	return deployRelease(s, release, owner)
+}
+
+func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, owner string) error {
+	clientset, err := kube.GetV1Clientset()
+	if err != nil {
+		return err
+	}
+	filebrowser, err := clientset.ArgovueV1().Services(namespace).Get("filebrowser", metav1.GetOptions{})
+	if err != nil {
+		return err
+	}
+	release := makeRelease(filebrowser, owner)
+	volumes := []string{}
+	for _, pvc := range wf.Status.PersistentVolumeClaims {
+		volumes = append(volumes, pvc.Name)
+	}
+	release.Spec.Values["volumes"] = volumes
+	if av, ok := release.Spec.Values["argovue"].(map[string]string); ok {
+		av["workflow"] = wf.Name
+	}
+	return deployRelease(filebrowser, release, owner)
 }
 
 func Delete(s *argovuev1.Service, name string) error {
@@ -62,10 +92,6 @@ func DeleteService(namespace, name string) error {
 	return clientset.ArgovueV1().Services(namespace).Delete(name, opts)
 }
 
-func DeployFilebrowser(wf *wfv1alpha1.Workflow, owner string) error {
-	return nil
-}
-
 func GetWorkflowFilebrowserNames(wf *wfv1alpha1.Workflow) (re []string) {
 	clientset, err := kube.GetV1Clientset()
 	if err != nil {
@@ -75,7 +101,7 @@ func GetWorkflowFilebrowserNames(wf *wfv1alpha1.Workflow) (re []string) {
 	iface := clientset.ArgovueV1().Services(wf.Namespace)
 
 	list, err := iface.List(metav1.ListOptions{
-		LabelSelector: fmt.Sprintf("workflows.argoproj.io/workflow=%s,service.argovue.io/type=%s", wf.Name, "filebrowser")})
+		LabelSelector: fmt.Sprintf("workflows.argoproj.io/workflow=%s,app.kubernetes.io/name=%s", wf.Name, "filebrowser")})
 	if err != nil {
 		return
 	}

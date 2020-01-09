@@ -1,4 +1,5 @@
-volumes: ["shared", "private"]
+volumes: []
 argovue:
-  owner: owner
-  baseurl: baseurl
+  workflow: ~
+  owner: ~
+  baseurl: ~

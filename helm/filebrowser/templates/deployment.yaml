@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "filebrowser.fullname" . }}
   labels:
+    workflows.argoproj.io/workflow: {{ .Values.argovue.workflow }}
     {{- include "filebrowser.labels" . | nindent 4 }}
 spec:
   replicas: 1
