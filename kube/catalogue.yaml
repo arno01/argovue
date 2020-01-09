@@ -20,24 +20,5 @@ spec:
         spec:
           type: object
           properties:
-            image:
-              type: string
-            port:
-              type: integer
-            input:
-              type: array
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                  title:
-                    type: string
-            args:
-              type: array
-              items:
-                type: string
-            sharedVolume:
-              type: string
-            privateVolumeSize:
-              type: string
+            helmRelease:
+              type: object

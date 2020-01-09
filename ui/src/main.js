@@ -16,6 +16,7 @@ import CatalogueObject from '@/Catalogue/Object'
 import CatalogueInstance from '@/Catalogue/Instance'
 import WorkflowPodObject from '@/Workflow/Pod/Object'
 import PodObject from '@/Pod/Object'
+import ServiceObject from '@/Service/Object'
 import PvcObject from '@/Pvc/Object'
 import Profile from '@/Profile'
 import API from '@/API'
@@ -44,6 +45,7 @@ const router = new VueRouter({
     { path: '/workflows/:namespace/:name', component: WorkflowObject, props: routeProps },
     { path: '/k8s/pod/:namespace/:name', component: PodObject, props: routeProps },
     { path: '/k8s/persistentvolumeclaim/:namespace/:name', component: PvcObject, props: routeProps },
+    { path: '/k8s/service/:namespace/:name', component: ServiceObject, props: routeProps },
     { path: '/workflow/:namespace/:name/pod/:pod', component: WorkflowPodObject, props: routeProps },
     { path: '/catalogue/:namespace/:name', component: CatalogueObject, props: routeProps },
     { path: '/catalogue/:namespace/:name/instance/:instance', component: CatalogueInstance, props: routeProps },

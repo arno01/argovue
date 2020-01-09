@@ -21,9 +21,10 @@ func Deploy(s *argovuev1.Service, owner string, input []argovuev1.InputValue) er
 	if err != nil {
 		return err
 	}
+	releaseName := fmt.Sprintf("%s-%s", s.Name, getInstanceId(s))
 	release := &fluxv1.HelmRelease{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      s.Name,
+			Name:      releaseName,
 			Namespace: s.Namespace,
 			Labels: map[string]string{
 				"service.argovue.io/name": s.Name,
@@ -33,7 +34,9 @@ func Deploy(s *argovuev1.Service, owner string, input []argovuev1.InputValue) er
 		},
 		Spec: s.Spec.HelmRelease,
 	}
-	_, err := clientset.HelmV1().HelmReleases(s.GetNamespace()).Create(release)
+	release.Spec.ReleaseName = releaseName
+	release.Spec.Values["argovue"] = map[string]string{"owner": owner}
+	_, err = clientset.HelmV1().HelmReleases(s.GetNamespace()).Create(release)
 	return err
 }
 

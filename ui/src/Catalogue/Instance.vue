@@ -6,15 +6,10 @@
     <div>
       <b-card no-body>
         <b-tabs card lazy>
-          <b-tab title="Proxy">
-            <a v-for="port in object.spec.ports" :key="port.port" target="_blank" :href="proxy_uri(port.port)">
-              {{ instance }}:{{ port.port }}
-            </a>
-          </b-tab>
           <b-tab title="Resources">
             <resources :name="name" :namespace="namespace" :instance="instance"></resources>
           </b-tab>
-          <b-tab title="Service">
+          <b-tab title="Release">
             <jsoneditor :content="object"></jsoneditor>
           </b-tab>
         </b-tabs>
@@ -36,9 +31,6 @@ export default {
     resources: Resources,
   },
   methods: {
-    proxy_uri(port) {
-      return this.$api.uri(`/proxy/${this.namespace}/${this.instance}/${port}`)
-    },
     uri() {
       return `/catalogue/${this.namespace}/${this.name}/instance/${this.instance}`
     },

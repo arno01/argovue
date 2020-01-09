@@ -4,8 +4,12 @@ metadata:
   name: filebrowser
   labels:
     oidc.argovue.io/group: authors
+    oidc.argovue.io/id: 726f6d616e5f67616c656576406d636b696e7365792e636f6d
 spec:
-  image: filebrowser/filebrowser:latest
-  args: ["--noauth", "--root", "/", "--baseurl", "BASE_URL"]
-  port: 80
-  privateVolumeSize: 1M
+  helmRelease:
+    chart:
+      git: https://github.com/jamhed/argovue.git
+      path: helm/filebrowser
+    values:
+      volumes: ["dash-1"]
+      baseurl: "/"

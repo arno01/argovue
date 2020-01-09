@@ -95,6 +95,7 @@ func (a *App) watchCatalogueInstanceResources(w http.ResponseWriter, r *http.Req
 	cb := a.maybeNewIdSubsetBroker(session.ID, id)
 	cb.AddCrd(crd.CatalogueInstancePods(instance))
 	cb.AddCrd(crd.CatalogueInstancePvcs(instance))
+	cb.AddCrd(crd.CatalogueInstanceServices(instance))
 	a.watchBroker(cb, w, r)
 	log.Debugf("SSE: stop catalogue/%s/%s/%s resources", namespace, name, instance)
 }

@@ -54,28 +54,34 @@ func Catalogue(name string) *Crd {
 }
 
 func CatalogueInstances(name string) *Crd {
-	return New("", "v1", "services").
+	return New("helm.fluxcd.io", "v1", "helmreleases").
 		SetLabelSelector("service.argovue.io/name=" + name)
 }
 
 func CatalogueResources(name string) *Crd {
 	return New("", "v1", "pods").
-		SetLabelSelector("service.argovue.io/name=" + name)
+		SetLabelSelector("app.kubernetes.io/name=" + name)
 }
 
 func CatalogueInstancePods(name string) *Crd {
 	return New("", "v1", "pods").
-		SetLabelSelector("service.argovue.io/instance=" + name)
+		SetLabelSelector("app.kubernetes.io/instance=" + name)
+}
+
+func CatalogueInstanceServices(name string) *Crd {
+	return New("", "v1", "services").
+		SetLabelSelector("app.kubernetes.io/instance=" + name)
 }
 
 func CatalogueInstancePvcs(name string) *Crd {
 	return New("", "v1", "persistentvolumeclaims").
-		SetLabelSelector("service.argovue.io/instance=" + name)
+		SetLabelSelector("app.kubernetes.io/instance=" + name)
 }
 
 func CatalogueInstance(name, instance string) *Crd {
-	return New("", "v1", "services").
-		SetLabelSelector(fmt.Sprintf("service.argovue.io/name=%s,service.argovue.io/instance=%s", name, instance))
+	return New("helm.fluxcd.io", "v1", "helmreleases").
+		SetLabelSelector("service.argovue.io/name=" + name).
+		SetFieldSelector("metadata.name=" + instance)
 }
 
 func Typecast(thing interface{}) (*v1.Service, error) {

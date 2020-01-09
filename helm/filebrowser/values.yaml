@@ -2,4 +2,3 @@ volumes: ["shared", "private"]
 argovue:
   owner: owner
   baseurl: baseurl
-  
