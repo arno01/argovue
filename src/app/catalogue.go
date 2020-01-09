@@ -176,10 +176,7 @@ func (a *App) controlCatalogueInstance(w http.ResponseWriter, r *http.Request) {
 	// Access granted, perform action
 	switch action {
 	case "delete":
-		svc, err := crd.Typecast(a.getBroker(session.ID, "catalogue").Broker().Find(name, namespace))
-		if err == nil {
-			crd.Delete(svc, instance)
-		}
+		crd.DeleteInstance(namespace, instance)
 	}
 	if err != nil {
 		log.Errorf("Can't %s catalogue %s/%s instance:%s, error:%s", action, namespace, name, instance, err)

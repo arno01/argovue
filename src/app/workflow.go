@@ -102,7 +102,7 @@ func (a *App) controlWorkflowService(w http.ResponseWriter, r *http.Request) {
 	}
 	switch action {
 	case "delete":
-		err = crd.DeleteService(namespace, service)
+		err = crd.DeleteInstance(namespace, service)
 	default:
 	}
 	if err != nil {

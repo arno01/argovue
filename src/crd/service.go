@@ -75,24 +75,14 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, owner string) error {
 	return deployRelease(filebrowser, release, owner)
 }
 
-func Delete(s *argovuev1.Service, name string) error {
+func DeleteInstance(namespace, name string) error {
 	clientset, err := kube.GetFluxV1Clientset()
 	if err != nil {
 		return err
 	}
 	deletePolicy := metav1.DeletePropagationForeground
 	opts := &metav1.DeleteOptions{PropagationPolicy: &deletePolicy}
-	return clientset.HelmV1().HelmReleases(s.GetNamespace()).Delete(name, opts)
-}
-
-func DeleteService(namespace, name string) error {
-	clientset, err := kube.GetV1Clientset()
-	if err != nil {
-		return err
-	}
-	deletePolicy := metav1.DeletePropagationForeground
-	opts := &metav1.DeleteOptions{PropagationPolicy: &deletePolicy}
-	return clientset.ArgovueV1().Services(namespace).Delete(name, opts)
+	return clientset.HelmV1().HelmReleases(namespace).Delete(name, opts)
 }
 
 func GetWorkflowFilebrowserNames(wf *wfv1alpha1.Workflow) (re []string) {
