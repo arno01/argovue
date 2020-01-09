@@ -6,6 +6,7 @@ metadata:
     oidc.argovue.io/group: authors
     oidc.argovue.io/id: 726f6d616e5f67616c656576406d636b696e7365792e636f6d
 spec:
+  chartName: simple
   helmRelease:
     chart:
       git: https://github.com/jamhed/argovue.git

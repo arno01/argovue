@@ -20,5 +20,7 @@ spec:
         spec:
           type: object
           properties:
+            chartName:
+              type: string
             helmRelease:
               type: object
