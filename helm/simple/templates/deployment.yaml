@@ -27,6 +27,9 @@ spec:
         - mountPath: /mnt/private
           name: private
         {{- end }}
+        env:
+        - name: BASEURL
+          value: {{ .Values.argovue.baseurl }}
       volumes:
       {{- if .Values.privateVolumeSize }}
       - name: private
