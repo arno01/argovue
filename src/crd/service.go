@@ -16,12 +16,12 @@ import (
 
 func int32Ptr(i int32) *int32 { return &i }
 
-func makeRelease(s *argovuev1.Service, owner string) *fluxv1.HelmRelease {
+func makeRelease(s *argovuev1.Service, namespace, owner string) *fluxv1.HelmRelease {
 	releaseName := fmt.Sprintf("%s-%s", s.Name, getInstanceId(s))
 	release := &fluxv1.HelmRelease{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      releaseName,
-			Namespace: s.Namespace,
+			Namespace: namespace,
 			Labels: map[string]string{
 				"service.argovue.io/name": s.Name,
 				"oidc.argovue.io/id":      owner,
@@ -30,7 +30,7 @@ func makeRelease(s *argovuev1.Service, owner string) *fluxv1.HelmRelease {
 		},
 		Spec: s.Spec.HelmRelease,
 	}
-	baseUrl := fmt.Sprintf("/proxy/%s/%s/%d", s.Namespace, releaseName, 80)
+	baseUrl := fmt.Sprintf("/proxy/%s/%s/%d", namespace, releaseName, 80)
 	release.Spec.ReleaseName = releaseName
 	if release.Spec.Values == nil {
 		release.Spec.Values = make(map[string]interface{})
@@ -49,7 +49,7 @@ func deployRelease(s *argovuev1.Service, release *fluxv1.HelmRelease, owner stri
 }
 
 func Deploy(s *argovuev1.Service, owner string, input []argovuev1.InputValue) error {
-	release := makeRelease(s, owner)
+	release := makeRelease(s, s.Namespace, owner)
 	env := []map[string]string{}
 	for _, i := range input {
 		env = append(env, map[string]string{"name": i.Name, "value": i.Value})
@@ -67,8 +67,7 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, owner string) error {
 	if err != nil {
 		return err
 	}
-	release := makeRelease(filebrowser, owner)
-	release.ObjectMeta.Namespace = wf.Namespace
+	release := makeRelease(filebrowser, wf.Namespace, owner)
 	volumes := []map[string]string{}
 	for _, pvc := range wf.Status.PersistentVolumeClaims {
 		volumes = append(volumes, map[string]string{"name": pvc.Name, "claim": pvc.PersistentVolumeClaim.ClaimName})
