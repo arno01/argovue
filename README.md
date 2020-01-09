@@ -38,6 +38,13 @@ skaffold dev --port-forward
 
 After successful deployment point your browser to `http://localhost:8080/ui/`.
 
+## Flux install
+
+```
+kubectl apply -f https://raw.githubusercontent.com/fluxcd/helm-operator/master/deploy/flux-helm-release-crd.yaml
+helm upgrade -i helm-operator fluxcd/helm-operator --namespace fluxcd --set helm.versions=v3
+```
+
 ## Flux sync
 
 ```
