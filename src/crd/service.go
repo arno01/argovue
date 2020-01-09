@@ -34,8 +34,8 @@ func Deploy(s *argovuev1.Service, owner string, input []argovuev1.InputValue) er
 		},
 		Spec: s.Spec.HelmRelease,
 	}
-	// rely helm naming schema: instance-release
-	baseUrl := fmt.Sprintf("/proxy/%s/%s/%d", s.Namespace, fmt.Sprintf("%s-%s", releaseName, s.Name), 80)
+	// rely helm naming schema: instance-chartname
+	baseUrl := fmt.Sprintf("/proxy/%s/%s/%d", s.Namespace, fmt.Sprintf("%s-%s", releaseName, s.Spec.ChartName), 80)
 	release.Spec.ReleaseName = releaseName
 	release.Spec.Values["argovue"] = map[string]string{"owner": owner, "baseurl": baseUrl}
 	_, err = clientset.HelmV1().HelmReleases(s.GetNamespace()).Create(release)
