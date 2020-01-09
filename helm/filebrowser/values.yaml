@@ -1,4 +1,6 @@
-volumes: []
+volumes:
+- name: ~
+  claim: ~
 argovue:
   workflow: ~
   owner: ~

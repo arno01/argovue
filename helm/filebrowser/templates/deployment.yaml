@@ -27,12 +27,12 @@ spec:
           protocol: TCP
         volumeMounts:
         {{- range $i, $volume := .Values.volumes }}
-        - mountPath: /mnt/{{ $volume }}
-          name: {{ $volume }}
+        - mountPath: /mnt/{{ $volume.name }}
+          name: {{ $volume.name }}
         {{- end }}
       volumes:
       {{- range $i, $volume := .Values.volumes }}
-      - name: {{ $volume }}
+      - name: {{ $volume.name }}
         persistentVolumeClaim:
-          claimName: {{ $volume }}
+          claimName: {{ $volume.claim }}
       {{- end }}
