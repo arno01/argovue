@@ -1,5 +1,6 @@
 # TODO
 
+* Fix env variables provisioning
 * Allow to share resources to groups user belongs
 * Document the system with workflows
 * Extend parent view for DAG if size is greater
@@ -12,13 +13,13 @@
 
 * Delete brokers on zero connections after timeout
 * Ingress objects for services
-* Use helm operator/cli to install services?
 * Add workflow templates and their actions?
 * Switch to redis (or any other distributed kv) to store sessions and add redundancy (replicas=2)
 * Fix dex proxy (service should be on even if oidc fails)
 
 # DONE
 
+* Use helm operator/cli to install services?
 * Add confirmation dialogs for workflow actions
 * List Service PVC as resources
 * Multiple workflow volume mounts (atm name is unique and can be owned)

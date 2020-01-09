@@ -50,6 +50,11 @@ func deployRelease(s *argovuev1.Service, release *fluxv1.HelmRelease, owner stri
 
 func Deploy(s *argovuev1.Service, owner string, input []argovuev1.InputValue) error {
 	release := makeRelease(s, owner)
+	env := []map[string]string{}
+	for _, i := range input {
+		env = append(env, map[string]string{"name": i.Name, "value": i.Value})
+	}
+	release.Spec.Values["env"] = env
 	return deployRelease(s, release, owner)
 }
 

@@ -217,6 +217,11 @@ func (in *ServiceList) DeepCopyObject() runtime.Object {
 func (in *ServiceSpec) DeepCopyInto(out *ServiceSpec) {
 	*out = *in
 	in.HelmRelease.DeepCopyInto(&out.HelmRelease)
+	if in.Input != nil {
+		in, out := &in.Input, &out.Input
+		*out = make([]InputItem, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 

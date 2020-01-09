@@ -20,7 +20,14 @@ spec:
         spec:
           type: object
           properties:
-            chartName:
-              type: string
+            input:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  caption:
+                    type: string
             helmRelease:
               type: object

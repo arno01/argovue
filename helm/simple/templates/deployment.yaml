@@ -30,6 +30,10 @@ spec:
         env:
         - name: BASE_URL
           value: {{ .Values.argovue.baseurl }}
+        {{- range $i, $env := .Values.argovue.env }}
+        - name: {{ $env.name }}
+          value: {{ $env.value }}
+        {{- end }}
       volumes:
       {{- if .Values.privateVolumeSize }}
       - name: private

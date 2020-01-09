@@ -4,3 +4,6 @@ privateVolumeSize: ~
 argovue:
   owner: ~
   baseurl: ~
+  env:
+  - name: name
+    value: value
