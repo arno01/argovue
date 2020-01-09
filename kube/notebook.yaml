@@ -1,0 +1,21 @@
+apiVersion: argovue.io/v1
+kind: Service
+metadata:
+  name: dash
+  labels:
+    oidc.argovue.io/group: authors
+    oidc.argovue.io/id: 726f6d616e5f67616c656576406d636b696e7365792e636f6d
+spec:
+  input:
+  - name: env1
+    caption: Variable one
+  - name: env2
+    caption: Variable two
+  helmRelease:
+    chart:
+      git: https://github.com/jamhed/argovue.git
+      path: helm/simple
+    values:
+      image: jamhed/notebook:0.1.0
+      port: 8888
+      privateVolumeSize: 1M
