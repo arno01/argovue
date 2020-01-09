@@ -4,14 +4,13 @@ metadata:
   name: dash
   labels:
     oidc.argovue.io/group: authors
+    oidc.argovue.io/id: 726f6d616e5f67616c656576406d636b696e7365792e636f6d
 spec:
-  image: jamhed/dash:0.1.1
-  port: 8000
-  privateVolumeSize: 1M
-  input:
-  - name: env1
-    caption: Variable One
-  - name: env2
-    caption: Variable Two
-  - name: env3
-    caption: Variable Three
+  helmRelease:
+    chart:
+      git: https://github.com/jamhed/argovue.git
+      path: helm/simple
+    values:
+      image: jamhed/dash:0.1.1
+      port: 8000
+      privateVolumeSize: 1M
