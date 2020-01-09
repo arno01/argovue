@@ -62,7 +62,7 @@ func New() *App {
 	go a.Serve()
 	a.auth = auth.New(a.Args().OIDC())
 	a.config = crd.New("argovue.io", "v1", "appconfigs").
-		SetFieldSelector("metadata.namespace=" + a.Args().Namespace()).
+		SetFieldSelector(fmt.Sprintf("metadata.namespace=%s,metadata.name=%s-config", a.Args().Namespace(), a.Args().Release())).
 		Watch()
 	go a.ListenForConfig()
 	a.ver = make(map[string]interface{})

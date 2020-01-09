@@ -25,6 +25,7 @@ type Args struct {
 	uiRootURL        string
 	uiRootDomain     string
 	k8sNamespace     string
+	k8sRelease       string
 	dexServiceName   string
 	sessionKey       string
 }
@@ -55,6 +56,7 @@ func (a *Args) Parse() *Args {
 	flag.StringVar(&a.oidcUserId, "oidc-user-id", getEnvOrDefault("OIDC_USER_ID", "preferred_username"), "OIDC user id field")
 	flag.StringVar(&a.uiRootURL, "ui-root-url", getEnvOrDefault("UI_ROOT_URL", "http://localhost:8080/ui/#/"), "UI root url for redirects")
 	flag.StringVar(&a.k8sNamespace, "k8s-namespace", getEnvOrDefault("K8S_NAMESPACE", "default"), "Kubernetes objects namespace")
+	flag.StringVar(&a.k8sRelease, "k8s-release-name", getEnvOrDefault("K8S_RELEASE_NAME", "argovue"), "Release name (to look up config and filebrowser)")
 	flag.StringVar(&a.dexServiceName, "dex-service-name", getEnvOrDefault("DEX_SERVICE_NAME", "dex"), "Dex service name")
 	flag.StringVar(&a.sessionKey, "session-key", getEnvOrDefault("SESSION_KEY", "not-very-secure"), "HTTP Session encryption key")
 
@@ -102,9 +104,12 @@ func (a *Args) OidcUserId() string {
 	return a.oidcUserId
 }
 
-// Namespace returns the namespace to keep our config objects
 func (a *Args) Namespace() string {
 	return a.k8sNamespace
+}
+
+func (a *Args) Release() string {
+	return a.k8sRelease
 }
 
 func (a *Args) DexServiceName() string {

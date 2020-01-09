@@ -58,12 +58,12 @@ func Deploy(s *argovuev1.Service, owner string, input []argovuev1.InputValue) er
 	return deployRelease(s, release, owner)
 }
 
-func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, owner string) error {
+func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, releaseName, owner string) error {
 	clientset, err := kube.GetV1Clientset()
 	if err != nil {
 		return err
 	}
-	filebrowser, err := clientset.ArgovueV1().Services(namespace).Get("filebrowser", metav1.GetOptions{})
+	filebrowser, err := clientset.ArgovueV1().Services(namespace).Get(fmt.Sprintf("%s-filebrowser", releaseName), metav1.GetOptions{})
 	if err != nil {
 		return err
 	}
