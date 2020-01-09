@@ -8,7 +8,7 @@ metadata:
     {{- include "simple.labels" . | nindent 4 }}
 spec:
   accessModes:
-    - {{ .Values.accessMode | default "RWO" | quote }}
+    - {{ .Values.accessMode | default "ReadWriteOnce" | quote }}
   resources:
     requests:
       storage: {{ .Values.privateVolumeSize | quote }}
