@@ -18,6 +18,9 @@ spec:
       containers:
       - name: {{ .Chart.Name }}
         image: {{ .Values.image }}
+        {{- if .Values.command }}
+        command: {{ .Values.command }}
+        {{- end }}
         ports:
         - name: http
           containerPort: {{ .Values.port }}
