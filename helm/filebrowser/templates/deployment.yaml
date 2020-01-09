@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: {{ .Chart.Name }}
-        image: chart/chart
+        image: filebrowser/filebrowser
         args: ["--noauth", "--root", "/mnt", "--baseurl", "{{ .Values.argovue.baseurl }}"]
         ports:
         - name: http
