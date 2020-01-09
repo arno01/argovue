@@ -6,12 +6,12 @@
     <div>
       <b-card no-body>
         <b-tabs card no-key-nav>
-          <b-tab title="Proxy">
+          <b-tab title="Proxy" active>
             <a v-for="port in object.spec.ports" :key="port.port" target="_blank" :href="proxy_uri(port.port)">
               {{ name }}:{{ port.port }}
             </a>
           </b-tab>
-          <b-tab title="Service" active>
+          <b-tab title="Service">
             <jsoneditor :content="object"></jsoneditor>
           </b-tab>
         </b-tabs>
