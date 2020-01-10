@@ -20,6 +20,9 @@ func Li2s(li interface{}) (re []string) {
 	if li == nil {
 		return
 	}
+	if ree, ok := li.([]string); ok {
+		return ree
+	}
 	lii, ok := li.([]interface{})
 	if !ok {
 		return

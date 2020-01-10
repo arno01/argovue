@@ -1,7 +1,5 @@
 # TODO
 
-* Allow to share resources to groups user belongs
-
 * Document the system with workflows
 * Better pod/service presentation (display significant fields on main page)
 
@@ -19,6 +17,7 @@
 
 # DONE
 
+* Allow to share resources to groups user belongs
 * Authorize proxy requests
 * Fix env variables provisioning
 * Use helm operator/cli to install services?

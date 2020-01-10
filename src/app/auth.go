@@ -168,7 +168,6 @@ func (a *App) AuthCallback(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	profile["effective_groups"] = effGroups
-	log.Debugf("OIDC: effective groups:%s", effGroups)
 
 	userIdKey := a.Args().OidcUserId()
 	if userId, ok := profile[userIdKey]; ok {
