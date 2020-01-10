@@ -90,6 +90,7 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, releaseName, owner st
 	}
 	release.ObjectMeta.Labels["workflows.argoproj.io/workflow"] = wf.Name
 	appendLabels(release, "workflows.argoproj.io/workflow", wf.Name)
+	release.Spec.Values["volumes"] = volumes
 	return deployRelease(filebrowser, release)
 }
 

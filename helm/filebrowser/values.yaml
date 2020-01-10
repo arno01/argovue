@@ -2,7 +2,6 @@ volumes:
 - name: ~
   claim: ~
 argovue:
-  workflow: ~
   baseurl: ~
   labels:
   - name: ~
