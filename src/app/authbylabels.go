@@ -31,7 +31,7 @@ func authorizeById(idLabel, id string) bool {
 func authorize(labels map[string]string, profile map[string]interface{}) bool {
 	var auth bool
 	if groupLabel, ok := labels["oidc.argovue.io/group"]; ok {
-		if groups, ok := profile["groups"]; ok {
+		if groups, ok := profile["effective_groups"]; ok {
 			auth = authorizeByGroup(groupLabel, util.Li2s(groups))
 			if auth {
 				log.Debugf("authorize by group:%s", groupLabel)
