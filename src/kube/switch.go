@@ -5,6 +5,7 @@ import (
 
 	argovuev1 "argovue/apis/argovue.io/v1"
 	v1alpha1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	fluxv1 "github.com/fluxcd/helm-operator/pkg/apis/helm.fluxcd.io/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -24,6 +25,8 @@ func GetByKind(kind, name, namespace string) (metav1.Object, error) {
 		return GetWorkflow(name, namespace)
 	case "argovue":
 		return GetArgovueService(name, namespace)
+	case "helmrelease":
+		return GetHelmRelease(name, namespace)
 	default:
 		return nil, fmt.Errorf("Unknown kubernetes kind %s", kind)
 	}
@@ -75,4 +78,12 @@ func GetDeployment(name, namespace string) (*appsv1.Deployment, error) {
 		return nil, err
 	}
 	return clientset.AppsV1().Deployments(namespace).Get(name, metav1.GetOptions{})
+}
+
+func GetHelmRelease(name, namespace string) (*fluxv1.HelmRelease, error) {
+	clientset, err := GetFluxV1Clientset()
+	if err != nil {
+		return nil, err
+	}
+	return clientset.HelmV1().HelmReleases(namespace).Get(name, metav1.GetOptions{})
 }
