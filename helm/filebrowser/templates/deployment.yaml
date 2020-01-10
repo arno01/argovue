@@ -3,7 +3,9 @@ kind: Deployment
 metadata:
   name: {{ include "chart.fullname" . }}
   labels:
-    workflows.argoproj.io/workflow: {{ .Values.argovue.workflow }}
+    {{- range .Values.argovue.labels }}
+    {{ .name }}: {{ .value }}
+    {{- end }}
     {{- include "chart.labels" . | nindent 4 }}
 spec:
   replicas: 1
