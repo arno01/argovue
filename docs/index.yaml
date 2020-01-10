@@ -2,8 +2,18 @@ apiVersion: v1
 entries:
   argovue:
   - apiVersion: v1
+    appVersion: 0.4.12
+    created: "2020-01-10T12:24:53.897794+01:00"
+    description: ArgoVue Helm Chart
+    digest: 9456c016a1b57d6ae9f991572e8aad84a69ef7be1f2aa8a4f24a7278348e535c
+    name: argovue
+    type: application
+    urls:
+    - https://jamhed.github.io/argovue/argovue-0.4.12.tgz
+    version: 0.4.12
+  - apiVersion: v1
     appVersion: 0.4.11
-    created: "2020-01-10T04:26:49.550522+01:00"
+    created: "2020-01-10T12:24:53.89713+01:00"
     description: ArgoVue Helm Chart
     digest: b59f12f4c94f8e371aa2cf11f1a760b24fb441016b9c007319a68ac6339f027c
     name: argovue
@@ -13,7 +23,7 @@ entries:
     version: 0.4.11
   - apiVersion: v1
     appVersion: 0.4.10
-    created: "2020-01-10T04:26:49.549893+01:00"
+    created: "2020-01-10T12:24:53.896161+01:00"
     description: ArgoVue Helm Chart
     digest: 6a088258ce8bc349da0cda7b406e3d947e252fc9c877d23732c8b33aee07d0f7
     name: argovue
@@ -23,7 +33,7 @@ entries:
     version: 0.4.10
   - apiVersion: v1
     appVersion: 0.4.9
-    created: "2020-01-10T04:26:49.558088+01:00"
+    created: "2020-01-10T12:24:53.907551+01:00"
     description: ArgoVue Helm Chart
     digest: 1646884fff3c49cbe957bb036cd3e6471117ef6624c27a57a9d1154f6d8fcace
     name: argovue
@@ -33,7 +43,7 @@ entries:
     version: 0.4.9
   - apiVersion: v1
     appVersion: 0.4.8
-    created: "2020-01-10T04:26:49.557209+01:00"
+    created: "2020-01-10T12:24:53.906205+01:00"
     description: ArgoVue Helm Chart
     digest: f781564fa2aad0e02832f7ab1162288d7b54ae7151fb667cdbe0a130a7862857
     name: argovue
@@ -43,7 +53,7 @@ entries:
     version: 0.4.8
   - apiVersion: v1
     appVersion: 0.4.7
-    created: "2020-01-10T04:26:49.556225+01:00"
+    created: "2020-01-10T12:24:53.90524+01:00"
     description: ArgoVue Helm Chart
     digest: 1a48e9989cdf0033f9b585d0eea218655823422a5dcdc1f4a99f2349b2815d1d
     name: argovue
@@ -53,7 +63,7 @@ entries:
     version: 0.4.7
   - apiVersion: v1
     appVersion: 0.4.6
-    created: "2020-01-10T04:26:49.55489+01:00"
+    created: "2020-01-10T12:24:53.90375+01:00"
     description: ArgoVue Helm Chart
     digest: ed0dc94130d90c656a0627407cba9e091a80b9886476eb1326d9dc044df31f82
     name: argovue
@@ -63,7 +73,7 @@ entries:
     version: 0.4.6
   - apiVersion: v1
     appVersion: 0.4.5
-    created: "2020-01-10T04:26:49.553973+01:00"
+    created: "2020-01-10T12:24:53.902259+01:00"
     description: ArgoVue Helm Chart
     digest: a3dbbf73734b42b17f9a78d27160d94baa685d4267780a9e1f2239d9759bc723
     name: argovue
@@ -73,7 +83,7 @@ entries:
     version: 0.4.5
   - apiVersion: v1
     appVersion: 0.4.4
-    created: "2020-01-10T04:26:49.553042+01:00"
+    created: "2020-01-10T12:24:53.900788+01:00"
     description: ArgoVue Helm Chart
     digest: b8e33188a851e28cd30c382078e764426db8a75b814a47423777d2d68b84f2ad
     name: argovue
@@ -83,7 +93,7 @@ entries:
     version: 0.4.4
   - apiVersion: v1
     appVersion: 0.4.3
-    created: "2020-01-10T04:26:49.552167+01:00"
+    created: "2020-01-10T12:24:53.899896+01:00"
     description: ArgoVue Helm Chart
     digest: 27a55517497f3c83309930e47fb24fb07f8072549e7389eacf240dd5fcf699aa
     name: argovue
@@ -93,7 +103,7 @@ entries:
     version: 0.4.3
   - apiVersion: v1
     appVersion: 0.4.2
-    created: "2020-01-10T04:26:49.551355+01:00"
+    created: "2020-01-10T12:24:53.898688+01:00"
     description: ArgoVue Helm Chart
     digest: 3256840c978a626ab22f609772d67bb634293466f7197425c5719338bef26ccc
     name: argovue
@@ -103,7 +113,7 @@ entries:
     version: 0.4.2
   - apiVersion: v1
     appVersion: 0.4.2
-    created: "2020-01-10T04:26:49.549033+01:00"
+    created: "2020-01-10T12:24:53.895261+01:00"
     description: ArgoVue Helm Chart
     digest: e24c2fe0e5c723a7cfdf5551194fbf20a400bc5364a733361d4335ce4bfc2e98
     name: argovue
@@ -113,7 +123,7 @@ entries:
     version: 0.4.1
   - apiVersion: v1
     appVersion: 0.4.0
-    created: "2020-01-10T04:26:49.547979+01:00"
+    created: "2020-01-10T12:24:53.894179+01:00"
     description: ArgoVue Helm Chart
     digest: 1d2acc029b056cac8cb3dc446a8b05cb64530609d01b7a96e725c2e28a0b0661
     name: argovue
@@ -123,7 +133,7 @@ entries:
     version: 0.4.0
   - apiVersion: v1
     appVersion: 0.2.34
-    created: "2020-01-10T04:26:49.544961+01:00"
+    created: "2020-01-10T12:24:53.890675+01:00"
     description: ArgoVue Helm Chart
     digest: 959bec36cb1355737cd279e375e35f5e1e269c5faf32df66656064b600e228ef
     name: argovue
@@ -133,7 +143,7 @@ entries:
     version: 0.2.36
   - apiVersion: v1
     appVersion: 0.2.33
-    created: "2020-01-10T04:26:49.542556+01:00"
+    created: "2020-01-10T12:24:53.889779+01:00"
     description: ArgoVue Helm Chart
     digest: af28442c33b59588b5ea22be0122cb665c69e5ce3f918014b175c9878313e1d0
     name: argovue
@@ -143,7 +153,7 @@ entries:
     version: 0.2.35
   - apiVersion: v1
     appVersion: 0.2.32
-    created: "2020-01-10T04:26:49.541437+01:00"
+    created: "2020-01-10T12:24:53.888849+01:00"
     description: ArgoVue Helm Chart
     digest: d2689a1e448246745db695beb7eb19f7dfb8735c9c495450616163293f5d162d
     name: argovue
@@ -153,7 +163,7 @@ entries:
     version: 0.2.34
   - apiVersion: v1
     appVersion: 0.2.31
-    created: "2020-01-10T04:26:49.540535+01:00"
+    created: "2020-01-10T12:24:53.887937+01:00"
     description: ArgoVue Helm Chart
     digest: 23aee6f8bd3bb8e6528c26c25d3565dde1537259e023a8e8732c05f7f52fc45e
     name: argovue
@@ -163,7 +173,7 @@ entries:
     version: 0.2.33
   - apiVersion: v1
     appVersion: 0.2.31
-    created: "2020-01-10T04:26:49.539426+01:00"
+    created: "2020-01-10T12:24:53.886879+01:00"
     description: ArgoVue Helm Chart
     digest: 4410e5f3544185440925eb9bb6821632e90afbc6e080a1071749aab7d59fbeaa
     name: argovue
@@ -173,7 +183,7 @@ entries:
     version: 0.2.32
   - apiVersion: v2
     appVersion: 0.2.30
-    created: "2020-01-10T04:26:49.538288+01:00"
+    created: "2020-01-10T12:24:53.885789+01:00"
     description: ArgoVue Helm Chart
     digest: 635aa8332682fe1262c1181789f4ceac69b4fe95136f7aacbfe44d18ed8c620c
     name: argovue
@@ -183,7 +193,7 @@ entries:
     version: 0.2.30
   - apiVersion: v2
     appVersion: 0.2.29
-    created: "2020-01-10T04:26:49.536572+01:00"
+    created: "2020-01-10T12:24:53.882963+01:00"
     description: ArgoVue Helm Chart
     digest: c85eeeddf698b3fe7375e4a094b2407686aeaaae40ff6b09462e08f28fda15e6
     name: argovue
@@ -193,7 +203,7 @@ entries:
     version: 0.2.29
   - apiVersion: v2
     appVersion: 0.2.28
-    created: "2020-01-10T04:26:49.535607+01:00"
+    created: "2020-01-10T12:24:53.881488+01:00"
     description: ArgoVue Helm Chart
     digest: b6fa5fbbe520bc04450373e6b891c33d44465025881c647049c33f37c2119bc8
     name: argovue
@@ -203,7 +213,7 @@ entries:
     version: 0.2.28
   - apiVersion: v2
     appVersion: 0.2.27
-    created: "2020-01-10T04:26:49.534524+01:00"
+    created: "2020-01-10T12:24:53.88049+01:00"
     description: ArgoVue Helm Chart
     digest: 7a2334c996cc50f80aa588099ed843da7db490774e625d05d17b4a3d660f94bd
     name: argovue
@@ -213,7 +223,7 @@ entries:
     version: 0.2.27
   - apiVersion: v2
     appVersion: 0.2.26
-    created: "2020-01-10T04:26:49.533541+01:00"
+    created: "2020-01-10T12:24:53.879486+01:00"
     description: ArgoVue Helm Chart
     digest: f62aa2658096157c1dac6557dec5bac5c3079b25ec467871c00f46ed8b36999d
     name: argovue
@@ -223,7 +233,7 @@ entries:
     version: 0.2.26
   - apiVersion: v2
     appVersion: 0.2.25
-    created: "2020-01-10T04:26:49.532364+01:00"
+    created: "2020-01-10T12:24:53.877314+01:00"
     description: ArgoVue Helm Chart
     digest: 7e3f09fd5b240fa786ce97093de3895d272311916cd5d0f1dab66e0b2ce387b7
     name: argovue
@@ -233,7 +243,7 @@ entries:
     version: 0.2.25
   - apiVersion: v2
     appVersion: 0.2.24
-    created: "2020-01-10T04:26:49.529611+01:00"
+    created: "2020-01-10T12:24:53.876243+01:00"
     description: ArgoVue Helm Chart
     digest: 92dc85e36e4b7f23a0957cafd4b51ce39deb2086562ea4975727b208eaf559e5
     name: argovue
@@ -243,7 +253,7 @@ entries:
     version: 0.2.24
   - apiVersion: v2
     appVersion: 0.2.23
-    created: "2020-01-10T04:26:49.528513+01:00"
+    created: "2020-01-10T12:24:53.875064+01:00"
     description: ArgoVue Helm Chart
     digest: c184bc0c7231b8961cf0ea65f32ebf7dfa830ebdfa163d6ea854977d92ff0a91
     name: argovue
@@ -253,7 +263,7 @@ entries:
     version: 0.2.23
   - apiVersion: v2
     appVersion: 0.2.22
-    created: "2020-01-10T04:26:49.527585+01:00"
+    created: "2020-01-10T12:24:53.873929+01:00"
     description: ArgoVue Helm Chart
     digest: 5573db301753287e5ff4009c161303e580f72a5e6f27cf722827bb46bd323cbe
     name: argovue
@@ -263,7 +273,7 @@ entries:
     version: 0.2.22
   - apiVersion: v2
     appVersion: 0.2.21
-    created: "2020-01-10T04:26:49.526567+01:00"
+    created: "2020-01-10T12:24:53.872712+01:00"
     description: ArgoVue Helm Chart
     digest: e37d3816930b8c927dfa8a6af695eb21060da374b3c3da22a6b99ecb0da1178e
     name: argovue
@@ -273,7 +283,7 @@ entries:
     version: 0.2.21
   - apiVersion: v2
     appVersion: 0.2.20
-    created: "2020-01-10T04:26:49.525533+01:00"
+    created: "2020-01-10T12:24:53.871708+01:00"
     description: ArgoVue Helm Chart
     digest: 3b571f6692eca6fe169e7724ab001c68dc8cd76264bceb9800718e9bbd4e3826
     name: argovue
@@ -283,7 +293,7 @@ entries:
     version: 0.2.20
   - apiVersion: v2
     appVersion: 0.2.19
-    created: "2020-01-10T04:26:49.523403+01:00"
+    created: "2020-01-10T12:24:53.869576+01:00"
     description: ArgoVue Helm Chart
     digest: 29cdcc24f867804db7a36ec49a9fad5ba6c296f1531cd6045f24d7906fccaa28
     name: argovue
@@ -293,7 +303,7 @@ entries:
     version: 0.2.19
   - apiVersion: v2
     appVersion: 0.2.18
-    created: "2020-01-10T04:26:49.522352+01:00"
+    created: "2020-01-10T12:24:53.868163+01:00"
     description: ArgoVue Helm Chart
     digest: de4f05703671da84666d4eeafae3d8af73a60dfdd20dbd2fd4d49dcd9459d3db
     name: argovue
@@ -303,7 +313,7 @@ entries:
     version: 0.2.18
   - apiVersion: v2
     appVersion: 0.2.17
-    created: "2020-01-10T04:26:49.52099+01:00"
+    created: "2020-01-10T12:24:53.866843+01:00"
     description: ArgoVue Helm Chart
     digest: 7a595ac5638fa1fc90bd17756ee872fc38a668f7490df70bd1ca64b081a9f8ed
     name: argovue
@@ -313,7 +323,7 @@ entries:
     version: 0.2.17
   - apiVersion: v2
     appVersion: 0.2.16
-    created: "2020-01-10T04:26:49.519753+01:00"
+    created: "2020-01-10T12:24:53.86516+01:00"
     description: ArgoVue Helm Chart
     digest: 1f0b7d33fe036d51b8183442ec7cb83314357b0cf9fb8f45bc068bd4b31b3df8
     name: argovue
@@ -323,7 +333,7 @@ entries:
     version: 0.2.16
   - apiVersion: v2
     appVersion: 0.2.15
-    created: "2020-01-10T04:26:49.518832+01:00"
+    created: "2020-01-10T12:24:53.864114+01:00"
     description: ArgoVue Helm Chart
     digest: 0a84e53959ab34abf13730c326b6664b1532b11b8afc186b93f9d0dbdaea6039
     name: argovue
@@ -333,7 +343,7 @@ entries:
     version: 0.2.15
   - apiVersion: v2
     appVersion: 0.2.14
-    created: "2020-01-10T04:26:49.516287+01:00"
+    created: "2020-01-10T12:24:53.862728+01:00"
     description: ArgoVue Helm Chart
     digest: a435ea3e630cd5b78b0ee13e3e1ff95a8462bdd16b57bf29dab26c41d73d6c00
     name: argovue
@@ -343,7 +353,7 @@ entries:
     version: 0.2.14
   - apiVersion: v2
     appVersion: 0.2.13
-    created: "2020-01-10T04:26:49.558931+01:00"
+    created: "2020-01-10T12:24:53.909892+01:00"
     description: ArgoVue Helm Chart
     digest: 0aa2bf512449565b6dc58762adde5b4b672ba45c90273a82b07ac70b9b102fd6
     name: argovue
@@ -353,7 +363,7 @@ entries:
     version: v0.2.13
   - apiVersion: v2
     appVersion: 0.2.12
-    created: "2020-01-10T04:26:49.547108+01:00"
+    created: "2020-01-10T12:24:53.893283+01:00"
     description: ArgoVue Helm Chart
     digest: 017918f5a7a2dbce2ed91a1174c1fdb5d8cf48891fe6d768b62e11463178c2f4
     name: argovue
@@ -363,7 +373,7 @@ entries:
     version: 0.2.5
   - apiVersion: v2
     appVersion: 0.2.11
-    created: "2020-01-10T04:26:49.545903+01:00"
+    created: "2020-01-10T12:24:53.891586+01:00"
     description: ArgoVue Helm Chart
     digest: 2a3755fcf030666638d6fbca5181d6144c596783c048250905692c27f2faa6d5
     name: argovue
@@ -373,7 +383,7 @@ entries:
     version: 0.2.4
   - apiVersion: v2
     appVersion: 0.2.10
-    created: "2020-01-10T04:26:49.537464+01:00"
+    created: "2020-01-10T12:24:53.884488+01:00"
     description: ArgoVue Helm Chart
     digest: b8ee927ac79fc89b80381eecad812376dd9febce3accfaf23a1a39861ed1f81d
     name: argovue
@@ -383,7 +393,7 @@ entries:
     version: 0.2.3
   - apiVersion: v2
     appVersion: 0.2.10
-    created: "2020-01-10T04:26:49.524545+01:00"
+    created: "2020-01-10T12:24:53.870587+01:00"
     description: ArgoVue Helm Chart
     digest: e73849477d6d5d09f55c71a2cfcd288d88c42346d8550a84a5350b4999617637
     name: argovue
@@ -393,7 +403,7 @@ entries:
     version: 0.2.2
   - apiVersion: v2
     appVersion: 0.2.10
-    created: "2020-01-10T04:26:49.515435+01:00"
+    created: "2020-01-10T12:24:53.861487+01:00"
     description: ArgoVue Helm Chart
     digest: 29b72958903f9754818abb8608fde865841f0ee7b58aaad2d42c011f45a300b2
     name: argovue
@@ -401,4 +411,4 @@ entries:
     urls:
     - https://jamhed.github.io/argovue/argovue-0.2.1.tgz
     version: 0.2.1
-generated: "2020-01-10T04:26:49.514182+01:00"
+generated: "2020-01-10T12:24:53.857374+01:00"
