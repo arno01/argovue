@@ -16,6 +16,21 @@ import (
 
 func int32Ptr(i int32) *int32 { return &i }
 
+func appendLabels(release *fluxv1.HelmRelease, name, value string) map[string]interface{} {
+	av, ok := release.Spec.Values["argovue"].(map[string]interface{})
+	if !ok {
+		av = make(map[string]interface{})
+	}
+	labels, ok := (av["labels"]).([]map[string]string)
+	if !ok {
+		labels = []map[string]string{}
+	}
+	labels = append(labels, map[string]string{"name": name, "value": value})
+	av["labels"] = labels
+	release.Spec.Values["argovue"] = av
+	return av
+}
+
 func makeRelease(s *argovuev1.Service, namespace, label, owner string) *fluxv1.HelmRelease {
 	releaseName := fmt.Sprintf("%s-%s", s.Name, getInstanceId(s))
 	release := &fluxv1.HelmRelease{
@@ -35,10 +50,8 @@ func makeRelease(s *argovuev1.Service, namespace, label, owner string) *fluxv1.H
 	if release.Spec.Values == nil {
 		release.Spec.Values = make(map[string]interface{})
 	}
-	argovue := make(map[string]interface{})
-	argovue["baseurl"] = baseUrl
-	argovue["labels"] = []map[string]string{{"name": label, "value": owner}}
-	release.Spec.Values["argovue"] = argovue
+	av := appendLabels(release, label, owner)
+	av["baseurl"] = baseUrl
 	return release
 }
 
@@ -76,10 +89,7 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, releaseName, owner st
 		volumes = append(volumes, map[string]string{"name": pvc.Name, "claim": pvc.PersistentVolumeClaim.ClaimName})
 	}
 	release.ObjectMeta.Labels["workflows.argoproj.io/workflow"] = wf.Name
-	release.Spec.Values["volumes"] = volumes
-	if av, ok := release.Spec.Values["argovue"].(map[string]string); ok {
-		av["workflow"] = wf.Name
-	}
+	appendLabels(release, "workflows.argoproj.io/workflow", wf.Name)
 	return deployRelease(filebrowser, release)
 }
 
