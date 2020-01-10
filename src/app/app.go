@@ -12,6 +12,7 @@ import (
 	"sync"
 
 	"net/http"
+	"net/url"
 
 	log "github.com/sirupsen/logrus"
 
@@ -83,7 +84,7 @@ func (a *App) SetVersion(version, commit, builddate string) *App {
 
 var bypassAuth []*regexp.Regexp = []*regexp.Regexp{
 	regexp.MustCompile("^/profile$"),
-	regexp.MustCompile("^/auth$"),
+	regexp.MustCompile("^/auth"),
 	regexp.MustCompile("^/logout$"),
 	regexp.MustCompile("^/dex/.*"),
 	regexp.MustCompile("^/callback.*$"),
@@ -94,7 +95,8 @@ func (a *App) checkAuth(w http.ResponseWriter, r *http.Request) map[string]inter
 	session, _ := a.Store().Get(r, "auth-session")
 	profileRef := session.Values["profile"]
 	if profileRef == nil {
-		http.Error(w, "Not Authorized", http.StatusUnauthorized)
+		log.Debugf("Not authorized, request:%s", r.RequestURI)
+		http.Redirect(w, r, "/auth?redirect="+url.PathEscape(r.RequestURI), http.StatusFound)
 		return nil
 	}
 	profile, ok := profileRef.(map[string]interface{})

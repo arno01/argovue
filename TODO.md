@@ -1,9 +1,9 @@
 # TODO
 
-* Fix env variables provisioning
+* Authorize proxy requests
 * Allow to share resources to groups user belongs
+
 * Document the system with workflows
-* Extend parent view for DAG if size is greater
 * Better pod/service presentation (display significant fields on main page)
 
 * On connection break give it some time (10-15 seconds) before clean up
@@ -11,6 +11,7 @@
 
 # MAYBE
 
+* Extend parent view for DAG if size is greater
 * Delete brokers on zero connections after timeout
 * Ingress objects for services
 * Add workflow templates and their actions?
@@ -19,6 +20,7 @@
 
 # DONE
 
+* Fix env variables provisioning
 * Use helm operator/cli to install services?
 * Add confirmation dialogs for workflow actions
 * List Service PVC as resources

@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/coreos/go-oidc"
@@ -85,9 +86,21 @@ func (a *App) AuthInitiate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	redirect := r.URL.Query().Get("redirect")
+
 	state := base64.StdEncoding.EncodeToString(b)
 	session, _ := a.Store().Get(r, "auth-session")
 	session.Values["state"] = state
+	if len(redirect) > 0 {
+		unescape, err := url.PathUnescape(redirect)
+		if err == nil {
+			log.Debugf("AUTH: keep redirect value:%s", unescape)
+			session.Values["redirect"] = unescape
+		} else {
+			log.Debugf("AUTH: error unescape path:%s, error:%s", redirect, err)
+		}
+	}
+
 	if err = session.Save(r, w); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -168,13 +181,21 @@ func (a *App) AuthCallback(w http.ResponseWriter, r *http.Request) {
 	session.Values["profile"] = profile
 	a.onLogin(session.ID, profile)
 
+	redirectUrl := session.Values["redirect"]
+	delete(session.Values, "redirect")
+
 	if err = session.Save(r, w); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	// this is to set cookie for the api domain
 	redirect := `<html><head><script type="text/javascript">window.location.href="%s"</script></head><body></body></html>`
-	fmt.Fprintf(w, redirect, a.Args().UIRootURL())
+	if re, ok := redirectUrl.(string); ok {
+		log.Debugf("AUTH: redirecting to:%s", re)
+		fmt.Fprintf(w, redirect, re)
+	} else {
+		fmt.Fprintf(w, redirect, a.Args().UIRootURL())
+	}
 }
 
 func (a *App) userInfo(token *oauth2.Token) (map[string]interface{}, error) {

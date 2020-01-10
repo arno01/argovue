@@ -15,6 +15,6 @@ spec:
       git: https://github.com/jamhed/argovue.git
       path: helm/simple
     values:
-      image: jamhed/notebook:0.1.2
+      image: jamhed/notebook:0.1.6
       port: 8888
       privateVolumeSize: 1M
