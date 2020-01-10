@@ -25,7 +25,7 @@ export default {
   },
   methods: {
     owners() {
-      var owners = this.$api.profile.effective_groups || []
+      var owners = this.$api.profile.effective_groups()
       owners.push(this.$api.profile.effective_id)
       return owners
     },
