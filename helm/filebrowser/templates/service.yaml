@@ -3,7 +3,9 @@ kind: Service
 metadata:
   name: {{ include "chart.fullname" . }}
   labels:
-    oidc.argovue.io/id: {{ .Values.argovue.owner }}
+    {{- range .Values.argovue.labels }}
+    {{ .name }}: {{ .value }}
+    {{- end }}
     workflows.argoproj.io/workflow: {{ .Values.argovue.workflow }}
     {{- include "chart.labels" . | nindent 4 }}
 spec:

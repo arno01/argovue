@@ -128,25 +128,38 @@ func (a *App) commandCatalogue(w http.ResponseWriter, r *http.Request) {
 	// Access granted, perform action
 	switch action {
 	case "deploy":
+		var svc *argovuev1.Service
+		var label, owner string
+
 		profile := session.Values["profile"].(map[string]interface{})
-		svc, err := crd.Typecast(a.getBroker(session.ID, "catalogue").Broker().Find(name, namespace))
+		svc, err = crd.Typecast(a.getBroker(session.ID, "catalogue").Broker().Find(name, namespace))
 		if err != nil {
-			break
+			goto err
 		}
-		input := make([]argovuev1.InputValue, 0)
-		err = json.NewDecoder(r.Body).Decode(&input)
+		data := struct {
+			Owner string                 `json:"owner"`
+			Input []argovuev1.InputValue `json:"input"`
+		}{}
+
+		err = json.NewDecoder(r.Body).Decode(&data)
 		if err != nil {
-			log.Errorf("Can't unmarshal input:%s", r.Body)
-			break
+			goto err
 		}
-		err = crd.Deploy(svc, util.EncodeLabel(util.I2s(profile["effective_id"])), input)
+		label, owner, err = verifyOwner(profile, data.Owner)
+		if err != nil {
+			goto err
+		}
+		log.Debugf("Deploy service %s/%s label:%s value:%s", namespace, name, label, owner)
+		err = crd.Deploy(svc, label, owner, data.Input)
+		if err != nil {
+			goto err
+		}
 	}
-	if err != nil {
-		log.Errorf("Can't %s catalogue %s/%s, error:%s", action, namespace, name, err)
-		sendError(w, action, err)
-	} else {
-		json.NewEncoder(w).Encode(map[string]string{"status": "ok", "action": action, "message": ""})
-	}
+	json.NewEncoder(w).Encode(map[string]string{"status": "ok", "action": action, "message": ""})
+	return
+err:
+	log.Errorf("Can't %s catalogue %s/%s, error:%s", action, namespace, name, err)
+	sendError(w, action, err)
 }
 
 func (a *App) controlCatalogueInstance(w http.ResponseWriter, r *http.Request) {
@@ -184,4 +197,16 @@ func (a *App) controlCatalogueInstance(w http.ResponseWriter, r *http.Request) {
 	} else {
 		json.NewEncoder(w).Encode(map[string]string{"status": "ok", "action": action, "message": ""})
 	}
+}
+
+func verifyOwner(profile map[string]interface{}, owner string) (string, string, error) {
+	if util.I2s(profile["effective_id"]) == owner {
+		return "oidc.argovue.io/id", util.EncodeLabel(owner), nil
+	}
+	for _, g := range util.Li2s(profile["effective_groups"]) {
+		if g == owner {
+			return "oidc.argovue.io/group", owner, nil
+		}
+	}
+	return "", "", fmt.Errorf("Can't verify owner:%s", owner)
 }

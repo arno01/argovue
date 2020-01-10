@@ -12,7 +12,9 @@ spec:
   template:
     metadata:
       labels:
-        oidc.argovue.io/id: {{ .Values.argovue.owner }}
+        {{- range .Values.argovue.labels }}
+        {{ .name }}: {{ .value }}
+        {{- end }}
         {{- include "chart.selectorLabels" . | nindent 8 }}
     spec:
       containers:

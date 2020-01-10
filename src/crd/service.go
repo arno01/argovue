@@ -16,7 +16,7 @@ import (
 
 func int32Ptr(i int32) *int32 { return &i }
 
-func makeRelease(s *argovuev1.Service, namespace, owner string) *fluxv1.HelmRelease {
+func makeRelease(s *argovuev1.Service, namespace, label, owner string) *fluxv1.HelmRelease {
 	releaseName := fmt.Sprintf("%s-%s", s.Name, getInstanceId(s))
 	release := &fluxv1.HelmRelease{
 		ObjectMeta: metav1.ObjectMeta{
@@ -24,7 +24,7 @@ func makeRelease(s *argovuev1.Service, namespace, owner string) *fluxv1.HelmRele
 			Namespace: namespace,
 			Labels: map[string]string{
 				"service.argovue.io/name": s.Name,
-				"oidc.argovue.io/id":      owner,
+				label:                     owner,
 			},
 			OwnerReferences: []metav1.OwnerReference{{APIVersion: "argovue.io/v1", Kind: "Service", Name: s.Name, UID: s.UID}},
 		},
@@ -35,11 +35,14 @@ func makeRelease(s *argovuev1.Service, namespace, owner string) *fluxv1.HelmRele
 	if release.Spec.Values == nil {
 		release.Spec.Values = make(map[string]interface{})
 	}
-	release.Spec.Values["argovue"] = map[string]string{"owner": owner, "baseurl": baseUrl}
+	argovue := make(map[string]interface{})
+	argovue["baseurl"] = baseUrl
+	argovue["labels"] = []map[string]string{{"name": label, "value": owner}}
+	release.Spec.Values["argovue"] = argovue
 	return release
 }
 
-func deployRelease(s *argovuev1.Service, release *fluxv1.HelmRelease, owner string) error {
+func deployRelease(s *argovuev1.Service, release *fluxv1.HelmRelease) error {
 	clientset, err := kube.GetFluxV1Clientset()
 	if err != nil {
 		return err
@@ -48,14 +51,14 @@ func deployRelease(s *argovuev1.Service, release *fluxv1.HelmRelease, owner stri
 	return err
 }
 
-func Deploy(s *argovuev1.Service, owner string, input []argovuev1.InputValue) error {
-	release := makeRelease(s, s.Namespace, owner)
+func Deploy(s *argovuev1.Service, label, owner string, input []argovuev1.InputValue) error {
+	release := makeRelease(s, s.Namespace, label, owner)
 	env := []map[string]string{}
 	for _, i := range input {
 		env = append(env, map[string]string{"name": i.Name, "value": i.Value})
 	}
 	release.Spec.Values["env"] = env
-	return deployRelease(s, release, owner)
+	return deployRelease(s, release)
 }
 
 func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, releaseName, owner string) error {
@@ -67,7 +70,7 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, releaseName, owner st
 	if err != nil {
 		return err
 	}
-	release := makeRelease(filebrowser, wf.Namespace, owner)
+	release := makeRelease(filebrowser, wf.Namespace, "oidc.argovue.io/id", owner)
 	volumes := []map[string]string{}
 	for _, pvc := range wf.Status.PersistentVolumeClaims {
 		volumes = append(volumes, map[string]string{"name": pvc.Name, "claim": pvc.PersistentVolumeClaim.ClaimName})
@@ -77,7 +80,7 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, releaseName, owner st
 	if av, ok := release.Spec.Values["argovue"].(map[string]string); ok {
 		av["workflow"] = wf.Name
 	}
-	return deployRelease(filebrowser, release, owner)
+	return deployRelease(filebrowser, release)
 }
 
 func DeleteInstance(namespace, name string) error {

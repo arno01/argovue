@@ -1,6 +1,5 @@
 # TODO
 
-* Authorize proxy requests
 * Allow to share resources to groups user belongs
 
 * Document the system with workflows
@@ -20,6 +19,7 @@
 
 # DONE
 
+* Authorize proxy requests
 * Fix env variables provisioning
 * Use helm operator/cli to install services?
 * Add confirmation dialogs for workflow actions

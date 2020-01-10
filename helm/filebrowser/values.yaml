@@ -3,5 +3,7 @@ volumes:
   claim: ~
 argovue:
   workflow: ~
-  owner: ~
   baseurl: ~
+  labels:
+  - name: ~
+    value: ~

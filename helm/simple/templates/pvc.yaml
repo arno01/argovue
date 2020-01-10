@@ -4,7 +4,9 @@ apiVersion: v1
 metadata:
   name: {{ template "chart.fullname" . }}
   labels:
-    oidc.argovue.io/id: {{ .Values.argovue.owner }}
+    {{- range .Values.argovue.labels }}
+    {{ .name }}: {{ .value }}
+    {{- end }}
     {{- include "chart.labels" . | nindent 4 }}
 spec:
   accessModes:

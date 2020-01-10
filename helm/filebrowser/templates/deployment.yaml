@@ -13,7 +13,9 @@ spec:
   template:
     metadata:
       labels:
-        oidc.argovue.io/id: {{ .Values.argovue.owner }}
+        {{- range .Values.argovue.labels }}
+        {{ .name }}: {{ .value }}
+        {{- end }}
         workflows.argoproj.io/workflow: {{ .Values.argovue.workflow }}
         {{- include "chart.selectorLabels" . | nindent 8 }}
     spec:
