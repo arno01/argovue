@@ -203,9 +203,12 @@ func verifyOwner(profile map[string]interface{}, owner string) (string, string, 
 	if util.I2s(profile["effective_id"]) == owner {
 		return "oidc.argovue.io/id", util.EncodeLabel(owner), nil
 	}
-	for _, g := range util.Li2s(profile["effective_groups"]) {
-		if g == owner {
-			return "oidc.argovue.io/group", owner, nil
+	if groups, ok := profile["effective_groups"].([]string); ok && len(groups) > 0 {
+		log.Debugf("Checking owner:%s in groups:%s", owner, groups)
+		for _, g := range groups {
+			if g == owner {
+				return "oidc.argovue.io/group", owner, nil
+			}
 		}
 	}
 	return "", "", fmt.Errorf("Can't verify owner:%s", owner)
