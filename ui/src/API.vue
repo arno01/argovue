@@ -68,7 +68,19 @@ export default {
     },
     logout() {
       this.redirect('/logout')
-    }
+    },
+    copy(ar) {
+      return JSON.parse(JSON.stringify(ar || []))
+    },
+    groups () {
+      return this.copy(this.profile.groups).sort()
+    },
+    effective_groups () {
+      return this.copy(this.profile.effective_groups).sort()
+    },
+    effective_id () {
+      return this.profile.effective_id
+    },
   }
 };
 </script>
