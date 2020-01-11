@@ -1,14 +1,14 @@
 package app
 
 import (
+	"argovue/constant"
 	"argovue/crd"
 	"argovue/kube"
-	u "argovue/util"
+	"argovue/profile"
 	"encoding/json"
 	"fmt"
 	"net/http"
 
-	"github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
 	"github.com/argoproj/argo/workflow/util"
 	log "github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -16,94 +16,68 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func sendError(w http.ResponseWriter, action string, err error) {
-	json.NewEncoder(w).Encode(map[string]string{"status": "error", "action": action, "message": fmt.Sprintf("%s", err)})
-}
-
-func (a *App) authWorkflow(sessionId, name, namespace string, w http.ResponseWriter) bool {
-	broker := a.getBroker(sessionId, "workflows")
-	if broker == nil {
-		log.Debugf("authWorkflow: no workflow broker")
-		http.Error(w, "Access denied", http.StatusForbidden)
-		return false
-	}
-	wf := broker.Broker().Find(name, namespace)
-	if wf == nil {
-		log.Debugf("authWorkflow: no workflow %s/%s in broker", namespace, name)
-		http.Error(w, "Access denied", http.StatusForbidden)
-		return false
-	}
-	return true
-}
-
-func (a *App) watchWorkflow(w http.ResponseWriter, r *http.Request) {
-	session, _ := a.Store().Get(r, "auth-session")
+func (a *App) watchWorkflow(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	v := mux.Vars(r)
 	name, namespace := v["name"], v["namespace"]
-	log.Debugf("SSE: start workflow/%s/%s", namespace, name)
-	if !a.authWorkflow(session.ID, name, namespace, w) {
-		return
+	if err := authObj("workflow", name, namespace, p); err != nil {
+		return err
 	}
-	crd := crd.Workflow(name)
-	cb := a.maybeNewSubsetBroker(session.ID, crd)
+	cb := a.maybeNewSubsetBroker(sid, crd.Workflow(name))
 	a.watchBroker(cb, w, r)
-	log.Debugf("SSE: stop workflow/%s/%s", namespace, name)
+	return nil
 }
 
-func (a *App) watchWorkflowPods(w http.ResponseWriter, r *http.Request) {
-	session, _ := a.Store().Get(r, "auth-session")
+func (a *App) watchWorkflowPods(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	v := mux.Vars(r)
 	name, namespace, pod := v["name"], v["namespace"], v["pod"]
-	log.Debugf("SSE: start workflow/%s/%s/%s", namespace, name, pod)
-	if !a.authWorkflow(session.ID, name, namespace, w) {
-		return
+	if err := authObj("workflow", name, namespace, p); err != nil {
+		return err
 	}
 	crd := crd.WorkflowPods(name, pod)
-	cb := a.maybeNewSubsetBroker(session.ID, crd)
+	cb := a.maybeNewSubsetBroker(sid, crd)
 	a.watchBroker(cb, w, r)
-	log.Debugf("SSE: stop workflow/%s/%s/%s", namespace, name, pod)
+	return nil
 }
 
-func (a *App) watchWorkflowMounts(w http.ResponseWriter, r *http.Request) {
-	session, _ := a.Store().Get(r, "auth-session")
+func (a *App) watchWorkflowMounts(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	v := mux.Vars(r)
 	name, namespace := v["name"], v["namespace"]
-	log.Debugf("SSE: start workflow/%s/%s mounts", namespace, name)
-	if !a.authWorkflow(session.ID, name, namespace, w) {
-		return
+	if err := authObj("workflow", name, namespace, p); err != nil {
+		return err
 	}
 	id := fmt.Sprintf("%s-%s-mounts", namespace, name)
-	cb := a.maybeNewIdSubsetBroker(session.ID, id)
+	cb := a.maybeNewIdSubsetBroker(sid, id)
 	cb.AddCrd(crd.WorkflowMounts(name))
 	a.watchBroker(cb, w, r)
-	log.Debugf("SSE: stop workflow/%s/%s mounts", namespace, name)
+	return nil
 }
 
-func (a *App) watchWorkflowServices(w http.ResponseWriter, r *http.Request) {
-	session, _ := a.Store().Get(r, "auth-session")
+func (a *App) watchWorkflowServices(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	v := mux.Vars(r)
 	name, namespace := v["name"], v["namespace"]
 	log.Debugf("SSE: start workflow/%s/%s services", namespace, name)
-	if !a.authWorkflow(session.ID, name, namespace, w) {
-		return
+	if err := authObj("workflow", name, namespace, p); err != nil {
+		return err
 	}
 	crd := crd.WorkflowServices(name)
-	cb := a.maybeNewSubsetBroker(session.ID, crd)
+	cb := a.maybeNewSubsetBroker(sid, crd)
 	a.watchBroker(cb, w, r)
 	log.Debugf("SSE: stop workflow/%s/%s services", namespace, name)
+	return nil
 }
 
-func (a *App) controlWorkflowService(w http.ResponseWriter, r *http.Request) {
+func (a *App) controlWorkflowService(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	v := mux.Vars(r)
 	name, namespace, service, action := v["name"], v["namespace"], v["service"], v["action"]
-	session, err := a.Store().Get(r, "auth-session")
-	if !a.authWorkflow(session.ID, name, namespace, w) {
-		return
+	if err := authObj("workflow", name, namespace, p); err != nil {
+		return err
 	}
+	var err error
 	switch action {
 	case "delete":
 		err = crd.DeleteInstance(namespace, service)
 	default:
+		err = fmt.Errorf("Unknown action:%s", action)
 	}
 	if err != nil {
 		log.Errorf("Can't %s workflow %s/%s, error:%s", action, namespace, name, err)
@@ -111,61 +85,52 @@ func (a *App) controlWorkflowService(w http.ResponseWriter, r *http.Request) {
 	} else {
 		json.NewEncoder(w).Encode(map[string]string{"status": "ok", "action": action, "message": ""})
 	}
+	return nil
 }
 
-func (a *App) watchWorkflowPodLogs(w http.ResponseWriter, r *http.Request) {
-	session, _ := a.Store().Get(r, "auth-session")
+func (a *App) watchWorkflowPodLogs(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	v := mux.Vars(r)
 	name, namespace, pod, container := v["name"], v["namespace"], v["pod"], v["container"]
-	log.Debugf("SSE: start workflow/%s/%s/%s/%s", namespace, name, pod, container)
-	if !a.authWorkflow(session.ID, name, namespace, w) {
-		return
+	if err := authObj("workflow", name, namespace, p); err != nil {
+		return err
 	}
 	crd := crd.WorkflowPods(name, pod)
-	broker := a.getSubsetBroker(session.ID, crd.Id())
+	broker := a.getSubsetBroker(sid, crd.Id())
 	if broker == nil {
-		http.Error(w, "Access denied", http.StatusForbidden)
-		return
+		return makeError(http.StatusForbidden, "Can't find workflow broker")
 	}
 	podObj := broker.Broker().Find(pod, namespace)
 	if podObj == nil {
-		http.Error(w, "Access denied", http.StatusForbidden)
-		return
+		return makeError(http.StatusForbidden, "Can't find workflow pod")
 	}
-	wfLabel, ok := podObj.(metav1.Object).GetLabels()["workflows.argoproj.io/workflow"]
-	if !ok {
-		http.Error(w, "Access denied", http.StatusForbidden)
-		return
+	wfLabel, ok := podObj.(metav1.Object).GetLabels()[constant.WorkflowLabel]
+	if !ok || wfLabel != name {
+		return makeError(http.StatusForbidden, "Can't find matching workflow label")
 	}
-	if wfLabel != name {
-		http.Error(w, "Access denied", http.StatusForbidden)
-		return
-	}
-	a.streamLogs(w, r)
-	log.Debugf("SSE: stop workflow/%s/%s/%s/%s", namespace, name, pod, container)
+	a.streamPodLogs(w, r, pod, namespace, container)
+	return nil
 }
 
-func (a *App) commandWorkflow(w http.ResponseWriter, r *http.Request) {
+func (a *App) controlWorkflow(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	v := mux.Vars(r)
 	name, namespace, action := v["name"], v["namespace"], v["action"]
 
-	session, _ := a.Store().Get(r, "auth-session")
-	if !a.authWorkflow(session.ID, name, namespace, w) {
-		return
+	if err := authObj("workflow", name, namespace, p); err != nil {
+		return err
 	}
 
 	wfClientset, err := kube.GetWfClientset()
 	if err != nil {
 		log.Errorf("Can't get argo clientset, error:%s", err)
 		sendError(w, action, err)
-		return
+		return nil
 	}
 	wfClient := kube.GetWfClient(wfClientset, namespace)
 	wf, err := wfClient.Get(name, metav1.GetOptions{})
 	if err != nil {
 		log.Errorf("Can't get workflow %s/%s, error:%s", namespace, name, err)
 		sendError(w, action, err)
-		return
+		return nil
 	}
 
 	kubeClient, _ := kube.GetClient()
@@ -186,8 +151,7 @@ func (a *App) commandWorkflow(w http.ResponseWriter, r *http.Request) {
 	case "terminate":
 		err = util.TerminateWorkflow(wfClient, name)
 	case "mount":
-		profile := session.Values["profile"].(map[string]interface{})
-		err = crd.DeployFilebrowser(wf, a.Args().Namespace(), a.Args().Release(), u.EncodeLabel(u.I2s(profile["effective_id"])))
+		err = crd.DeployFilebrowser(wf, a.Args().Namespace(), a.Args().Release(), p.IdLabel())
 	default:
 		err = fmt.Errorf("unrecognized command %s", action)
 	}
@@ -197,19 +161,5 @@ func (a *App) commandWorkflow(w http.ResponseWriter, r *http.Request) {
 	} else {
 		json.NewEncoder(w).Encode(map[string]string{"status": "ok", "action": action, "message": ""})
 	}
-}
-
-func getWorkflow(name, namespace string) (*v1alpha1.Workflow, error) {
-	wfClientset, err := kube.GetWfClientset()
-	if err != nil {
-		log.Errorf("Can't get argo clientset, error:%s", err)
-		return nil, err
-	}
-	wfClient := kube.GetWfClient(wfClientset, namespace)
-	wf, err := wfClient.Get(name, metav1.GetOptions{})
-	if err != nil {
-		log.Errorf("Can't get workflow %s/%s, error:%s", namespace, name, err)
-		return nil, err
-	}
-	return wf, nil
+	return nil
 }

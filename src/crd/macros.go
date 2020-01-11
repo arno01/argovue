@@ -18,9 +18,9 @@ func GetByKind(kind, namespace, name string) (crd *Crd, err error) {
 		crd = New("", "v1", "services")
 	case "workflow":
 		crd = New("argoproj.io", "v1alpha1", "workflows")
-	case "catalogue":
+	case "argovue":
 		crd = New("argovue.io", "v1", "services")
-	case "instance":
+	case "helmrelease":
 		crd = New("helm.fluxcd.io", "v1", "helmreleases")
 	default:
 		return nil, fmt.Errorf("Can't create crd by kind:%s", kind)

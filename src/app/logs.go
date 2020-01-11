@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -49,10 +48,4 @@ func (a *App) streamPodLogs(w http.ResponseWriter, r *http.Request, name, namesp
 	}
 	<-w.(http.CloseNotifier).CloseNotify()
 	log.Debugf("Logs: close connection,")
-}
-
-func (a *App) streamLogs(w http.ResponseWriter, r *http.Request) {
-	v := mux.Vars(r)
-	namespace, pod, container := v["namespace"], v["pod"], v["container"]
-	a.streamPodLogs(w, r, pod, namespace, container)
 }

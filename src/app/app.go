@@ -7,6 +7,7 @@ import (
 	"argovue/kube"
 	"argovue/profile"
 	"encoding/gob"
+	"encoding/json"
 	"fmt"
 	"regexp"
 	"sync"
@@ -153,6 +154,10 @@ func (a *App) authMiddleWare(next http.Handler) http.Handler {
 	})
 }
 
+func sendError(w http.ResponseWriter, action string, err error) {
+	json.NewEncoder(w).Encode(map[string]string{"status": "error", "action": action, "message": fmt.Sprintf("%s", err)})
+}
+
 func (a *App) Serve() {
 	a.wg.Add(1)
 	defer a.wg.Done()
@@ -184,13 +189,13 @@ func (a *App) Serve() {
 	r.Handle("/catalogue/{namespace}/{name}/{action}", a.appHandler(a.controlCatalogue)).Methods("POST", "OPTIONS")
 	r.Handle("/catalogue/{namespace}/{name}/instance/{instance}/action/{action}", a.appHandler(a.controlCatalogueInstance)).Methods("POST", "OPTIONS")
 
-	r.HandleFunc("/workflow/{namespace}/{name}", a.watchWorkflow)
-	r.HandleFunc("/workflow/{namespace}/{name}/services", a.watchWorkflowServices)
-	r.HandleFunc("/workflow/{namespace}/{name}/mounts", a.watchWorkflowMounts)
-	r.HandleFunc("/workflow/{namespace}/{name}/service/{service}/action/{action}", a.controlWorkflowService).Methods("POST", "OPTIONS")
-	r.HandleFunc("/workflow/{namespace}/{name}/pod/{pod}", a.watchWorkflowPods)
-	r.HandleFunc("/workflow/{namespace}/{name}/pod/{pod}/container/{container}/logs", a.watchWorkflowPodLogs)
-	r.HandleFunc("/workflow/{namespace}/{name}/action/{action}", a.commandWorkflow).Methods("POST", "OPTIONS")
+	r.Handle("/workflow/{namespace}/{name}", a.appHandler(a.watchWorkflow))
+	r.Handle("/workflow/{namespace}/{name}/services", a.appHandler(a.watchWorkflowServices))
+	r.Handle("/workflow/{namespace}/{name}/mounts", a.appHandler(a.watchWorkflowMounts))
+	r.Handle("/workflow/{namespace}/{name}/service/{service}/action/{action}", a.appHandler(a.controlWorkflowService)).Methods("POST", "OPTIONS")
+	r.Handle("/workflow/{namespace}/{name}/pod/{pod}", a.appHandler(a.watchWorkflowPods))
+	r.Handle("/workflow/{namespace}/{name}/pod/{pod}/container/{container}/logs", a.appHandler(a.watchWorkflowPodLogs))
+	r.Handle("/workflow/{namespace}/{name}/action/{action}", a.appHandler(a.controlWorkflow)).Methods("POST", "OPTIONS")
 
 	r.Use(a.authMiddleWare)
 	srv := &http.Server{
