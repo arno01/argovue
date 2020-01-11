@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"argovue/constant"
 	"argovue/kube"
 
 	argovuev1 "argovue/apis/argovue.io/v1"
@@ -83,7 +84,7 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, releaseName, owner st
 	if err != nil {
 		return err
 	}
-	release := makeRelease(filebrowser, wf.Namespace, "oidc.argovue.io/id", owner)
+	release := makeRelease(filebrowser, wf.Namespace, constant.IdLabel, owner)
 	volumes := []map[string]string{}
 	for _, pvc := range wf.Status.PersistentVolumeClaims {
 		volumes = append(volumes, map[string]string{"name": pvc.Name, "claim": pvc.PersistentVolumeClaim.ClaimName})

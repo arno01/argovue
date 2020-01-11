@@ -1,6 +1,7 @@
 package crd
 
 import (
+	"argovue/constant"
 	"encoding/json"
 	"fmt"
 
@@ -31,18 +32,18 @@ func GetByKind(kind, namespace, name string) (crd *Crd, err error) {
 
 func WorkflowPods(wfName, pod string) *Crd {
 	return New("", "v1", "pods").
-		SetLabelSelector("workflows.argoproj.io/workflow=" + wfName).
+		SetLabelSelector(fmt.Sprintf("%s=%s", constant.WorkflowLabel, wfName)).
 		SetFieldSelector("metadata.name=" + pod)
 }
 
 func WorkflowServices(wfName string) *Crd {
 	return New("helm.fluxcd.io", "v1", "helmreleases").
-		SetLabelSelector("workflows.argoproj.io/workflow=" + wfName)
+		SetLabelSelector(fmt.Sprintf("%s=%s", constant.WorkflowLabel, wfName))
 }
 
 func WorkflowMounts(wfName string) *Crd {
 	return New("", "v1", "services").
-		SetLabelSelector("workflows.argoproj.io/workflow=" + wfName)
+		SetLabelSelector(fmt.Sprintf("%s=%s", constant.WorkflowLabel, wfName))
 }
 
 func Workflow(wfName string) *Crd {
