@@ -120,6 +120,17 @@ func (a *App) appHandler(fn appHandler) httpHandler {
 	}
 }
 
+func authObj(kind, name, namespace string, p *profile.Profile) *appError {
+	obj, err := kube.GetByKind(kind, name, namespace)
+	if err != nil {
+		return makeError(http.StatusNotFound, "Can't find object by kind %s/%s/%s", kind, namespace, name)
+	}
+	if !p.Authorize(obj) {
+		return makeError(http.StatusForbidden, "Not authorized to access object %s/%s/%s", kind, namespace, name)
+	}
+	return nil
+}
+
 func (a *App) authMiddleWare(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", a.Args().UIRootDomain())

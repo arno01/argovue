@@ -9,25 +9,21 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (a *App) streamPodLogs(w http.ResponseWriter, r *http.Request, name, namespace, container string) {
+func (a *App) streamPodLogs(w http.ResponseWriter, r *http.Request, name, namespace, container string) *appError {
 	flusher, ok := w.(http.Flusher)
 	if !ok {
-		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
-		return
+		return makeError(http.StatusInternalServerError, "Streaming not supported")
 	}
 
 	stream, err := kube.GetPodLogs(name, namespace, container)
 	if err != nil {
-		log.Errorf("Error getting pod logs %s/%s/%s, error:%s", namespace, name, container, err)
-		http.Error(w, "Error getting logs", http.StatusInternalServerError)
-		return
+		return makeError(http.StatusInternalServerError, "Error getting pod logs %s/%s/%s, error:%s", namespace, name, container, err)
 	}
 
 	defer stream.Close()
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("Transfer-Encoding", "identity")
-	w.Header().Set("Access-Control-Allow-Origin", a.Args().UIRootDomain())
 	w.Header().Set("Connection", "keep-alive")
 	w.WriteHeader(http.StatusOK)
 	flusher.Flush()
@@ -47,5 +43,5 @@ func (a *App) streamPodLogs(w http.ResponseWriter, r *http.Request, name, namesp
 		flusher.Flush()
 	}
 	<-w.(http.CloseNotifier).CloseNotify()
-	log.Debugf("Logs: close connection,")
+	return nil
 }

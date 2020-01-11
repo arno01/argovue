@@ -22,9 +22,7 @@ func (a *App) watchWorkflow(sid string, p *profile.Profile, w http.ResponseWrite
 	if err := authObj("workflow", name, namespace, p); err != nil {
 		return err
 	}
-	cb := a.maybeNewSubsetBroker(sid, crd.Workflow(name))
-	a.watchBroker(cb, w, r)
-	return nil
+	return a.maybeNewSubsetBroker(sid, crd.Workflow(name)).ServeHTTP(w, r)
 }
 
 func (a *App) watchWorkflowPods(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
@@ -33,10 +31,7 @@ func (a *App) watchWorkflowPods(sid string, p *profile.Profile, w http.ResponseW
 	if err := authObj("workflow", name, namespace, p); err != nil {
 		return err
 	}
-	crd := crd.WorkflowPods(name, pod)
-	cb := a.maybeNewSubsetBroker(sid, crd)
-	a.watchBroker(cb, w, r)
-	return nil
+	return a.maybeNewSubsetBroker(sid, crd.WorkflowPods(name, pod)).ServeHTTP(w, r)
 }
 
 func (a *App) watchWorkflowMounts(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
@@ -46,24 +41,16 @@ func (a *App) watchWorkflowMounts(sid string, p *profile.Profile, w http.Respons
 		return err
 	}
 	id := fmt.Sprintf("%s-%s-mounts", namespace, name)
-	cb := a.maybeNewIdSubsetBroker(sid, id)
-	cb.AddCrd(crd.WorkflowMounts(name))
-	a.watchBroker(cb, w, r)
-	return nil
+	return a.maybeNewIdSubsetBroker(sid, id).AddCrd(crd.WorkflowMounts(name)).ServeHTTP(w, r)
 }
 
 func (a *App) watchWorkflowServices(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	v := mux.Vars(r)
 	name, namespace := v["name"], v["namespace"]
-	log.Debugf("SSE: start workflow/%s/%s services", namespace, name)
 	if err := authObj("workflow", name, namespace, p); err != nil {
 		return err
 	}
-	crd := crd.WorkflowServices(name)
-	cb := a.maybeNewSubsetBroker(sid, crd)
-	a.watchBroker(cb, w, r)
-	log.Debugf("SSE: stop workflow/%s/%s services", namespace, name)
-	return nil
+	return a.maybeNewSubsetBroker(sid, crd.WorkflowServices(name)).ServeHTTP(w, r)
 }
 
 func (a *App) controlWorkflowService(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
@@ -107,8 +94,7 @@ func (a *App) watchWorkflowPodLogs(sid string, p *profile.Profile, w http.Respon
 	if !ok || wfLabel != name {
 		return makeError(http.StatusForbidden, "Can't find matching workflow label")
 	}
-	a.streamPodLogs(w, r, pod, namespace, container)
-	return nil
+	return a.streamPodLogs(w, r, pod, namespace, container)
 }
 
 func (a *App) controlWorkflow(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {

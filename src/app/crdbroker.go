@@ -3,6 +3,7 @@ package app
 import (
 	"argovue/broker"
 	"argovue/crd"
+	"net/http"
 )
 
 type CrdBroker struct {
@@ -97,4 +98,19 @@ func (cb *CrdBroker) Stop() {
 
 func (cb *CrdBroker) Broker() *broker.Broker {
 	return cb.broker
+}
+
+func (cb *CrdBroker) ServeHTTP(w http.ResponseWriter, r *http.Request) *appError {
+	flusher, ok := w.(http.Flusher)
+	if !ok {
+		return makeError(http.StatusInternalServerError, "Streaming unsupported!")
+	}
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Transfer-Encoding", "identity")
+	w.Header().Set("Connection", "keep-alive")
+	w.WriteHeader(http.StatusOK)
+	flusher.Flush()
+	cb.broker.Serve(w, flusher)
+	return nil
 }

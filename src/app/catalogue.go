@@ -15,26 +15,13 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func authObj(kind, name, namespace string, p *profile.Profile) *appError {
-	obj, err := kube.GetByKind(kind, name, namespace)
-	if err != nil {
-		return makeError(http.StatusNotFound, "Can't find object by kind %s/%s/%s", kind, namespace, name)
-	}
-	if !p.Authorize(obj) {
-		return makeError(http.StatusForbidden, "Not authorized to access object %s/%s/%s", kind, namespace, name)
-	}
-	return nil
-}
-
 func (a *App) watchCatalogue(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	v := mux.Vars(r)
 	name, namespace := v["name"], v["namespace"]
 	if err := authObj("argovue", name, namespace, p); err != nil {
 		return err
 	}
-	cb := a.maybeNewSubsetBroker(sid, crd.Catalogue(name))
-	a.watchBroker(cb, w, r)
-	return nil
+	return a.maybeNewSubsetBroker(sid, crd.Catalogue(name)).ServeHTTP(w, r)
 }
 
 func (a *App) watchCatalogueInstances(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
@@ -43,9 +30,7 @@ func (a *App) watchCatalogueInstances(sid string, p *profile.Profile, w http.Res
 	if err := authObj("argovue", name, namespace, p); err != nil {
 		return err
 	}
-	cb := a.maybeNewSubsetBroker(sid, crd.CatalogueInstances(name))
-	a.watchBroker(cb, w, r)
-	return nil
+	return a.maybeNewSubsetBroker(sid, crd.CatalogueInstances(name)).ServeHTTP(w, r)
 }
 
 func (a *App) watchCatalogueResources(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
@@ -54,9 +39,7 @@ func (a *App) watchCatalogueResources(sid string, p *profile.Profile, w http.Res
 	if err := authObj("argovue", name, namespace, p); err != nil {
 		return err
 	}
-	cb := a.maybeNewSubsetBroker(sid, crd.CatalogueResources(name))
-	a.watchBroker(cb, w, r)
-	return nil
+	return a.maybeNewSubsetBroker(sid, crd.CatalogueResources(name)).ServeHTTP(w, r)
 }
 
 func (a *App) watchCatalogueInstanceResources(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
@@ -71,8 +54,7 @@ func (a *App) watchCatalogueInstanceResources(sid string, p *profile.Profile, w 
 	cb.AddCrd(crd.CatalogueInstancePods(instance))
 	cb.AddCrd(crd.CatalogueInstancePvcs(instance))
 	cb.AddCrd(crd.CatalogueInstanceServices(instance))
-	a.watchBroker(cb, w, r)
-	return nil
+	return cb.ServeHTTP(w, r)
 }
 
 func (a *App) watchCatalogueInstance(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
@@ -81,9 +63,7 @@ func (a *App) watchCatalogueInstance(sid string, p *profile.Profile, w http.Resp
 	if err := authObj("helmrelease", instance, namespace, p); err != nil {
 		return err
 	}
-	cb := a.maybeNewSubsetBroker(sid, crd.CatalogueInstance(name, instance))
-	a.watchBroker(cb, w, r)
-	return nil
+	return a.maybeNewSubsetBroker(sid, crd.CatalogueInstance(name, instance)).ServeHTTP(w, r)
 }
 
 func (a *App) controlCatalogue(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
