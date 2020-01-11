@@ -1,8 +1,0 @@
-volumes:
-- name: ~
-  claim: ~
-argovue:
-  baseurl: ~
-  labels:
-  - name: ~
-    value: ~

@@ -17,7 +17,10 @@ import (
 
 func int32Ptr(i int32) *int32 { return &i }
 
-func addLabel(release *fluxv1.HelmRelease, name, value string) map[string]interface{} {
+func ensureArgovueValues(release *fluxv1.HelmRelease) *fluxv1.HelmRelease {
+	if release.Spec.Values == nil {
+		release.Spec.Values = make(map[string]interface{})
+	}
 	av, ok := release.Spec.Values["argovue"].(map[string]interface{})
 	if !ok {
 		av = make(map[string]interface{})
@@ -26,15 +29,22 @@ func addLabel(release *fluxv1.HelmRelease, name, value string) map[string]interf
 	if !ok {
 		labels = make(map[string]string)
 	}
-	labels[name] = value
 	av["labels"] = labels
 	release.Spec.Values["argovue"] = av
-	return av
+	return release
+}
+
+func addArgovueLabel(release *fluxv1.HelmRelease, label, value string) {
+	release.Spec.Values["argovue"].(map[string]interface{})["labels"].(map[string]string)[label] = value
+}
+
+func addArgovueValue(release *fluxv1.HelmRelease, key string, value interface{}) {
+	release.Spec.Values["argovue"].(map[string]interface{})[key] = value
 }
 
 func makeRelease(s *argovuev1.Service, namespace, label, owner string) *fluxv1.HelmRelease {
 	releaseName := fmt.Sprintf("%s-%s", s.Name, getInstanceId(s))
-	release := &fluxv1.HelmRelease{
+	release := ensureArgovueValues(&fluxv1.HelmRelease{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      releaseName,
 			Namespace: namespace,
@@ -45,14 +55,10 @@ func makeRelease(s *argovuev1.Service, namespace, label, owner string) *fluxv1.H
 			OwnerReferences: []metav1.OwnerReference{{APIVersion: "argovue.io/v1", Kind: "Service", Name: s.Name, UID: s.UID}},
 		},
 		Spec: s.Spec.HelmRelease,
-	}
-	baseUrl := fmt.Sprintf("/proxy/%s/%s/%d", namespace, releaseName, 80)
+	})
 	release.Spec.ReleaseName = releaseName
-	if release.Spec.Values == nil {
-		release.Spec.Values = make(map[string]interface{})
-	}
-	av := addLabel(release, label, owner)
-	av["baseurl"] = baseUrl
+	addArgovueLabel(release, label, owner)
+	addArgovueValue(release, "baseurl", fmt.Sprintf("/proxy/%s/%s/%d", namespace, releaseName, 80))
 	return release
 }
 
@@ -90,7 +96,7 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, releaseName, owner st
 		volumes = append(volumes, map[string]string{"name": pvc.Name, "claim": pvc.PersistentVolumeClaim.ClaimName})
 	}
 	release.ObjectMeta.Labels[constant.WorkflowLabel] = wf.Name
-	addLabel(release, constant.WorkflowLabel, wf.Name)
+	addArgovueLabel(release, constant.WorkflowLabel, wf.Name)
 	release.Spec.Values["volumes"] = volumes
 	return deployRelease(filebrowser, release)
 }
