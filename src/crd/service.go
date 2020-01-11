@@ -17,16 +17,16 @@ import (
 
 func int32Ptr(i int32) *int32 { return &i }
 
-func appendLabels(release *fluxv1.HelmRelease, name, value string) map[string]interface{} {
+func addLabel(release *fluxv1.HelmRelease, name, value string) map[string]interface{} {
 	av, ok := release.Spec.Values["argovue"].(map[string]interface{})
 	if !ok {
 		av = make(map[string]interface{})
 	}
-	labels, ok := (av["labels"]).([]map[string]string)
+	labels, ok := (av["labels"]).(map[string]string)
 	if !ok {
-		labels = []map[string]string{}
+		labels = make(map[string]string)
 	}
-	labels = append(labels, map[string]string{"name": name, "value": value})
+	labels[name] = value
 	av["labels"] = labels
 	release.Spec.Values["argovue"] = av
 	return av
@@ -39,8 +39,8 @@ func makeRelease(s *argovuev1.Service, namespace, label, owner string) *fluxv1.H
 			Name:      releaseName,
 			Namespace: namespace,
 			Labels: map[string]string{
-				"service.argovue.io/name": s.Name,
-				label:                     owner,
+				constant.ServiceLabel: s.Name,
+				label:                 owner,
 			},
 			OwnerReferences: []metav1.OwnerReference{{APIVersion: "argovue.io/v1", Kind: "Service", Name: s.Name, UID: s.UID}},
 		},
@@ -51,7 +51,7 @@ func makeRelease(s *argovuev1.Service, namespace, label, owner string) *fluxv1.H
 	if release.Spec.Values == nil {
 		release.Spec.Values = make(map[string]interface{})
 	}
-	av := appendLabels(release, label, owner)
+	av := addLabel(release, label, owner)
 	av["baseurl"] = baseUrl
 	return release
 }
@@ -89,8 +89,8 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, releaseName, owner st
 	for _, pvc := range wf.Status.PersistentVolumeClaims {
 		volumes = append(volumes, map[string]string{"name": pvc.Name, "claim": pvc.PersistentVolumeClaim.ClaimName})
 	}
-	release.ObjectMeta.Labels["workflows.argoproj.io/workflow"] = wf.Name
-	appendLabels(release, "workflows.argoproj.io/workflow", wf.Name)
+	release.ObjectMeta.Labels[constant.WorkflowLabel] = wf.Name
+	addLabel(release, constant.WorkflowLabel, wf.Name)
 	release.Spec.Values["volumes"] = volumes
 	return deployRelease(filebrowser, release)
 }
@@ -114,7 +114,7 @@ func GetWorkflowFilebrowserNames(wf *wfv1alpha1.Workflow) (re []string) {
 	iface := clientset.ArgovueV1().Services(wf.Namespace)
 
 	list, err := iface.List(metav1.ListOptions{
-		LabelSelector: fmt.Sprintf("workflows.argoproj.io/workflow=%s,app.kubernetes.io/name=%s", wf.Name, "filebrowser")})
+		LabelSelector: fmt.Sprintf("%s=%s,app.kubernetes.io/name=%s", constant.WorkflowLabel, wf.Name, "filebrowser")})
 	if err != nil {
 		return
 	}
@@ -139,7 +139,7 @@ func getInstanceId(s *argovuev1.Service) string {
 	if ann == nil {
 		ann = make(map[string]string)
 	}
-	id, ok := ann["instance.argovue.io/id"]
+	id, ok := ann[constant.InstanceId]
 	if !ok {
 		id = "1"
 	} else {
@@ -149,7 +149,7 @@ func getInstanceId(s *argovuev1.Service) string {
 		}
 		id = strconv.Itoa(idI + 1)
 	}
-	ann["instance.argovue.io/id"] = id
+	ann[constant.InstanceId] = id
 	freshCopy.SetAnnotations(ann)
 	_, err = clientset.ArgovueV1().Services(s.Namespace).Update(freshCopy)
 	if err != nil {
@@ -174,7 +174,7 @@ func getFilebrowserInstanceId(wf *wfv1alpha1.Workflow) string {
 	if ann == nil {
 		ann = make(map[string]string)
 	}
-	id, ok := ann["instance.argovue.io/id"]
+	id, ok := ann[constant.InstanceId]
 	if !ok {
 		id = "1"
 	} else {
@@ -184,7 +184,7 @@ func getFilebrowserInstanceId(wf *wfv1alpha1.Workflow) string {
 		}
 		id = strconv.Itoa(idI + 1)
 	}
-	ann["instance.argovue.io/id"] = id
+	ann[constant.InstanceId] = id
 	freshCopy.SetAnnotations(ann)
 	_, err = iface.Update(freshCopy)
 	if err != nil {
