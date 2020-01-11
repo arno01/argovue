@@ -34,7 +34,7 @@ func (a *App) onLogout(sessionId string) {
 func (a *App) onLogin(sessionId string, p *profile.Profile) {
 	wfBroker := a.newBroker(sessionId, "workflows")
 	catBroker := a.newBroker(sessionId, "catalogue")
-	if len(p.Groups) > 0 {
+	if len(p.EffectiveGroups) > 0 {
 		selector := fmt.Sprintf("%s in (%s)", constant.GroupLabel, strings.Join(p.Groups, ","))
 		wfBroker.AddCrd(crd.New("argoproj.io", "v1alpha1", "workflows").SetLabelSelector(selector))
 		catBroker.AddCrd(crd.New("argovue.io", "v1", "services").SetLabelSelector(selector))
