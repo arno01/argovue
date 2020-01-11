@@ -77,7 +77,7 @@ func Deploy(s *argovuev1.Service, label, owner string, input []argovuev1.InputVa
 	for _, i := range input {
 		env = append(env, map[string]string{"name": i.Name, "value": i.Value})
 	}
-	release.Spec.Values["env"] = env
+	addArgovueValue(release, "env", env)
 	return deployRelease(s, release)
 }
 
