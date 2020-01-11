@@ -12,8 +12,9 @@ spec:
     caption: Variable two
   helmRelease:
     chart:
-      git: https://github.com/jamhed/argovue.git
-      path: helm/simple
+      repository: https://jamhed.github.io/charts
+      name: simple
+      version: 0.1.4
     values:
       image: jamhed/dash:0.1.1
       port: 8000
