@@ -42,8 +42,7 @@ func addArgovueValue(release *fluxv1.HelmRelease, key string, value interface{})
 	release.Spec.Values["argovue"].(map[string]interface{})[key] = value
 }
 
-func makeRelease(s *argovuev1.Service, namespace, label, owner string) *fluxv1.HelmRelease {
-	releaseName := fmt.Sprintf("%s-%s", s.Name, getInstanceId(s))
+func makeRelease(s *argovuev1.Service, namespace, label, owner, releaseName string) *fluxv1.HelmRelease {
 	release := ensureArgovueValues(&fluxv1.HelmRelease{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      releaseName,
@@ -72,26 +71,29 @@ func deployRelease(release *fluxv1.HelmRelease) error {
 }
 
 func Deploy(s *argovuev1.Service, label, owner string, input []argovuev1.InputValue) error {
-	release := makeRelease(s, s.Namespace, label, owner)
+	releaseName := fmt.Sprintf("%s-%s", s.Name, GetIdFromAnnotations("argovue", s.Namespace, s.Name))
+	release := makeRelease(s, s.Namespace, label, owner, releaseName)
 	addArgovueValue(release, "input", input)
 	return deployRelease(release)
 }
 
-func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, releaseName, owner string) error {
+func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, argovueReleaseName, owner string) error {
 	clientset, err := kube.GetV1Clientset()
 	if err != nil {
 		return err
 	}
-	filebrowser, err := clientset.ArgovueV1().Services(namespace).Get(fmt.Sprintf("%s-filebrowser", releaseName), metav1.GetOptions{})
+	filebrowser, err := clientset.ArgovueV1().Services(namespace).Get(fmt.Sprintf("%s-filebrowser", argovueReleaseName), metav1.GetOptions{})
 	if err != nil {
 		return err
 	}
-	release := makeRelease(filebrowser, wf.Namespace, constant.IdLabel, owner)
+	releaseName := fmt.Sprintf("%s-%s", wf.Name, GetIdFromAnnotations("workflow", wf.Namespace, wf.Name))
+	release := makeRelease(filebrowser, wf.Namespace, constant.IdLabel, owner, releaseName)
 	volumes := []map[string]string{}
 	for _, pvc := range wf.Status.PersistentVolumeClaims {
 		volumes = append(volumes, map[string]string{"name": pvc.Name, "claim": pvc.PersistentVolumeClaim.ClaimName})
 	}
-	release.ObjectMeta.OwnerReferences = []metav1.OwnerReference{}
+	release.ObjectMeta.OwnerReferences =
+		[]metav1.OwnerReference{{APIVersion: "argoproj.io/v1alpha1", Kind: "Workflow", Name: wf.Name, UID: wf.UID}}
 	release.ObjectMeta.Labels[constant.WorkflowLabel] = wf.Name
 	addArgovueLabel(release, constant.WorkflowLabel, wf.Name)
 	release.Spec.Values["volumes"] = volumes
@@ -127,22 +129,19 @@ func GetWorkflowFilebrowserNames(wf *wfv1alpha1.Workflow) (re []string) {
 	return
 }
 
-func getInstanceId(s *argovuev1.Service) string {
-	clientset, err := kube.GetV1Clientset()
+func GetIdFromAnnotations(kind, namespace, name string) string {
+	client := kube.ByKind(kind, namespace)
+	obj, err := client.Get(name, metav1.GetOptions{})
 	if err != nil {
-		log.Errorf("Can't get clientset, error:%s", err)
+		log.Errorf("Can't get object %s/%s/%s, error:%s", kind, namespace, name, err)
 		return "0"
 	}
-	freshCopy, err := clientset.ArgovueV1().Services(s.Namespace).Get(s.Name, metav1.GetOptions{})
-	if err != nil {
-		log.Errorf("Can't get object, error:%s", err)
-		return "0"
+	annotations := obj.GetAnnotations()
+	if annotations == nil {
+		annotations = make(map[string]string)
+		obj.SetAnnotations(annotations)
 	}
-	ann := freshCopy.GetAnnotations()
-	if ann == nil {
-		ann = make(map[string]string)
-	}
-	id, ok := ann[constant.InstanceId]
+	id, ok := annotations[constant.InstanceId]
 	if !ok {
 		id = "1"
 	} else {
@@ -152,46 +151,7 @@ func getInstanceId(s *argovuev1.Service) string {
 		}
 		id = strconv.Itoa(idI + 1)
 	}
-	ann[constant.InstanceId] = id
-	freshCopy.SetAnnotations(ann)
-	_, err = clientset.ArgovueV1().Services(s.Namespace).Update(freshCopy)
-	if err != nil {
-		log.Errorf("Can't update object, error:%s", err)
-	}
-	return id
-}
-
-func getFilebrowserInstanceId(wf *wfv1alpha1.Workflow) string {
-	clientset, err := kube.GetWfClientset()
-	if err != nil {
-		log.Errorf("Can't get clientset, error:%s", err)
-		return "0"
-	}
-	iface := clientset.ArgoprojV1alpha1().Workflows(wf.Namespace)
-	freshCopy, err := iface.Get(wf.Name, metav1.GetOptions{})
-	if err != nil {
-		log.Errorf("Can't get object, error:%s", err)
-		return "0"
-	}
-	ann := freshCopy.GetAnnotations()
-	if ann == nil {
-		ann = make(map[string]string)
-	}
-	id, ok := ann[constant.InstanceId]
-	if !ok {
-		id = "1"
-	} else {
-		idI, err := strconv.Atoi(id)
-		if err != nil {
-			idI = 1
-		}
-		id = strconv.Itoa(idI + 1)
-	}
-	ann[constant.InstanceId] = id
-	freshCopy.SetAnnotations(ann)
-	_, err = iface.Update(freshCopy)
-	if err != nil {
-		log.Errorf("Can't update object, error:%s", err)
-	}
+	annotations[constant.InstanceId] = id
+	client.Update(obj, metav1.UpdateOptions{})
 	return id
 }
