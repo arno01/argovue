@@ -1,9 +1,10 @@
 package app
 
 import (
+	"argovue/constant"
 	"argovue/crd"
 	"argovue/kube"
-	"argovue/util"
+	"argovue/profile"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -14,111 +15,89 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func (a *App) authObj(kind, name, namespace string, w http.ResponseWriter, r *http.Request) bool {
+func authObj(kind, name, namespace string, p *profile.Profile) *appError {
 	obj, err := kube.GetByKind(kind, name, namespace)
 	if err != nil {
-		http.Error(w, "Not found", http.StatusNotFound)
-		log.Errorf("Can't find object %s/%s/%s", kind, namespace, name)
-		return false
+		return makeError(http.StatusNotFound, "Can't find object by kind %s/%s/%s", kind, namespace, name)
 	}
-	if !authHTTP(obj, a.Store(), r) {
-		http.Error(w, "Not authorized", http.StatusForbidden)
-		log.Errorf("Not authorized to access object %s/%s/%s", kind, namespace, name)
-		return false
+	if !p.Authorize(obj) {
+		return makeError(http.StatusForbidden, "Not authorized to access object %s/%s/%s", kind, namespace, name)
 	}
-	return true
+	return nil
 }
 
-func (a *App) watchCatalogue(w http.ResponseWriter, r *http.Request) {
-	session, _ := a.Store().Get(r, "auth-session")
+func (a *App) watchCatalogue(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	v := mux.Vars(r)
 	name, namespace := v["name"], v["namespace"]
-	if !a.authObj("argovue", name, namespace, w, r) {
-		return
+	if err := authObj("argovue", name, namespace, p); err != nil {
+		return err
 	}
-	log.Debugf("SSE: start catalogue/%s/%s", namespace, name)
-	crd := crd.Catalogue(name)
-	cb := a.maybeNewSubsetBroker(session.ID, crd)
+	cb := a.maybeNewSubsetBroker(sid, crd.Catalogue(name))
 	a.watchBroker(cb, w, r)
-	log.Debugf("SSE: stop catalogue/%s/%s", namespace, name)
+	return nil
 }
 
-func (a *App) watchCatalogueInstances(w http.ResponseWriter, r *http.Request) {
-	session, _ := a.Store().Get(r, "auth-session")
+func (a *App) watchCatalogueInstances(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	v := mux.Vars(r)
 	name, namespace := v["name"], v["namespace"]
-	if !a.authObj("argovue", name, namespace, w, r) {
-		return
+	if err := authObj("argovue", name, namespace, p); err != nil {
+		return err
 	}
-	log.Debugf("SSE: start catalogue/%s/%s instances", namespace, name)
-	crd := crd.CatalogueInstances(name)
-	cb := a.maybeNewSubsetBroker(session.ID, crd)
+	cb := a.maybeNewSubsetBroker(sid, crd.CatalogueInstances(name))
 	a.watchBroker(cb, w, r)
-	log.Debugf("SSE: stop catalogue/%s/%s instances", namespace, name)
+	return nil
 }
 
-func (a *App) watchCatalogueResources(w http.ResponseWriter, r *http.Request) {
-	session, _ := a.Store().Get(r, "auth-session")
+func (a *App) watchCatalogueResources(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	v := mux.Vars(r)
 	name, namespace := v["name"], v["namespace"]
-	if !a.authObj("argovue", name, namespace, w, r) {
-		return
+	if err := authObj("argovue", name, namespace, p); err != nil {
+		return err
 	}
-	log.Debugf("SSE: start catalogue/%s/%s resources", namespace, name)
-	crd := crd.CatalogueResources(name)
-	cb := a.maybeNewSubsetBroker(session.ID, crd)
+	cb := a.maybeNewSubsetBroker(sid, crd.CatalogueResources(name))
 	a.watchBroker(cb, w, r)
-	log.Debugf("SSE: stop catalogue/%s/%s resources", namespace, name)
+	return nil
 }
 
-func (a *App) watchCatalogueInstanceResources(w http.ResponseWriter, r *http.Request) {
+func (a *App) watchCatalogueInstanceResources(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	session, _ := a.Store().Get(r, "auth-session")
 	v := mux.Vars(r)
 	name, namespace, instance := v["name"], v["namespace"], v["instance"]
-	if !a.authObj("helmrelease", instance, namespace, w, r) {
-		return
+	if err := authObj("helmrelease", instance, namespace, p); err != nil {
+		return err
 	}
-	log.Debugf("SSE: start catalogue/%s/%s/%s resources", namespace, name, instance)
 	id := fmt.Sprintf("%s-%s-%s-resources", namespace, name, instance)
 	cb := a.maybeNewIdSubsetBroker(session.ID, id)
 	cb.AddCrd(crd.CatalogueInstancePods(instance))
 	cb.AddCrd(crd.CatalogueInstancePvcs(instance))
 	cb.AddCrd(crd.CatalogueInstanceServices(instance))
 	a.watchBroker(cb, w, r)
-	log.Debugf("SSE: stop catalogue/%s/%s/%s resources", namespace, name, instance)
+	return nil
 }
 
-func (a *App) watchCatalogueInstance(w http.ResponseWriter, r *http.Request) {
-	session, _ := a.Store().Get(r, "auth-session")
+func (a *App) watchCatalogueInstance(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	v := mux.Vars(r)
 	name, namespace, instance := v["name"], v["namespace"], v["instance"]
-	if !a.authObj("helmrelease", instance, namespace, w, r) {
-		return
+	if err := authObj("helmrelease", instance, namespace, p); err != nil {
+		return err
 	}
-	log.Debugf("SSE: start catalogue/%s/%s/%s", namespace, name, instance)
-	crd := crd.CatalogueInstance(name, instance)
-	cb := a.maybeNewSubsetBroker(session.ID, crd)
+	cb := a.maybeNewSubsetBroker(sid, crd.CatalogueInstance(name, instance))
 	a.watchBroker(cb, w, r)
-	log.Debugf("SSE: stop catalogue/%s/%s/%s", namespace, name, instance)
+	return nil
 }
 
-func (a *App) commandCatalogue(w http.ResponseWriter, r *http.Request) {
-	session, err := a.Store().Get(r, "auth-session")
-	if err != nil {
-		http.Error(w, "Streaming unsupported!", http.StatusInternalServerError)
-		return
-	}
+func (a *App) controlCatalogue(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	v := mux.Vars(r)
 	name, namespace, action := v["name"], v["namespace"], v["action"]
-	if !a.authObj("argovue", name, namespace, w, r) {
-		return
+	if err := authObj("argovue", name, namespace, p); err != nil {
+		return err
 	}
+	var err error
 	switch action {
 	case "deploy":
 		var svc *argovuev1.Service
 		var label, owner string
 
-		profile := session.Values["profile"].(map[string]interface{})
 		svc, err = kube.GetArgovueService(name, namespace)
 		if err != nil {
 			goto err
@@ -132,7 +111,7 @@ func (a *App) commandCatalogue(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			goto err
 		}
-		label, owner, err = verifyOwner(profile, data.Owner)
+		label, owner, err = verifyOwner(p, data.Owner)
 		if err != nil {
 			goto err
 		}
@@ -143,17 +122,18 @@ func (a *App) commandCatalogue(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	json.NewEncoder(w).Encode(map[string]string{"status": "ok", "action": action, "message": ""})
-	return
+	return nil
 err:
 	log.Errorf("Can't %s catalogue %s/%s, error:%s", action, namespace, name, err)
 	sendError(w, action, err)
+	return nil
 }
 
-func (a *App) controlCatalogueInstance(w http.ResponseWriter, r *http.Request) {
+func (a *App) controlCatalogueInstance(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	v := mux.Vars(r)
 	name, namespace, instance, action := v["name"], v["namespace"], v["instance"], v["action"]
-	if !a.authObj("helmrelease", instance, namespace, w, r) {
-		return
+	if err := authObj("helmrelease", instance, namespace, p); err != nil {
+		return err
 	}
 	switch action {
 	case "delete":
@@ -165,17 +145,16 @@ func (a *App) controlCatalogueInstance(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(map[string]string{"status": "ok", "action": action, "message": ""})
 		}
 	}
+	return nil
 }
 
-func verifyOwner(profile map[string]interface{}, owner string) (string, string, error) {
-	if util.I2s(profile["effective_id"]) == owner {
-		return "oidc.argovue.io/id", util.EncodeLabel(owner), nil
+func verifyOwner(p *profile.Profile, owner string) (string, string, error) {
+	if p.Id == owner {
+		return constant.IdLabel, p.IdLabel(), nil
 	}
-	if groups, ok := profile["effective_groups"].([]string); ok && len(groups) > 0 {
-		for _, g := range groups {
-			if g == owner {
-				return "oidc.argovue.io/group", owner, nil
-			}
+	for _, g := range p.EffectiveGroups {
+		if g == owner {
+			return constant.GroupLabel, owner, nil
 		}
 	}
 	return "", "", fmt.Errorf("Can't verify owner:%s", owner)

@@ -79,7 +79,7 @@ export default {
       return this.copy(this.profile.effective_groups).sort()
     },
     effective_id () {
-      return this.profile.effective_id
+      return this.profile.id
     },
   }
 };

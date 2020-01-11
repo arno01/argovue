@@ -2,6 +2,7 @@ package app
 
 import (
 	"argovue/kube"
+	"argovue/profile"
 	"fmt"
 	"net/http"
 	"net/http/httputil"
@@ -12,27 +13,23 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func (a *App) proxyDex(w http.ResponseWriter, r *http.Request) {
+func (a *App) proxyDex(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	vars := mux.Vars(r)
 	r = mux.SetURLVars(r, map[string]string{"namespace": a.args.Namespace(), "name": a.Args().DexServiceName(), "port": "5556", "rest": vars["rest"]})
-	a.proxyService(w, r)
+	return a.proxyService(sid, p, w, r)
 }
 
-func (a *App) proxyService(w http.ResponseWriter, r *http.Request) {
+func (a *App) proxyService(sid string, p *profile.Profile, w http.ResponseWriter, r *http.Request) *appError {
 	v := mux.Vars(r)
 	name, namespace, port, rest := v["name"], v["namespace"], v["port"], v["rest"]
 
 	if name != a.Args().DexServiceName() {
 		svc, err := kube.GetService(name, namespace)
 		if err != nil {
-			log.Errorf("Proxy: no service %s/%s, access denied, error:%s", namespace, name, err)
-			http.Error(w, "Access denied", http.StatusForbidden)
-			return
+			return makeError(http.StatusForbidden, "Proxy: no service %s/%s, access denied, error:%s", namespace, name, err)
 		}
-		if !authHTTP(svc, a.Store(), r) {
-			log.Errorf("Proxy: %s/%s, no auth, access denied", namespace, name)
-			http.Error(w, "Access denied", http.StatusForbidden)
-			return
+		if !p.Authorize(svc) {
+			return makeError(http.StatusForbidden, "Proxy: %s/%s, no auth, access denied", namespace, name)
 		}
 	}
 
@@ -57,4 +54,5 @@ func (a *App) proxyService(w http.ResponseWriter, r *http.Request) {
 	r.Header.Set("X-Forwarded-Host", r.Header.Get("Host"))
 	r.Host = url.Host
 	proxy.ServeHTTP(w, r)
+	return nil
 }

@@ -19,7 +19,7 @@ export default {
   props: ['object', 'name', 'namespace'],
   data () {
     return {
-      owner: this.$api.profile.effective_id,
+      owner: this.$api.effective_id(),
       data: {}
     }
   },

@@ -2,11 +2,10 @@ package app
 
 import (
 	"argovue/crd"
-	"argovue/util"
+	"argovue/profile"
 	"context"
 	"crypto/rand"
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -31,35 +30,20 @@ func (a *App) onLogout(sessionId string) {
 	}
 }
 
-func (a *App) onLogin(sessionId string, profile map[string]interface{}) {
+func (a *App) onLogin(sessionId string, p *profile.Profile) {
 	wfBroker := a.newBroker(sessionId, "workflows")
 	catBroker := a.newBroker(sessionId, "catalogue")
-	if groups, ok := profile["effective_groups"].([]string); ok && len(groups) > 0 {
-		selector := fmt.Sprintf("oidc.argovue.io/group in (%s)", strings.Join(groups, ","))
+	if len(p.Groups) > 0 {
+		selector := fmt.Sprintf("oidc.argovue.io/group in (%s)", strings.Join(p.Groups, ","))
 		wfBroker.AddCrd(crd.New("argoproj.io", "v1alpha1", "workflows").SetLabelSelector(selector))
 		catBroker.AddCrd(crd.New("argovue.io", "v1", "services").SetLabelSelector(selector))
 	}
-	if userId, ok := profile["effective_id"]; ok {
-		label := util.EncodeLabel(util.I2s(userId))
-		log.Debugf("App: using user label:%s", label)
-		selector := fmt.Sprintf("oidc.argovue.io/id in (%s)", label)
-		wfBroker.AddCrd(crd.New("argoproj.io", "v1alpha1", "workflows").SetLabelSelector(selector))
-		catBroker.AddCrd(crd.New("argovue.io", "v1", "services").SetLabelSelector(selector))
-	}
+	log.Debugf("App: using user label:%s", p.IdLabel())
+	selector := fmt.Sprintf("oidc.argovue.io/id in (%s)", p.IdLabel())
+	wfBroker.AddCrd(crd.New("argoproj.io", "v1alpha1", "workflows").SetLabelSelector(selector))
+	catBroker.AddCrd(crd.New("argovue.io", "v1", "services").SetLabelSelector(selector))
 }
 
-// Profile returns user's profile if autorised
-func (a *App) Profile(w http.ResponseWriter, r *http.Request) {
-	var profile interface{}
-	session, err := a.Store().Get(r, "auth-session")
-	if err == nil {
-		profile = session.Values["profile"]
-	}
-	obj, err := json.Marshal(profile)
-	w.Write([]byte(obj))
-}
-
-// Logout clears authentication
 func (a *App) Logout(w http.ResponseWriter, r *http.Request) {
 	session, err := a.Store().Get(r, "auth-session")
 	if err != nil {
@@ -77,7 +61,6 @@ func (a *App) Logout(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, a.Args().UIRootURL(), http.StatusFound)
 }
 
-// AuthInitiate initialises OIDC auth sequence by redirecting browser to OIDC provider
 func (a *App) AuthInitiate(w http.ResponseWriter, r *http.Request) {
 	b := make([]byte, 32)
 	_, err := rand.Read(b)
@@ -108,84 +91,56 @@ func (a *App) AuthInitiate(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, a.Auth().Config.AuthCodeURL(state), http.StatusTemporaryRedirect)
 }
 
-// AuthCallback processes OIDC provider response with state and code parameters
-func (a *App) AuthCallback(w http.ResponseWriter, r *http.Request) {
+func (a *App) AuthCallback(w http.ResponseWriter, r *http.Request) *appError {
 	session, err := a.Store().Get(r, "auth-session")
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return makeError(http.StatusInternalServerError, "Can't get session, error:%s", err.Error())
 	}
 
 	if r.URL.Query().Get("state") != session.Values["state"] {
-		http.Error(w, "Invalid state parameter", http.StatusBadRequest)
-		return
+		return makeError(http.StatusBadRequest, "Can't get proper state value from request")
 	}
 
 	token, err := a.Auth().Config.Exchange(context.TODO(), r.URL.Query().Get("code"))
 	if err != nil {
-		log.Errorf("no token found: %v", err)
-		w.WriteHeader(http.StatusUnauthorized)
-		return
+		return makeError(http.StatusUnauthorized, "Can't get token by code value")
 	}
 
 	rawIDToken, ok := token.Extra("id_token").(string)
 	if !ok {
-		http.Error(w, "No id_token field in oauth2 token.", http.StatusInternalServerError)
-		return
+		return makeError(http.StatusInternalServerError, "Can't get id_token value from token:%s", token)
 	}
 
 	idToken, err := a.Auth().Provider.Verifier(&oidc.Config{ClientID: a.Auth().Config.ClientID}).Verify(context.TODO(), rawIDToken)
 	if err != nil {
-		http.Error(w, "Failed to verify ID Token: "+err.Error(), http.StatusInternalServerError)
-		return
+		return makeError(http.StatusInternalServerError, "Can't verify token, error:%s", err)
 	}
 
 	var idTokenClaims map[string]interface{}
 	if err := idToken.Claims(&idTokenClaims); err != nil {
-		log.Errorf("Can't decode id_token claims, error:%s", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return makeError(http.StatusInternalServerError, "Can't decode token claims, error:%s", err)
 	}
 
 	log.Debugf("OIDC: id token claims: %s", idTokenClaims)
-	profile := idTokenClaims
-	log.Debugf("OIDC: auth name:%s", idTokenClaims["name"])
-	if _, ok := idTokenClaims["groups"]; !ok {
+	p := profile.New().FromMap(idTokenClaims, a.Args().OidcUserId())
+	if len(p.Groups) == 0 {
 		if userInfoclaims, err := a.userInfo(token); err == nil {
 			log.Debugf("OIDC: user info claims: %s", userInfoclaims)
-			profile = userInfoclaims
+			p.FromMap(userInfoclaims, a.Args().OidcUserId())
+		} else {
+			log.Debugf("Can't get userInfo claims, error:%s", err)
 		}
 	}
+	p.MapValues(a.groups)
 
-	if email, ok := idTokenClaims["email"]; ok {
-		profile["email"] = email
-	}
-
-	effGroups := []string{}
-	for _, group := range util.Li2s(profile["groups"]) {
-		if k8sGroup, ok := a.groups[group]; ok {
-			effGroups = append(effGroups, k8sGroup)
-		}
-	}
-	profile["effective_groups"] = effGroups
-
-	userIdKey := a.Args().OidcUserId()
-	if userId, ok := profile[userIdKey]; ok {
-		profile["effective_id"] = userId
-	} else {
-		profile["effective_id"] = profile["sub"]
-		log.Warnf("OIDC: can't find map effective user id by name:%s, using sub value:%s", userIdKey, profile["sub"])
-	}
-
-	session.Values["profile"] = profile
-	a.onLogin(session.ID, profile)
+	session.Values["profile"] = p
+	a.onLogin(session.ID, p)
 
 	redirectUrl := session.Values["redirect"]
 	delete(session.Values, "redirect")
 
 	if err = session.Save(r, w); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return makeError(http.StatusInternalServerError, "Can't save session, error:%s", err)
 	}
 	// this is to set cookie for the api domain
 	redirect := `<html><head><script type="text/javascript">window.location.href="%s"</script></head><body></body></html>`
@@ -195,6 +150,7 @@ func (a *App) AuthCallback(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Fprintf(w, redirect, a.Args().UIRootURL())
 	}
+	return nil
 }
 
 func (a *App) userInfo(token *oauth2.Token) (map[string]interface{}, error) {
