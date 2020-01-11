@@ -62,7 +62,7 @@ func makeRelease(s *argovuev1.Service, namespace, label, owner string) *fluxv1.H
 	return release
 }
 
-func deployRelease(s *argovuev1.Service, release *fluxv1.HelmRelease) error {
+func deployRelease(release *fluxv1.HelmRelease) error {
 	clientset, err := kube.GetFluxV1Clientset()
 	if err != nil {
 		return err
@@ -73,12 +73,8 @@ func deployRelease(s *argovuev1.Service, release *fluxv1.HelmRelease) error {
 
 func Deploy(s *argovuev1.Service, label, owner string, input []argovuev1.InputValue) error {
 	release := makeRelease(s, s.Namespace, label, owner)
-	env := []map[string]string{}
-	for _, i := range input {
-		env = append(env, map[string]string{"name": i.Name, "value": i.Value})
-	}
-	addArgovueValue(release, "env", env)
-	return deployRelease(s, release)
+	addArgovueValue(release, "input", input)
+	return deployRelease(release)
 }
 
 func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, releaseName, owner string) error {
@@ -95,10 +91,11 @@ func DeployFilebrowser(wf *wfv1alpha1.Workflow, namespace, releaseName, owner st
 	for _, pvc := range wf.Status.PersistentVolumeClaims {
 		volumes = append(volumes, map[string]string{"name": pvc.Name, "claim": pvc.PersistentVolumeClaim.ClaimName})
 	}
+	release.ObjectMeta.OwnerReferences = []metav1.OwnerReference{}
 	release.ObjectMeta.Labels[constant.WorkflowLabel] = wf.Name
 	addArgovueLabel(release, constant.WorkflowLabel, wf.Name)
 	release.Spec.Values["volumes"] = volumes
-	return deployRelease(filebrowser, release)
+	return deployRelease(release)
 }
 
 func DeleteInstance(namespace, name string) error {
